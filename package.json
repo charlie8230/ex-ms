@@ -1,0 +1,49 @@
+{
+  "name": "t3js",
+  "description": "T3 Javascript Framework",
+  "version": "2.7.0",
+  "author": "Box (https://www.box.com/)",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "bugs": "http://github.com/box/t3js/issues",
+  "homepage": "http://t3js.org",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/box/t3js"
+  },
+  "scripts": {
+    "test": "node Makefile.js test",
+    "test-watch": "node Makefile.js test-watch",
+    "lint": "node Makefile.js lint",
+    "dist": "node Makefile.js dist",
+    "patch": "node Makefile.js patch",
+    "minor": "node Makefile.js minor",
+    "major": "node Makefile.js major"
+  },
+  "main": "dist/t3-native.js",
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-class-properties": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.22.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "webpack": "^2.2.1"
+  },
+  "keywords": [
+    "javascript",
+    "framework",
+    "browser",
+    "client-side",
+    "modular",
+    "component"
+  ],
+  "dependencies": {
+    "mitt": "^1.0.1"
+  }
+}

@@ -1,2 +1,2 @@
-# t3x
-An extension to T3JS Framework
+Modules and Services
+# Inspired by T3
