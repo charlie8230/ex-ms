@@ -1,30 +1,23 @@
 {
-  "name": "t3js",
-  "description": "T3 Javascript Framework",
-  "version": "2.7.0",
-  "author": "Box (https://www.box.com/)",
+  "name": "ex MS",
+  "description": "Module Based System",
+  "version": "1.0",
+  "author": "Carlos Moran (https://moranjr.com/)",
   "files": [
     "LICENSE",
     "README.md",
     "dist"
   ],
-  "bugs": "http://github.com/box/t3js/issues",
-  "homepage": "http://t3js.org",
-  "license": "Apache-2.0",
+  "bugs": "https://github.com/charlie8230/ex-ms/issues",
+  "homepage": "https://github.com/charlie8230/ex-ms",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/box/t3js"
+    "url": "https://github.com/charlie8230/ex-ms"
   },
   "scripts": {
-    "test": "node Makefile.js test",
-    "test-watch": "node Makefile.js test-watch",
-    "lint": "node Makefile.js lint",
-    "dist": "node Makefile.js dist",
-    "patch": "node Makefile.js patch",
-    "minor": "node Makefile.js minor",
-    "major": "node Makefile.js major"
   },
-  "main": "dist/t3-native.js",
+  "main": "dist/ex-ms.js",
   "devDependencies": {
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
