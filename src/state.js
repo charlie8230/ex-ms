@@ -5,7 +5,8 @@ let immutable = require('immutable');
 let stacks = {
   'plugins': [],
   'services': [],
-  'actions': []
+  'actions': [],
+  'globalState':[]
 };
 
 // initial state
@@ -16,6 +17,14 @@ let stacks = {
 // dispatch
 
 //  API
+
+let shape = {
+  globalSettings: {
+    debug: true
+  } // immutable
+}
+
+window.immutable = immutable;
 
 
 module.exports = class AppState {
