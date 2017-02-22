@@ -48,13 +48,15 @@ function items(state=[], action) {
 }
 
 // store
-const reducers = combineReducers(items);
+const reducers = combineReducers({items});
 const store = createStore(reducers);
-//unsub
-
-// subscribe
-
+//handler
+function handleSubscribe() {
+  console.log(store.getState());
+}
+let unsubscribe = store.subscribe(handleSubscribe);
 // dispatch
+store.dispatch(registerItem('name',function(){console.log('I am here')}))
 
 //  API
 
