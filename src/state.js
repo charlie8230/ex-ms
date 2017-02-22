@@ -1,16 +1,22 @@
 let { createStore, combineReducers } = require('redux');
 
-let immutable = require('immutable');
-
-let stacks = {
-  'plugins': [],
-  'services': [],
-  'actions': [],
-  'globalState':[]
-};
+//  let immutable = require('immutable');
+//  stacks
 
 // initial state
-// actions
+const s = {
+  services: [], // DOM, AJAX, PUBSUB << Interact with Redux? >> Rx Streams>>? Templating (plugin)>>
+  modules: [],
+  plugins: [],
+  globalConfig: {}
+};
+// 
+const ACTIONS = {
+  SET_VAL: 'SET_VAL',
+  GET_VAL: 'GET_VAL',
+  GET_ALL: 'GET_ALL'
+};
+
 // reducer
 // store
 // subscribe
@@ -18,10 +24,10 @@ let stacks = {
 
 //  API
 
-let shape = {
+let defaultState = {
   globalSettings: {
     debug: true
-  } // immutable
+  } // immutable ?
 }
 
 window.immutable = immutable;
