@@ -1,11 +1,13 @@
 
 let AppState = require('./state');
-
+let GState = require('./general-state');
 
 let app = {
 
   init(globalConfig){
     this.state = new AppState(globalConfig);
+    this.gstate = new GState({debugger: true});
+    this.anotherState = new GState({selector:'#page'});
   },
 
   get(prop) {
