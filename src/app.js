@@ -1,9 +1,16 @@
 
-let AppState = require('./state');
+
 let GState = require('./general-state');
+const stacksState = require('./stacks-state');
 
 let app = {
   globalConfig: new GState({debugger: false}),
+  get stacks(){
+    return (stacksState && stacksState.stack) || {};
+  },
+  set stacks(item){
+    stacksState.stack = item;
+  },
   get config() {
     return this.globalConfig.config;
   },

@@ -34,7 +34,7 @@ function state(init={}, handler) {
       return state;
     }
   }
-
+  //  bind a listener to the Redux store
   function setHandler(handler) {
     return this.unsubscribe = self.store.subscribe(handler);
   }

@@ -29,12 +29,6 @@ function registerItem(name, fn, itemType) {
   }
 }
 
-function setConfig(configType,value) {
-  return {
-    type: configType,
-    value
-  }
-}
 
 function item(state={},action){
   switch (action.type) {
@@ -47,15 +41,7 @@ function item(state={},action){
       return state;
   }
 }
-// reducer
-function items(state=[], action) {
-  switch(action.type) {
-    case ACTIONS.REGISTER_ITEM:
-      return [...state, item(undefined, action)]
-    default:
-      return state;
-  }
-}
+
 
 function stack(state={services:[],modules:[],plugins:[]}, action) {
   console.log('stack', action);
@@ -69,17 +55,8 @@ function stack(state={services:[],modules:[],plugins:[]}, action) {
   }
 }
 
-function globalConfig(state={}, action) {
-  switch(action.type) {
-    case 'GLOBAL_CONFIG':
-      return Object.assign({}, state, action.value);
-    default:
-      return state;
-  }
-}
-
 // store
-const reducers = combineReducers({stack, globalConfig});
+const reducers = combineReducers({stack});
 const store = createStore(reducers);
 //handler
 function handleSubscribe() {
@@ -89,39 +66,3 @@ let unsubscribe = store.subscribe(handleSubscribe);
 // dispatch
 store.dispatch(registerItem('name',function(){console.log('I am here')},'IS_MODULE'))
 store.dispatch(registerItem('name',function(){console.log('I am here')}))
-store.dispatch(setConfig('GLOBAL_CONFIG',{debug:true}));
-
-//  API
-
-let defaultState = {
-  globalSettings: {
-    debug: true
-  } // immutable ?
-}
-
-
-module.exports = class AppState {
-  constructor(data={}){
-    this.data = data;
-  }
-
-  get(name) {
-    return this.data[name];
-  }
-
-  get allData(){
-    return this.data;
-  }
-  set allData(val){
-    this.data = val;
-  }
-
-  set(name,value) {
-    this.data[name] = value;
-  }
-
-  reset() {
-    this.data = {};
-  }
-
-};
