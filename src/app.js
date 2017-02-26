@@ -3,41 +3,17 @@ let AppState = require('./state');
 let GState = require('./general-state');
 
 let app = {
-
-  init(globalConfig){
-    this.state = new AppState(globalConfig);
-    this.gstate = new GState({debugger: true});
-    this.anotherState = new GState({selector:'#page'});
+  globalConfig: new GState({debugger: false}),
+  get config() {
+    return this.globalConfig.config;
   },
-
-  get(prop) {
-    //  this.expr = prop;
-    if(this.state) {
-      return this.state.get(prop);
-    }
+  set config(val) {
+    this.globalConfig.set(val);
+  },
+  init(config){
+    this.globalConfig.set(config);
   }
-
 };
-
-function counter(state=0, action) {
-  switch (action.type){
-    case 'INCREMENT':
-      return state +1;
-    case 'DECREMENT':
-      return state -1;
-    default:
-      return state;
-  }
-}
-
-const ADD_TODO = 'ADD_TODO';
-
-function addTodo(text) {
-  return {
-    type: 'ADD_TODO',
-    text
-  }
-}
 
 
 
