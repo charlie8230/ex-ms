@@ -6,9 +6,11 @@ Todo
   let emitter = mitt()
 
 
-  Store - get?
-  Global State?
-  Stacks -
+  Store - get? - ok
+  Global State? - ok
+  Logging?
+  Context Base
+  Stacks - - working
     services singleton
       Dependencies
       Global API
