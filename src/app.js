@@ -61,14 +61,16 @@ Object.assign(app,emitterAPI);
 /*
 
   Needs Plugin system - requires conventions be followed returns chainable
-  Needs Singleton Service
-  Needs States
-  Needs stacks
-  Needs Public API
-  Needs Modules
-  Needs config
-  Needs data-*
-  Has Mini Pub Sub
+  Services -
+    Public
+    require
+    Singleton
+  Needs States - done
+  Needs stacks - done
+  Needs Modules - done
+  Needs config - done
+  Needs data-* - done
+  Has Mini Pub Sub - done
   Allows Views (how does data flow?)
   Allows Streams
   Allows delegation
@@ -79,8 +81,8 @@ Object.assign(app,emitterAPI);
     short hand query All
 
   What about?
-    XHR
-    Select modern vs transpiled?crea
+    XHR - fetch
+
 
 */
 
