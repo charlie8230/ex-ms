@@ -1,8 +1,8 @@
 let { createStore, combineReducers } = require('redux');
 
-function registerItem(name, fn, itemType) {
+function registerItem(name, fn, itemType, api) {
   return {
-    type: 'REGISTER',
+    type: typeof api !=='undefined' ? 'REGISTER':'ADD_API',
     itemType,
     name,
     fn
@@ -17,17 +17,34 @@ function item(state={},action){
         fn: action.fn,
         itemType: action.itemType
       }
+    case 'ADD_API':
+      return Object.assign({},state,{api: action.api});
     default:
       return state;
   }
 }
 
-function stack(state={services:[],modules:[],plugins:[]}, action) {
-  let {itemType} = action;
+function stack(state={services:[],serviceInit:[], modules:[],plugins:[]}, action) {
+  let {itemType, type, name} = action;
+  debugger;
   if(itemType) {
+    if(action==='ADD_API') {
       let itemObj = {};
+      // specific stack
+      itemObj[itemType] = [(state[itemType]||[]).map((val)=>{
+        if (val.name===name) {
+          return item(val,action);
+        } else {
+          return val;
+        }
+      })];
+      return Object.assign({}, state, itemObj);
+    } else {
+      let itemObj = {};
+      // specific stack
       itemObj[itemType] = [...(state[itemType]||[]),item(undefined, action)];
       return Object.assign({}, state, itemObj);
+    }
   } else {
       return state;
   }
@@ -37,9 +54,9 @@ function stack(state={services:[],modules:[],plugins:[]}, action) {
 const reducers = combineReducers({stack});
 const store = createStore(reducers);
 //handler
-function dispatch({name, fn, type}) {
+function dispatch({name, fn, type, api}) {
   // dispatch
-  store.dispatch(registerItem(name,fn,type));
+  store.dispatch(registerItem(name,fn,type, api));
 
 }
 

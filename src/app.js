@@ -1,5 +1,3 @@
-
-
 let GState = require('./general-state');
 const stacksState = require('./stacks-state');
 let Context = require('./context');
@@ -22,6 +20,7 @@ let app = {
   init(config){
     this.globalConfig.set(config);
   },
+  logger,
   getElements(){
     return document.querySelectorAll(this.config.moduleSelector);
   },
@@ -35,6 +34,12 @@ let app = {
   },
   getModule(name=''){
     return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc));
+  },
+  addService(name, fn){},
+  addModule(name, fn){},
+  getService(name=''){
+    let svc = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
+    //if (svc) svc['fn']();
   },
   startModules() {
     if (this.config['initCompleted']) {
