@@ -36,10 +36,19 @@ let app = {
     return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc));
   },
   addService(name, fn){},
-  addModule(name, fn){},
+  addModule(name, fn){
+
+  },
   getService(name=''){
-    let svc = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
-    //if (svc) svc['fn']();
+    let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
+    let svc;
+    if (svcFn) {
+      if ('api' in svcFn) svcFn['api'];
+//  NEEDS circular ref checks
+      svc = svcFn['fn']();
+      Object.assign(svcFn, {api:svc, type:'services'}); // incomplete implementation
+      return svc;
+    }
   },
   startModules() {
     if (this.config['initCompleted']) {
@@ -67,9 +76,9 @@ Object.assign(app,emitterAPI);
 
   Needs Plugin system - requires conventions be followed returns chainable
   Services -
-    Public
-    require
-    Singleton
+    Public - done
+    require done
+    Singleton done
   Needs States - done
   Needs stacks - done
   Needs Modules - done

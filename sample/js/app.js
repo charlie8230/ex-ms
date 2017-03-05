@@ -13,5 +13,6 @@ EXMS.stacks = {name:'list',fn:function(ctx){
   console.log('module', ctx)
   ctx.on('event', (data)=>{ console.log('Inside CTX', msg, data);})
 },type:'modules'};
+EXMS.stacks = {name: 'date', fn: function(){return new Date();}, type: 'services'};
 
 EXMS.startModules();

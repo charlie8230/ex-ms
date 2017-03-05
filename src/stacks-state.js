@@ -1,8 +1,22 @@
 let { createStore, combineReducers } = require('redux');
 
 function registerItem(name, fn, itemType, api) {
+  let type = 'REGISTER';
+  switch(itemType) {
+    case 'serviceInitDone':
+      type = 'REMOVE_FROM_SVC_STACK';
+      break;
+    case 'serviceInitAdd':
+      type = 'ADD_TO_SERVICE_STACK';
+      break;
+    case 'services':
+      type = typeof api ==='undefined' ? 'REGISTER':'ADD_API';
+      break;
+    default:
+     break;
+  }
   return {
-    type: typeof api !=='undefined' ? 'REGISTER':'ADD_API',
+    type,
     itemType,
     name,
     fn
@@ -26,24 +40,28 @@ function item(state={},action){
 
 function stack(state={services:[],serviceInit:[], modules:[],plugins:[]}, action) {
   let {itemType, type, name} = action;
-  debugger;
+  let itemObj = {};
   if(itemType) {
-    if(action==='ADD_API') {
-      let itemObj = {};
-      // specific stack
-      itemObj[itemType] = [(state[itemType]||[]).map((val)=>{
-        if (val.name===name) {
-          return item(val,action);
-        } else {
-          return val;
-        }
-      })];
-      return Object.assign({}, state, itemObj);
-    } else {
-      let itemObj = {};
-      // specific stack
-      itemObj[itemType] = [...(state[itemType]||[]),item(undefined, action)];
-      return Object.assign({}, state, itemObj);
+    switch (type) {
+      case 'ADD_API':
+        debugger;
+        console.log('running map');
+        // specific stack
+        itemObj[itemType] = [(state[itemType]||[]).map((val)=>{
+          if (val.name===name) {
+            return item(val,action);
+          } else {
+            return val;
+          }
+        })];
+        return Object.assign({}, state, itemObj);
+      case 'REGISTER':
+
+        // specific stack
+        itemObj[itemType] = [...(state[itemType]||[]),item(undefined, action)];
+        return Object.assign({}, state, itemObj);
+      default:
+        return state;
     }
   } else {
       return state;
