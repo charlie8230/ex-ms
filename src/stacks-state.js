@@ -4,10 +4,14 @@ function registerItem(name, fn, itemType, api) {
   let type = 'REGISTER';
   switch(itemType) {
     case 'serviceInitDone':
+      console.log('Removing Service', name);
       type = 'REMOVE_FROM_SVC_STACK';
+      itemType = 'serviceInit';
       break;
     case 'serviceInitAdd':
-      type = 'ADD_TO_SERVICE_STACK';
+      console.log('adding service', name);
+      type = 'REGISTER';
+      itemType = 'serviceInit';
       break;
     case 'services':
       type = typeof api ==='undefined' ? 'REGISTER':'ADD_API';
@@ -38,11 +42,14 @@ function item(state={},action){
   }
 }
 
-function stack(state={services:[],serviceInit:[], modules:[],plugins:[]}, action) {
+function stack(state={services:[],serviceInit:[], modules:[],moduleRefs:[],plugins:[]}, action) {
   let {itemType, type, name} = action;
   let itemObj = {};
   if(itemType) {
     switch (type) {
+      case 'REMOVE_FROM_SVC_STACK':
+        itemObj['serviceInit'] = (state['serviceInit']||[]).filter(val=>val.name!==name);
+        return Object.assign({}, state, itemObj);
       case 'ADD_API':
         debugger;
         console.log('running map');

@@ -1,4 +1,5 @@
 let {getQueryVariable} = require('./util');
 const debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
-const logger = console && debugMode ?console:function(){};
-module.exports = {logger, debugMode};
+const logger = debugMode ?console:function(){};
+const log = debugMode ? console.log: function(){};
+module.exports = {logger, log, debugMode};

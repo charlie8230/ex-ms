@@ -2,7 +2,7 @@ let GState = require('./general-state');
 const stacksState = require('./stacks-state');
 let Context = require('./context');
 let {emitterAPI} = require('./events');
-let {logger, debugMode}  = require('./logger');
+let {logger, log, debugMode}  = require('./logger');
 let app = {
   globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
   get stacks(){
@@ -43,9 +43,29 @@ let app = {
     let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
     let svc;
     if (svcFn) {
-      if ('api' in svcFn) svcFn['api'];
+      if ('api' in svcFn) {
+        log('Got ', svcFn['name'], ' already');
+        return svcFn['api'];
+      }
 //  NEEDS circular ref checks
-      svc = svcFn['fn']();
+      
+      let svcName = svcFn['name'];
+      let servicesInProgress = this.stacks['serviceInit'];
+      if(servicesInProgress.length>5) {
+        console.log('too deep');
+        return;
+      }
+      let circular = servicesInProgress.some(val=>val.name===svcName);
+      if (circular) {
+        console.log('Found a circular ref!', svcName);
+        return;
+      } else {
+        console.log('No circular refs', svcName);
+      }
+      this.stacks = {type:'serviceInitAdd', name: svcName};
+      svc = svcFn['fn'](this);
+      this.stacks = {type: 'serviceInitDone', name: svcName};
+      console.log(this.stacks['serviceInit']);
       Object.assign(svcFn, {api:svc, type:'services'}); // incomplete implementation
       return svc;
     }
@@ -62,7 +82,7 @@ let app = {
       let exmodule = this.getModule(name);
       
       let context = new Context(e);
-
+      //  this.stacks = {}
       exmodule && exmodule['fn'] && exmodule['fn'](context);
     });
     this.config = {initCompleted: true};
@@ -82,6 +102,9 @@ Object.assign(app,emitterAPI);
   Needs States - done
   Needs stacks - done
   Needs Modules - done
+  Use fetch ponyfill;
+    Module should return init within a closure??
+    Module context should be able to request plugin or submodule
   Needs config - done
   Needs data-* - done
   Has Mini Pub Sub - done
