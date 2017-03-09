@@ -8,8 +8,9 @@ Todo
 
   Store - get? - ok
   Global State? - ok
-  Logging?
+  Logging - ok
   Context Base
+    
   Stacks - - working
     services singleton
       Dependencies

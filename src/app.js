@@ -35,9 +35,11 @@ let app = {
   getModule(name=''){
     return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc));
   },
-  addService(name, fn){},
-  addModule(name, fn){
+  addService(name, fn){
 
+  },
+  addModule(name, fn){
+    
   },
   getService(name=''){
     let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
@@ -47,32 +49,33 @@ let app = {
         log('Got ', svcFn['name'], ' already');
         return svcFn['api'];
       }
-//  NEEDS circular ref checks
+
+      // bails out on circular ref checks
       
       let svcName = svcFn['name'];
       let servicesInProgress = this.stacks['serviceInit'];
       if(servicesInProgress.length>5) {
-        console.log('too deep');
+        log('too deep');
         return;
       }
       let circular = servicesInProgress.some(val=>val.name===svcName);
       if (circular) {
-        console.log('Found a circular ref!', svcName);
+        log('Found a circular ref!', svcName);
         return;
       } else {
-        console.log('No circular refs', svcName);
+        log('No circular refs', svcName);
       }
       this.stacks = {type:'serviceInitAdd', name: svcName};
       svc = svcFn['fn'](this);
       this.stacks = {type: 'serviceInitDone', name: svcName};
-      console.log(this.stacks['serviceInit']);
+      log(this.stacks['serviceInit']);
       Object.assign(svcFn, {api:svc, type:'services'}); // incomplete implementation
       return svc;
     }
   },
   startModules() {
     if (this.config['initCompleted']) {
-      logger.log('Global Init already done - exit!');
+      log('Global Init already done - exit!');
       return;
     }
     let elems = this.getElements();
