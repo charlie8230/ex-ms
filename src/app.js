@@ -1,8 +1,10 @@
+let R = require('../vendor/ramda/dist/ramda.custom');
 let GState = require('./general-state');
 const stacksState = require('./stacks-state');
 let Context = require('./context');
 let {emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
+debugger;
 let app = {
   globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
   get stacks(){
