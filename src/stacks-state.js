@@ -1,4 +1,5 @@
 let { createStore, combineReducers } = require('redux');
+let R = require('../vendor/ramda/dist/ramda.custom');
 
 function registerItem(name, fn, itemType, api) {
   let type = 'REGISTER';
@@ -85,7 +86,7 @@ function dispatch({name, fn, type, api}) {
 
 }
 
-module.exports = {
+let stackState = {
   unsubscribe: {},
   handleSubscribe(handler){
     this.unsubscribe = store.subscribe(handler);
@@ -98,3 +99,14 @@ module.exports = {
     return stack;
   }
 };
+
+/* General functions */
+function updateStack(type, name, fn) {
+  stacksState.stack = {type, name, fn};
+}
+
+function addToStack(){
+  return R.curry(updateStack);
+}
+
+module.exports = { stackState, stackFunctions: {updateStack, addToStack}};

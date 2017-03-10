@@ -1,13 +1,9 @@
 let R = require('../vendor/ramda/dist/ramda.custom');
 let GState = require('./general-state');
-const stacksState = require('./stacks-state');
+const {stacksState, stackFunctions} = require('./stacks-state');
 let Context = require('./context');
 let {emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
-/* General functions */
-function updateStack(type, name, fn) {
-  stacksState.stack = {type, name, fn};
-}
 
 let app = {
   globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
@@ -41,11 +37,8 @@ let app = {
   getModule(name=''){
     return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc));
   },
-  addToStack(...args) {
-    updateStack(...args);
-  },
-  addService: R.curry(updateStack)('services'),
-  addModule: R.curry(updateStack)('modules'),
+  addService: stackFunctions.addToStack('services'),
+  addModule: stackFunctions.addToStack('modules'),
   getService(name=''){
     let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
     let svc;
