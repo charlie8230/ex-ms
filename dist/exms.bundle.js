@@ -73,212 +73,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 32);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var R = __webpack_require__(32);
-var GState = __webpack_require__(29);
-var stacksState = __webpack_require__(30);
-var Context = __webpack_require__(28);
-
-var _require = __webpack_require__(10),
-    emitterAPI = _require.emitterAPI;
-
-var _require2 = __webpack_require__(11),
-    logger = _require2.logger,
-    log = _require2.log,
-    debugMode = _require2.debugMode;
-
-debugger;
-var app = {
-  globalConfig: new GState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]' }),
-  get stacks() {
-    return stacksState && stacksState.stack || {};
-  },
-  set stacks(item) {
-    stacksState.stack = item;
-  },
-  get config() {
-    return this.globalConfig.config;
-  },
-  set config(val) {
-    this.globalConfig.set(val);
-  },
-  init: function init(config) {
-    this.globalConfig.set(config);
-  },
-
-  logger: logger,
-  getElements: function getElements() {
-    return document.querySelectorAll(this.config.moduleSelector);
-  },
-  getModuleName: function getModuleName() {
-    var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-    var selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
-    var key = selector.replace(/[\[\]]/g, '');
-    if (e) {
-      return e && e.attributes && e.attributes[key] && e.attributes[key].value;
-    } else {
-      return e;
-    }
-  },
-  getModule: function getModule() {
-    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
-    return (this.stacks['modules'] || []).reduce(function (acc, val) {
-      return val.name === name && val || acc;
-    });
-  },
-  addService: function addService(name, fn) {},
-  addModule: function addModule(name, fn) {},
-  getService: function getService() {
-    var _this = this;
-
-    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
-    var svcFn = this.stacks['services'].reduce(function (acc, val) {
-      return val.name === name && val || acc;
-    });
-    var svc = void 0;
-    if (svcFn) {
-      var _ret = function () {
-        if ('api' in svcFn) {
-          log('Got ', svcFn['name'], ' already');
-          return {
-            v: svcFn['api']
-          };
-        }
-
-        // bails out on circular ref checks
-
-        var svcName = svcFn['name'];
-        var servicesInProgress = _this.stacks['serviceInit'];
-        if (servicesInProgress.length > 5) {
-          log('too deep');
-          return {
-            v: void 0
-          };
-        }
-        var circular = servicesInProgress.some(function (val) {
-          return val.name === svcName;
-        });
-        if (circular) {
-          log('Found a circular ref!', svcName);
-          return {
-            v: void 0
-          };
-        } else {
-          log('No circular refs', svcName);
-        }
-        _this.stacks = { type: 'serviceInitAdd', name: svcName };
-        svc = svcFn['fn'](_this);
-        _this.stacks = { type: 'serviceInitDone', name: svcName };
-        log(_this.stacks['serviceInit']);
-        Object.assign(svcFn, { api: svc, type: 'services' }); // incomplete implementation
-        return {
-          v: svc
-        };
-      }();
-
-      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-    }
-  },
-  startModules: function startModules() {
-    var _this2 = this;
-
-    if (this.config['initCompleted']) {
-      log('Global Init already done - exit!');
-      return;
-    }
-    var elems = this.getElements();
-    elems.forEach(function (e) {
-      var name = _this2.getModuleName(e, _this2.config.moduleSelector);
-      if (!name) return;
-      var exmodule = _this2.getModule(name);
-
-      var context = new Context(e);
-      //  this.stacks = {}
-      exmodule && exmodule['fn'] && exmodule['fn'](context);
-    });
-    this.config = { initCompleted: true };
-  }
-};
-
-//  Extend
-Object.assign(app, emitterAPI);
-
-/*
-
-  Needs Plugin system - requires conventions be followed returns chainable
-  Services -
-    Public - done
-    require done
-    Singleton done
-  Needs States - done
-  Needs stacks - done
-  Needs Modules - done
-  Use fetch ponyfill;
-    Module should return init within a closure??
-    Module context should be able to request plugin or submodule
-  Needs config - done
-  Needs data-* - done
-  Has Mini Pub Sub - done
-  Allows Views (how does data flow?)
-  Allows Streams
-  Allows delegation
-  Enable custom build
-  Allows composition (rambda?)
-
-  todo:
-    short hand query All
-
-  What about?
-    XHR - fetch
-
-
-*/
-
-module.exports = app;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * @fileoverview Main library
- * @author Carlos Moran
- */
-
-var app = __webpack_require__(0);
-
-var previousEXMS = void 0;
-
-var __EXMS = Object.assign(app, {
-  noConflict: function noConflict() {
-    window.EXMS = previousEXMS;
-    return this;
-  }
-});
-
-if (window['EXMS']) previousEXMS = window['EXMS'];
-
-module.exports = __EXMS;
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -465,7 +264,7 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -511,7 +310,7 @@ function compose() {
 }
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -526,11 +325,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.default = createStore;
 
-var _isPlainObject = __webpack_require__(8);
+var _isPlainObject = __webpack_require__(6);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _symbolObservable = __webpack_require__(24);
+var _symbolObservable = __webpack_require__(23);
 
 var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 
@@ -783,7 +582,7 @@ function createStore(reducer, preloadedState, enhancer) {
 }
 
 /***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -794,27 +593,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 
-var _createStore = __webpack_require__(4);
+var _createStore = __webpack_require__(2);
 
 var _createStore2 = _interopRequireDefault(_createStore);
 
-var _combineReducers = __webpack_require__(15);
+var _combineReducers = __webpack_require__(14);
 
 var _combineReducers2 = _interopRequireDefault(_combineReducers);
 
-var _bindActionCreators = __webpack_require__(14);
+var _bindActionCreators = __webpack_require__(13);
 
 var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 
-var _applyMiddleware = __webpack_require__(13);
+var _applyMiddleware = __webpack_require__(12);
 
 var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 
-var _compose = __webpack_require__(3);
+var _compose = __webpack_require__(1);
 
 var _compose2 = _interopRequireDefault(_compose);
 
-var _warning = __webpack_require__(6);
+var _warning = __webpack_require__(4);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -835,10 +634,10 @@ exports.combineReducers = _combineReducers2.default;
 exports.bindActionCreators = _bindActionCreators2.default;
 exports.applyMiddleware = _applyMiddleware2.default;
 exports.compose = _compose2.default;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 6 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -871,7 +670,7 @@ function warning(message) {
 }
 
 /***/ }),
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -881,7 +680,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _root = __webpack_require__(22);
+var _root = __webpack_require__(21);
 
 var _root2 = _interopRequireDefault(_root);
 
@@ -893,7 +692,7 @@ var _Symbol = _root2.default.Symbol;
 exports.default = _Symbol;
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -903,15 +702,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _baseGetTag = __webpack_require__(16);
+var _baseGetTag = __webpack_require__(15);
 
 var _baseGetTag2 = _interopRequireDefault(_baseGetTag);
 
-var _getPrototype = __webpack_require__(18);
+var _getPrototype = __webpack_require__(17);
 
 var _getPrototype2 = _interopRequireDefault(_getPrototype);
 
-var _isObjectLike = __webpack_require__(23);
+var _isObjectLike = __webpack_require__(22);
 
 var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
 
@@ -976,7 +775,7 @@ function isPlainObject(value) {
 exports.default = isPlainObject;
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1006,7 +805,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1014,7 +813,7 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _mitt = __webpack_require__(12);
+var _mitt = __webpack_require__(11);
 
 var _mitt2 = _interopRequireDefault(_mitt);
 
@@ -1062,13 +861,13 @@ var API = function () {
 module.exports = { API: API, emitterAPI: emitterAPI };
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _require = __webpack_require__(31),
+var _require = __webpack_require__(30),
     getQueryVariable = _require.getQueryVariable;
 
 var debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
@@ -1077,7 +876,190 @@ var log = debugMode ? console.log : function () {};
 module.exports = { logger: logger, log: log, debugMode: debugMode };
 
 /***/ }),
-/* 12 */
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var R = __webpack_require__(31);
+var GState = __webpack_require__(28);
+var stacksState = __webpack_require__(29);
+var Context = __webpack_require__(27);
+
+var _require = __webpack_require__(8),
+    emitterAPI = _require.emitterAPI;
+
+var _require2 = __webpack_require__(9),
+    logger = _require2.logger,
+    log = _require2.log,
+    debugMode = _require2.debugMode;
+/* General functions */
+
+
+function updateStack(type, name, fn) {
+  stacksState.stack = { type: type, name: name, fn: fn };
+}
+
+var app = {
+  globalConfig: new GState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]' }),
+  get stacks() {
+    return stacksState && stacksState.stack || {};
+  },
+  set stacks(item) {
+    stacksState.stack = item;
+  },
+  get config() {
+    return this.globalConfig.config;
+  },
+  set config(val) {
+    this.globalConfig.set(val);
+  },
+  init: function init(config) {
+    this.globalConfig.set(config);
+  },
+
+  logger: logger,
+  getElements: function getElements() {
+    return document.querySelectorAll(this.config.moduleSelector);
+  },
+  getModuleName: function getModuleName() {
+    var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+    var key = selector.replace(/[\[\]]/g, '');
+    if (e) {
+      return e && e.attributes && e.attributes[key] && e.attributes[key].value;
+    } else {
+      return e;
+    }
+  },
+  getModule: function getModule() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    return (this.stacks['modules'] || []).reduce(function (acc, val) {
+      return val.name === name && val || acc;
+    });
+  },
+  addToStack: function addToStack() {
+    updateStack.apply(undefined, arguments);
+  },
+
+  addService: R.curry(updateStack)('services'),
+  addModule: R.curry(updateStack)('modules'),
+  getService: function getService() {
+    var _this = this;
+
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    var svcFn = this.stacks['services'].reduce(function (acc, val) {
+      return val.name === name && val || acc;
+    });
+    var svc = void 0;
+    if (svcFn) {
+      var _ret = function () {
+        if ('api' in svcFn) {
+          log('Got ', svcFn['name'], ' already');
+          return {
+            v: svcFn['api']
+          };
+        }
+
+        // bails out on circular ref checks
+
+        var svcName = svcFn['name'];
+        var servicesInProgress = _this.stacks['serviceInit'];
+        if (servicesInProgress.length > 5) {
+          log('too deep');
+          return {
+            v: void 0
+          };
+        }
+        var circular = servicesInProgress.some(function (val) {
+          return val.name === svcName;
+        });
+        if (circular) {
+          log('Found a circular ref!', svcName);
+          return {
+            v: void 0
+          };
+        } else {
+          log('No circular refs', svcName);
+        }
+        _this.stacks = { type: 'serviceInitAdd', name: svcName };
+        svc = svcFn['fn'](_this);
+        _this.stacks = { type: 'serviceInitDone', name: svcName };
+        log(_this.stacks['serviceInit']);
+        Object.assign(svcFn, { api: svc, type: 'services' }); // incomplete implementation
+        return {
+          v: svc
+        };
+      }();
+
+      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+    }
+  },
+  startModules: function startModules() {
+    var _this2 = this;
+
+    if (this.config['initCompleted']) {
+      log('Global Init already done - exit!');
+      return;
+    }
+    var elems = this.getElements();
+    elems.forEach(function (e) {
+      var name = _this2.getModuleName(e, _this2.config.moduleSelector);
+      if (!name) return;
+      var exmodule = _this2.getModule(name);
+
+      var context = new Context(e);
+      //  this.stacks = {}
+      exmodule && exmodule['fn'] && exmodule['fn'](context);
+    });
+    this.config = { initCompleted: true };
+  }
+};
+
+//  Extend
+Object.assign(app, emitterAPI);
+
+/*
+
+  Needs Plugin system - requires conventions be followed returns chainable
+  Services -
+    Public - done
+    require done
+    Singleton done
+  Needs States - done
+  Needs stacks - done
+  Needs Modules - done
+  Use fetch ponyfill;
+    Module should return init within a closure??
+    Module context should be able to request plugin or submodule
+  Needs config - done
+  Needs data-* - done
+  Has Mini Pub Sub - done
+  Allows Views (how does data flow?)
+  Allows Streams
+  Allows delegation
+  Enable custom build
+  Allows composition (rambda?)
+
+  todo:
+    short hand query All
+
+  What about?
+    XHR - fetch
+
+
+*/
+
+module.exports = app;
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1100,7 +1082,7 @@ function n(n) {
 //# sourceMappingURL=mitt.js.map
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1111,7 +1093,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = applyMiddleware;
 
-var _compose = __webpack_require__(3);
+var _compose = __webpack_require__(1);
 
 var _compose2 = _interopRequireDefault(_compose);
 
@@ -1173,7 +1155,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1235,7 +1217,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1246,13 +1228,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = combineReducers;
 
-var _createStore = __webpack_require__(4);
+var _createStore = __webpack_require__(2);
 
-var _isPlainObject = __webpack_require__(8);
+var _isPlainObject = __webpack_require__(6);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _warning = __webpack_require__(6);
+var _warning = __webpack_require__(4);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -1383,10 +1365,10 @@ function combineReducers(reducers) {
     return hasChanged ? nextState : state;
   };
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1396,15 +1378,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Symbol2 = __webpack_require__(7);
+var _Symbol2 = __webpack_require__(5);
 
 var _Symbol3 = _interopRequireDefault(_Symbol2);
 
-var _getRawTag = __webpack_require__(19);
+var _getRawTag = __webpack_require__(18);
 
 var _getRawTag2 = _interopRequireDefault(_getRawTag);
 
-var _objectToString = __webpack_require__(20);
+var _objectToString = __webpack_require__(19);
 
 var _objectToString2 = _interopRequireDefault(_objectToString);
 
@@ -1434,7 +1416,7 @@ function baseGetTag(value) {
 exports.default = baseGetTag;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1450,7 +1432,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var freeGlobal = (typeof global === 'undefined' ? 'undefined' : _typeof(global)) == 'object' && global && global.Object === Object && global;
 
 exports.default = freeGlobal;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _overArg = __webpack_require__(20);
+
+var _overArg2 = _interopRequireDefault(_overArg);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/** Built-in value references. */
+var getPrototype = (0, _overArg2.default)(Object.getPrototypeOf, Object);
+
+exports.default = getPrototype;
 
 /***/ }),
 /* 18 */
@@ -1463,29 +1467,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _overArg = __webpack_require__(21);
-
-var _overArg2 = _interopRequireDefault(_overArg);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/** Built-in value references. */
-var getPrototype = (0, _overArg2.default)(Object.getPrototypeOf, Object);
-
-exports.default = getPrototype;
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _Symbol2 = __webpack_require__(7);
+var _Symbol2 = __webpack_require__(5);
 
 var _Symbol3 = _interopRequireDefault(_Symbol2);
 
@@ -1537,7 +1519,7 @@ function getRawTag(value) {
 exports.default = getRawTag;
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1570,7 +1552,7 @@ function objectToString(value) {
 exports.default = objectToString;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1596,7 +1578,7 @@ function overArg(func, transform) {
 exports.default = overArg;
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1608,7 +1590,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _freeGlobal = __webpack_require__(17);
+var _freeGlobal = __webpack_require__(16);
 
 var _freeGlobal2 = _interopRequireDefault(_freeGlobal);
 
@@ -1623,7 +1605,7 @@ var root = _freeGlobal2.default || freeSelf || Function('return this')();
 exports.default = root;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1666,16 +1648,16 @@ function isObjectLike(value) {
 exports.default = isObjectLike;
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(25);
+module.exports = __webpack_require__(24);
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1685,7 +1667,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(26);
+var _ponyfill = __webpack_require__(25);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -1709,10 +1691,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(27)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(26)(module)))
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1741,7 +1723,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1771,7 +1753,7 @@ module.exports = function (module) {
 };
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1787,18 +1769,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 // Context is a store with a bound elem?
 // Context is passed on to the module factory functions
-var _require = __webpack_require__(10),
+var _require = __webpack_require__(8),
     API = _require.API,
     methods = _require.methods;
 
-var _require2 = __webpack_require__(11),
+var _require2 = __webpack_require__(9),
     logger = _require2.logger,
     debugMode = _require2.debugMode;
 
 var Context = function (_API) {
   _inherits(Context, _API);
 
-  function Context(elem) {
+  function Context(elem, App) {
     _classCallCheck(this, Context);
 
     var _this = _possibleConstructorReturn(this, (Context.__proto__ || Object.getPrototypeOf(Context)).call(this));
@@ -1823,13 +1805,13 @@ module.exports = Context;
 // needs init & life cycle
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _require = __webpack_require__(5),
+var _require = __webpack_require__(3),
     createStore = _require.createStore,
     combineReducers = _require.combineReducers;
 
@@ -1895,7 +1877,7 @@ function state() {
 module.exports = state;
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1903,7 +1885,7 @@ module.exports = state;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var _require = __webpack_require__(5),
+var _require = __webpack_require__(3),
     createStore = _require.createStore,
     combineReducers = _require.combineReducers;
 
@@ -2024,7 +2006,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2044,7 +2026,7 @@ function getQueryVariable(variable) {
 module.exports = { getQueryVariable: getQueryVariable };
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3036,6 +3018,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.R = R;
     }
 }).call(undefined);
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @fileoverview Main library
+ * @author Carlos Moran
+ */
+
+var app = __webpack_require__(10);
+
+var previousEXMS = void 0;
+
+var __EXMS = Object.assign(app, {
+  noConflict: function noConflict() {
+    window.EXMS = previousEXMS;
+    return this;
+  }
+});
+
+if (window['EXMS']) previousEXMS = window['EXMS'];
+
+module.exports = __EXMS;
 
 /***/ })
 /******/ ]);

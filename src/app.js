@@ -4,7 +4,11 @@ const stacksState = require('./stacks-state');
 let Context = require('./context');
 let {emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
-debugger;
+/* General functions */
+function updateStack(type, name, fn) {
+  stacksState.stack = {type, name, fn};
+}
+
 let app = {
   globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
   get stacks(){
@@ -37,12 +41,11 @@ let app = {
   getModule(name=''){
     return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc));
   },
-  addService(name, fn){
-
+  addToStack(...args) {
+    updateStack(...args);
   },
-  addModule(name, fn){
-    
-  },
+  addService: R.curry(updateStack)('services'),
+  addModule: R.curry(updateStack)('modules'),
   getService(name=''){
     let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
     let svc;

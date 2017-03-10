@@ -4,7 +4,7 @@ let {API, methods} = require('./events');
 let {logger, debugMode}  = require('./logger');
 
 class Context extends API{
-  constructor(elem) {
+  constructor(elem, App) {
     super();
     this.el = this.elem = elem;
     this.status = 'created';

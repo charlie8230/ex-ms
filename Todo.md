@@ -10,12 +10,13 @@ Todo
   Global State? - ok
   Logging - ok
   Context Base
-    
+    -add App methods
+  Convenience addModule, addService
   Stacks - - working
     services singleton
       Dependencies
       Global API
-      Application Services (Pub Sub)
+      Application Services (Pub Sub) - ok
     Module Init per instance
       Dependencies
       No API
