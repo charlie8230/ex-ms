@@ -344,6 +344,60 @@
     }();
 
     /**
+     * Returns a function that always returns the given value. Note that for
+     * non-primitives the value returned is a reference to the original value.
+     *
+     * This function is known as `const`, `constant`, or `K` (for K combinator) in
+     * other languages and libraries.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Function
+     * @sig a -> (* -> a)
+     * @param {*} val The value to wrap in a function
+     * @return {Function} A Function :: * -> val.
+     * @example
+     *
+     *      var t = R.always('Tee');
+     *      t(); //=> 'Tee'
+     */
+    var always = _curry1(function always(val) {
+        return function () {
+            return val;
+        };
+    });
+
+    /**
+     * Makes a shallow clone of an object, setting or overriding the specified
+     * property with the given value. Note that this copies and flattens prototype
+     * properties onto the new object as well. All non-primitive properties are
+     * copied by reference.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.8.0
+     * @category Object
+     * @sig String -> a -> {k: v} -> {k: v}
+     * @param {String} prop The property name to set
+     * @param {*} val The new value
+     * @param {Object} obj The object to clone
+     * @return {Object} A new object equivalent to the original except for the changed property.
+     * @see R.dissoc
+     * @example
+     *
+     *      R.assoc('c', 3, {a: 1, b: 2}); //=> {a: 1, b: 2, c: 3}
+     */
+    var assoc = _curry3(function assoc(prop, val, obj) {
+        var result = {};
+        for (var p in obj) {
+            result[p] = obj[p];
+        }
+        result[prop] = val;
+        return result;
+    });
+
+    /**
      * Creates a function that is bound to a context.
      * Note: `R.bind` does not provide the additional argument-binding capabilities of
      * [Function.prototype.bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
@@ -540,6 +594,76 @@
     }();
 
     /**
+     * Returns the result of "setting" the portion of the given data structure
+     * focused by the given lens to the result of applying the given function to
+     * the focused value.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.16.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig Lens s a -> (a -> a) -> s -> s
+     * @param {Lens} lens
+     * @param {*} v
+     * @param {*} x
+     * @return {*}
+     * @see R.prop, R.lensIndex, R.lensProp
+     * @example
+     *
+     *      var headLens = R.lensIndex(0);
+     *
+     *      R.over(headLens, R.toUpper, ['foo', 'bar', 'baz']); //=> ['FOO', 'bar', 'baz']
+     */
+    // `Identity` is a functor that holds a single value, where `map` simply
+    // transforms the held value with the provided function.
+    // The value returned by the getter function is first transformed with `f`,
+    // then set as the value of an `Identity`. This is then mapped over with the
+    // setter function of the lens.
+    var over = function () {
+        // `Identity` is a functor that holds a single value, where `map` simply
+        // transforms the held value with the provided function.
+        var Identity = function (x) {
+            return {
+                value: x,
+                map: function (f) {
+                    return Identity(f(x));
+                }
+            };
+        };
+        return _curry3(function over(lens, f, x) {
+            // The value returned by the getter function is first transformed with `f`,
+            // then set as the value of an `Identity`. This is then mapped over with the
+            // setter function of the lens.
+            return lens(function (y) {
+                return Identity(f(y));
+            })(x).value;
+        });
+    }();
+
+    /**
+     * Returns a function that when supplied an object returns the indicated
+     * property of that object, if it exists.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Object
+     * @sig s -> {s: a} -> a | Undefined
+     * @param {String} p The property name
+     * @param {Object} obj The object to query
+     * @return {*} The value at `obj.p`.
+     * @see R.path
+     * @example
+     *
+     *      R.prop('x', {x: 100}); //=> 100
+     *      R.prop('x', {}); //=> undefined
+     */
+    var prop = _curry2(function prop(p, obj) {
+        return obj[p];
+    });
+
+    /**
      * Returns a new list or string with the elements or characters in reverse
      * order.
      *
@@ -565,6 +689,32 @@
      */
     var reverse = _curry1(function reverse(list) {
         return _isString(list) ? list.split('').reverse().join('') : Array.prototype.slice.call(list, 0).reverse();
+    });
+
+    /**
+     * Returns the result of "setting" the portion of the given data structure
+     * focused by the given lens to the given value.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.16.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig Lens s a -> a -> s -> s
+     * @param {Lens} lens
+     * @param {*} v
+     * @param {*} x
+     * @return {*}
+     * @see R.prop, R.lensIndex, R.lensProp
+     * @example
+     *
+     *      var xLens = R.lensProp('x');
+     *
+     *      R.set(xLens, 4, {x: 1, y: 2});  //=> {x: 4, y: 2}
+     *      R.set(xLens, 8, {x: 1, y: 2});  //=> {x: 8, y: 2}
+     */
+    var set = _curry3(function set(lens, v, x) {
+        return over(lens, always(v), x);
     });
 
     /**
@@ -623,6 +773,38 @@
      *      R.tail('');     //=> ''
      */
     var tail = _curry1(_checkForMethod('tail', slice(1, Infinity)));
+
+    /**
+     * Tests the final argument by passing it to the given predicate function. If
+     * the predicate is satisfied, the function will return the result of calling
+     * the `whenTrueFn` function with the same argument. If the predicate is not
+     * satisfied, the argument is returned as is.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.18.0
+     * @category Logic
+     * @sig (a -> Boolean) -> (a -> a) -> a -> a
+     * @param {Function} pred       A predicate function
+     * @param {Function} whenTrueFn A function to invoke when the `condition`
+     *                              evaluates to a truthy value.
+     * @param {*}        x          An object to test with the `pred` function and
+     *                              pass to `whenTrueFn` if necessary.
+     * @return {*} Either `x` or the result of applying `x` to `whenTrueFn`.
+     * @see R.ifElse, R.unless
+     * @example
+     *
+     *      // truncate :: String -> String
+     *      var truncate = R.when(
+     *        R.propSatisfies(R.gt(R.__, 10), 'length'),
+     *        R.pipe(R.take(10), R.append('…'), R.join(''))
+     *      );
+     *      truncate('12345');         //=> '12345'
+     *      truncate('0123456789ABC'); //=> '0123456789…'
+     */
+    var when = _curry3(function when(pred, whenTrueFn, x) {
+        return pred(x) ? whenTrueFn(x) : x;
+    });
 
     /**
      * `_makeFlat` is a helper function that returns a one-level or fully recursive
@@ -908,6 +1090,63 @@
     }));
 
     /**
+     * Returns a lens for the given getter and setter functions. The getter "gets"
+     * the value of the focus; the setter "sets" the value of the focus. The setter
+     * should not mutate the data structure.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.8.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig (s -> a) -> ((a, s) -> s) -> Lens s a
+     * @param {Function} getter
+     * @param {Function} setter
+     * @return {Lens}
+     * @see R.view, R.set, R.over, R.lensIndex, R.lensProp
+     * @example
+     *
+     *      var xLens = R.lens(R.prop('x'), R.assoc('x'));
+     *
+     *      R.view(xLens, {x: 1, y: 2});            //=> 1
+     *      R.set(xLens, 4, {x: 1, y: 2});          //=> {x: 4, y: 2}
+     *      R.over(xLens, R.negate, {x: 1, y: 2});  //=> {x: -1, y: 2}
+     */
+    var lens = _curry2(function lens(getter, setter) {
+        return function (toFunctorFn) {
+            return function (target) {
+                return map(function (focus) {
+                    return setter(focus, target);
+                }, toFunctorFn(getter(target)));
+            };
+        };
+    });
+
+    /**
+     * Returns a lens whose focus is the specified property.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.14.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig String -> Lens s a
+     * @param {String} k
+     * @return {Lens}
+     * @see R.view, R.set, R.over
+     * @example
+     *
+     *      var xLens = R.lensProp('x');
+     *
+     *      R.view(xLens, {x: 1, y: 2});            //=> 1
+     *      R.set(xLens, 4, {x: 1, y: 2});          //=> {x: 4, y: 2}
+     *      R.over(xLens, R.negate, {x: 1, y: 2});  //=> {x: -1, y: 2}
+     */
+    var lensProp = _curry1(function lensProp(k) {
+        return lens(prop(k), assoc(k));
+    });
+
+    /**
      * Performs left-to-right function composition. The leftmost function may have
      * any arity; the remaining functions must be unary.
      *
@@ -971,7 +1210,12 @@
     var R = {
         chain: chain,
         compose: compose,
-        curry: curry
+        curry: curry,
+        lens: lens,
+        lensProp: lensProp,
+        pipe: pipe,
+        set: set,
+        when: when
     };
   /* eslint-env amd */
 

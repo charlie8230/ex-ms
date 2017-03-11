@@ -10,12 +10,12 @@ Todo
   Global State? - ok
   Logging - ok
   Context Base
-    -add App methods
-  Convenience addModule, addService
+    -add App methods - ok getService, asSubModule
+  Convenience addModule, addService - OK
   Stacks - - working
-    services singleton
-      Dependencies
-      Global API
+    services singleton - ok
+                                              Dependencies <<-major
+      Global API - ok
       Application Services (Pub Sub) - ok
     Module Init per instance
       Dependencies
@@ -33,9 +33,9 @@ Todo
     Behaviors - N/A
     Plug Ins - Jquery Init?
 
-  Pubsub
-  
+  Pubsub - OK
+  ./scripts/build -- src/compose.js src/curry.js src/chain.js src/pipe.js src/when.js src/lens.js src/set.js > dist/ramda.custom2.js
   File Size?
   Views
-  Routing??
+  XXX- Routing??
   AJAX

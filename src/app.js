@@ -1,17 +1,17 @@
 let R = require('../vendor/ramda/dist/ramda.custom');
 let GState = require('./general-state');
-const {stacksState, stackFunctions} = require('./stacks-state');
+const {stackState, stackFunctions} = require('./stacks-state');
 let Context = require('./context');
 let {emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
-
+window.R = R;
 let app = {
   globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
   get stacks(){
-    return (stacksState && stacksState.stack) || {};
+    return (stackState && stackState.stack) || {};
   },
   set stacks(item){
-    stacksState.stack = item;
+    stackState.stack = item;
   },
   get config() {
     return this.globalConfig.config;
@@ -71,6 +71,7 @@ let app = {
       return svc;
     }
   },
+  asSubModule(){},
   startModules() {
     if (this.config['initCompleted']) {
       log('Global Init already done - exit!');
@@ -82,7 +83,7 @@ let app = {
       if (!name) return;
       let exmodule = this.getModule(name);
       
-      let context = new Context(e);
+      let context = new Context(e, this);
       //  this.stacks = {}
       exmodule && exmodule['fn'] && exmodule['fn'](context);
     });

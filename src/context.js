@@ -8,6 +8,8 @@ class Context extends API{
     super();
     this.el = this.elem = elem;
     this.status = 'created';
+    this.getService = App.getService.bind(App);
+    this.getSubModule = App.asSubModule.bind(App);
   }
   destroy() {
     this.el = null;

@@ -102,7 +102,7 @@ let stackState = {
 
 /* General functions */
 function updateStack(type, name, fn) {
-  stacksState.stack = {type, name, fn};
+  stackState.stack = {type, name, fn};
 }
 
 function addToStack(){
