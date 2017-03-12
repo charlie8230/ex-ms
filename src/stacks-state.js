@@ -52,8 +52,6 @@ function stack(state={services:[],serviceInit:[], modules:[],moduleRefs:[],plugi
         itemObj['serviceInit'] = (state['serviceInit']||[]).filter(val=>val.name!==name);
         return Object.assign({}, state, itemObj);
       case 'ADD_API':
-        debugger;
-        console.log('running map');
         // specific stack
         itemObj[itemType] = [(state[itemType]||[]).map((val)=>{
           if (val.name===name) {
@@ -64,7 +62,6 @@ function stack(state={services:[],serviceInit:[], modules:[],moduleRefs:[],plugi
         })];
         return Object.assign({}, state, itemObj);
       case 'REGISTER':
-
         // specific stack
         itemObj[itemType] = [...(state[itemType]||[]),item(undefined, action)];
         return Object.assign({}, state, itemObj);

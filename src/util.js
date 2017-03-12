@@ -1,3 +1,4 @@
+let shortid = require('shortid');
 function getQueryVariable(variable){
        var query = window.location.search.substring(1);
        var vars = query.split("&");
@@ -7,4 +8,4 @@ function getQueryVariable(variable){
        }
        return(false);
 }
-module.exports = {getQueryVariable};
+module.exports = {shortid, getQueryVariable};

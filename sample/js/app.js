@@ -3,9 +3,16 @@
 
 */
 console.log(typeof EXMS);
-
+let log = EXMS.logger.log;
 EXMS.stacks = {name:'hi',fn:function(ctx){console.log('module');
-  ctx.on('event2', (data)=>{ console.log('Inside Hiiii', data);})
+  ctx.on('event2', (data)=>{ console.log('Inside Hiiii', data);});
+  log('returning from hi');
+  return {
+    init() {
+      log('init!')
+      log(ctx.el.id);
+    }
+  };
 },type:'modules'};
 EXMS.stacks = {name:'list',fn:function(ctx){
   let msg = 'HI!!';

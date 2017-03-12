@@ -17,7 +17,7 @@ Todo
                                               Dependencies <<-major
       Global API - ok
       Application Services (Pub Sub) - ok
-    Module Init per instance
+    Module Init per instance - ok
       Dependencies
       No API
       Local State - Redux?

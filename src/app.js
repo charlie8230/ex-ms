@@ -1,4 +1,5 @@
 let R = require('../vendor/ramda/dist/ramda.custom');
+let util = require('./util');
 let GState = require('./general-state');
 const {stackState, stackFunctions} = require('./stacks-state');
 let Context = require('./context');
@@ -83,9 +84,14 @@ let app = {
       if (!name) return;
       let exmodule = this.getModule(name);
       
-      let context = new Context(e, this);
+      let context = new Context(e, this, util);
       //  this.stacks = {}
-      exmodule && exmodule['fn'] && exmodule['fn'](context);
+      if(exmodule && exmodule['fn']) {
+        let moduleFn = exmodule['fn'](context);
+        if (typeof moduleFn !== 'undefined') {
+          this.stacks = {type: 'moduleRefs', name, fn:moduleFn};  // fn should have lifecyle methods?
+        }
+      }
     });
     this.config = {initCompleted: true};
   }
