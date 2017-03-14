@@ -40,6 +40,12 @@ let app = {
   },
   addService: stackFunctions.addToStack('services'),
   addModule: stackFunctions.addToStack('modules'),
+  startAll(){
+    let all = this.stacks['moduleRefs'];
+    all.forEach(m=>{
+      m && m.fn && m.fn['init'] && m.fn['init']();
+    });
+  },
   getService(name=''){
     let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
     let svc;
@@ -73,7 +79,20 @@ let app = {
     }
   },
   asSubModule(){},
-  startModules() {
+  runStart(){    
+    this.setupModules();
+    this.startAll();
+  },
+  startModules(kickoffmsg){
+    if (kickoffmsg) {
+      this.on(kickoffmsg,()=>{
+        this.runStart();
+      });
+    } else {
+      this.runStart();
+    }
+  },
+  setupModules() {
     if (this.config['initCompleted']) {
       log('Global Init already done - exit!');
       return;
@@ -109,10 +128,11 @@ Object.assign(app,emitterAPI);
     Singleton done
   Needs States - done
   Needs stacks - done
-  Needs Modules - done
+  Needs Modules - 
+  Modules - run init!
   Use fetch ponyfill;
     Module should return init within a closure??
-    Module context should be able to request plugin or submodule
+                    Module context should be able to request plugin or submodule
   Needs config - done
   Needs data-* - done
   Has Mini Pub Sub - done
