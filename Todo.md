@@ -5,7 +5,8 @@ Todo
 
   let emitter = mitt()
 
-
+  Redo store - using ramda -> models? -> views
+  Add - onmessage -> listen to all messages? (add to ctx)
   Store - get? - ok
   Global State? - ok
   Logging - ok

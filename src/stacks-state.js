@@ -1,5 +1,17 @@
-let { createStore, combineReducers } = require('redux');
+
 let R = require('../vendor/ramda/dist/ramda.custom');
+
+function _resetState(){
+  return Object.assign({},{services:[],serviceInit:[], modules:[],moduleRefs:[],plugins:[]});
+};
+
+let STATE = _resetState();
+
+function _getState(){
+  return state;
+}
+
+
 
 function registerItem(name, fn, itemType, api) {
   let type = 'REGISTER';
@@ -43,7 +55,7 @@ function item(state={},action){
   }
 }
 
-function stack(state={services:[],serviceInit:[], modules:[],moduleRefs:[],plugins:[]}, action) {
+function stack(state, action) {
   let {itemType, type, name} = action;
   let itemObj = {};
   if(itemType) {
@@ -73,26 +85,21 @@ function stack(state={services:[],serviceInit:[], modules:[],moduleRefs:[],plugi
   }
 }
 
-// store
-const reducers = combineReducers({stack});
-const store = createStore(reducers);
 //handler
 function dispatch({name, fn, type, api}) {
   // dispatch
-  store.dispatch(registerItem(name,fn,type, api));
+ let action = registerItem(name,fn,type, api);
+ // new state
+ STATE = stack(STATE, action);
 
 }
 
 let stackState = {
-  unsubscribe: {},
-  handleSubscribe(handler){
-    this.unsubscribe = store.subscribe(handler);
-  },
   set stack(item) {
     dispatch(item||{});
   },
   get stack() {
-    let {stack} = store.getState()||{}; 
+    let {stack} = getState()||{}; 
     return stack;
   }
 };

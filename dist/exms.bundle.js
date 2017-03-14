@@ -2278,7 +2278,8 @@ var GState = __webpack_require__(40);
 
 var _require = __webpack_require__(41),
     stackState = _require.stackState,
-    stackFunctions = _require.stackFunctions;
+    stackFunctions = _require.stackFunctions; // no redux here
+
 
 var Context = __webpack_require__(39);
 
@@ -3548,11 +3549,17 @@ module.exports = state;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var _require = __webpack_require__(4),
-    createStore = _require.createStore,
-    combineReducers = _require.combineReducers;
-
 var R = __webpack_require__(13);
+
+function _resetState() {
+  return Object.assign({}, { services: [], serviceInit: [], modules: [], moduleRefs: [], plugins: [] });
+};
+
+var STATE = _resetState();
+
+function _getState() {
+  return state;
+}
 
 function registerItem(name, fn, itemType, api) {
   var type = 'REGISTER';
@@ -3599,9 +3606,7 @@ function item() {
   }
 }
 
-function stack() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { services: [], serviceInit: [], modules: [], moduleRefs: [], plugins: [] };
-  var action = arguments[1];
+function stack(state, action) {
   var itemType = action.itemType,
       type = action.type,
       name = action.name;
@@ -3636,9 +3641,6 @@ function stack() {
   }
 }
 
-// store
-var reducers = combineReducers({ stack: stack });
-var store = createStore(reducers);
 //handler
 function dispatch(_ref) {
   var name = _ref.name,
@@ -3647,20 +3649,17 @@ function dispatch(_ref) {
       api = _ref.api;
 
   // dispatch
-  store.dispatch(registerItem(name, fn, type, api));
+  var action = registerItem(name, fn, type, api);
+  // new state
+  STATE = stack(STATE, action);
 }
 
 var stackState = {
-  unsubscribe: {},
-  handleSubscribe: function handleSubscribe(handler) {
-    this.unsubscribe = store.subscribe(handler);
-  },
-
   set stack(item) {
     dispatch(item || {});
   },
   get stack() {
-    var _ref2 = store.getState() || {},
+    var _ref2 = getState() || {},
         stack = _ref2.stack;
 
     return stack;

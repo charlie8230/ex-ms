@@ -1,7 +1,7 @@
 let R = require('../vendor/ramda/dist/ramda.custom');
 let util = require('./util');
 let GState = require('./general-state');
-const {stackState, stackFunctions} = require('./stacks-state');
+const {stackState, stackFunctions} = require('./stacks-state'); // no redux here
 let Context = require('./context');
 let {emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
