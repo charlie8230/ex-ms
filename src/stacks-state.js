@@ -2,7 +2,13 @@
 let R = require('../vendor/ramda/dist/ramda.custom');
 
 function _resetState(){
-  return Object.assign({},{services:[],serviceInit:[], modules:[],moduleRefs:[],plugins:[]});
+  return Object.assign({},{
+    services:[],
+    serviceInit:[],
+    modules:[],
+    moduleRefs:[],
+    plugins:[]
+  });
 };
 
 let STATE = _resetState();
@@ -10,8 +16,6 @@ let STATE = _resetState();
 function _getState(){
   return state;
 }
-
-
 
 function registerItem(name, fn, itemType, api) {
   let type = 'REGISTER';

@@ -1,56 +1,47 @@
-let { createStore, combineReducers } = require('redux');
 
-const SET_VAL = 'SET_VAL';
+let STATE = {};
 
-function config(state={}, action) {
-  switch(action.type) {
-    case 'SET_VAL':
-      return Object.assign({}, state, action.value);
-    default:
-      return state;
-  }
+function updateState(item){
+  if (item) return Object.assign({},STATE,item);
+  return {};
 }
 
-// store
-const reducers = combineReducers({config});
+function setState(item) {
+  STATE = updateState(item);
+}
 
-function state(init={}, handler) {
-  let self = this;
-  this.store = createStore(reducers);
-  
-  set(init);
-  if (handler) {
-    setHandler(handler);
+function getState() {
+  return STATE;
+}
+
+function state(init={}) {
+
+  function set(item){
+   setState(item);
   }
 
-  function set(value){
-    self.store.dispatch({type:'SET_VAL', value});
-  }
   function get(prop=undefined) {
-    let state = self.store.getState();
+    let state = getState();
     if (prop) {
       return state[prop];
     } else {
       return state;
     }
   }
-  //  bind a listener to the Redux store
-  function setHandler(handler) {
-    return this.unsubscribe = self.store.subscribe(handler);
-  }
-  function destroy() {
-    if (self.unsubscribe) self.unsubscribe();
-  }
+
+  set(init);
+
   return { 
     get, 
-    set, 
-    setHandler,
+    set,
+    set config(item){
+      setState(item);
+    },
     get config(){
-      return this.get('config');
+      return getState();
     }
   };
   
 }
-
 
 module.exports = state;
