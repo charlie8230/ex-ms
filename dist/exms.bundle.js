@@ -429,7 +429,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.default = createStore;
 
-var _isPlainObject = __webpack_require__(7);
+var _isPlainObject = __webpack_require__(6);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
@@ -690,61 +690,6 @@ function createStore(reducer, preloadedState, enhancer) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
-
-var _createStore = __webpack_require__(3);
-
-var _createStore2 = _interopRequireDefault(_createStore);
-
-var _combineReducers = __webpack_require__(18);
-
-var _combineReducers2 = _interopRequireDefault(_combineReducers);
-
-var _bindActionCreators = __webpack_require__(17);
-
-var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
-
-var _applyMiddleware = __webpack_require__(16);
-
-var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
-
-var _compose = __webpack_require__(2);
-
-var _compose2 = _interopRequireDefault(_compose);
-
-var _warning = __webpack_require__(5);
-
-var _warning2 = _interopRequireDefault(_warning);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/*
-* This is a dummy function to check if the function name has been altered by minification.
-* If the function has been minified and NODE_ENV !== 'production', warn the user.
-*/
-function isCrushed() {}
-
-if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
-  (0, _warning2.default)('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
-}
-
-exports.createStore = _createStore2.default;
-exports.combineReducers = _combineReducers2.default;
-exports.bindActionCreators = _bindActionCreators2.default;
-exports.applyMiddleware = _applyMiddleware2.default;
-exports.compose = _compose2.default;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -774,7 +719,7 @@ function warning(message) {
 }
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -796,7 +741,7 @@ var _Symbol = _root2.default.Symbol;
 exports.default = _Symbol;
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -879,7 +824,7 @@ function isPlainObject(value) {
 exports.default = isPlainObject;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -904,7 +849,7 @@ function encode(lookup, number) {
 module.exports = encode;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -934,7 +879,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -942,7 +887,7 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _mitt = __webpack_require__(15);
+var _mitt = __webpack_require__(14);
 
 var _mitt2 = _interopRequireDefault(_mitt);
 
@@ -990,13 +935,13 @@ var API = function () {
 module.exports = { API: API, emitterAPI: emitterAPI };
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _require = __webpack_require__(12),
+var _require = __webpack_require__(11),
     getQueryVariable = _require.getQueryVariable;
 
 var debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
@@ -1005,7 +950,7 @@ var log = logger.log = debugMode ? console.log : function () {};
 module.exports = { logger: logger, log: log, debugMode: debugMode };
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1026,7 +971,7 @@ function getQueryVariable(variable) {
 module.exports = { shortid: shortid, getQueryVariable: getQueryVariable };
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2264,7 +2209,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 }).call(undefined);
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2272,8 +2217,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var R = __webpack_require__(13);
-var util = __webpack_require__(12);
+var R = __webpack_require__(12);
+var util = __webpack_require__(11);
 var GState = __webpack_require__(40);
 
 var _require = __webpack_require__(41),
@@ -2283,10 +2228,10 @@ var _require = __webpack_require__(41),
 
 var Context = __webpack_require__(39);
 
-var _require2 = __webpack_require__(10),
+var _require2 = __webpack_require__(9),
     emitterAPI = _require2.emitterAPI;
 
-var _require3 = __webpack_require__(11),
+var _require3 = __webpack_require__(10),
     logger = _require3.logger,
     log = _require3.log,
     debugMode = _require3.debugMode;
@@ -2473,7 +2418,7 @@ Object.assign(app, emitterAPI);
 module.exports = app;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2496,7 +2441,7 @@ function n(n) {
 //# sourceMappingURL=mitt.js.map
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2569,7 +2514,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2631,7 +2576,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2644,11 +2589,11 @@ exports.default = combineReducers;
 
 var _createStore = __webpack_require__(3);
 
-var _isPlainObject = __webpack_require__(7);
+var _isPlainObject = __webpack_require__(6);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _warning = __webpack_require__(5);
+var _warning = __webpack_require__(4);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -2782,6 +2727,61 @@ function combineReducers(reducers) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
+
+var _createStore = __webpack_require__(3);
+
+var _createStore2 = _interopRequireDefault(_createStore);
+
+var _combineReducers = __webpack_require__(17);
+
+var _combineReducers2 = _interopRequireDefault(_combineReducers);
+
+var _bindActionCreators = __webpack_require__(16);
+
+var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
+
+var _applyMiddleware = __webpack_require__(15);
+
+var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
+
+var _compose = __webpack_require__(2);
+
+var _compose2 = _interopRequireDefault(_compose);
+
+var _warning = __webpack_require__(4);
+
+var _warning2 = _interopRequireDefault(_warning);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+* This is a dummy function to check if the function name has been altered by minification.
+* If the function has been minified and NODE_ENV !== 'production', warn the user.
+*/
+function isCrushed() {}
+
+if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
+  (0, _warning2.default)('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
+}
+
+exports.createStore = _createStore2.default;
+exports.combineReducers = _combineReducers2.default;
+exports.bindActionCreators = _bindActionCreators2.default;
+exports.applyMiddleware = _applyMiddleware2.default;
+exports.compose = _compose2.default;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2792,7 +2792,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Symbol2 = __webpack_require__(6);
+var _Symbol2 = __webpack_require__(5);
 
 var _Symbol3 = _interopRequireDefault(_Symbol2);
 
@@ -2846,7 +2846,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var freeGlobal = (typeof global === 'undefined' ? 'undefined' : _typeof(global)) == 'object' && global && global.Object === Object && global;
 
 exports.default = freeGlobal;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }),
 /* 21 */
@@ -2881,7 +2881,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Symbol2 = __webpack_require__(6);
+var _Symbol2 = __webpack_require__(5);
 
 var _Symbol3 = _interopRequireDefault(_Symbol2);
 
@@ -3077,7 +3077,7 @@ module.exports = __webpack_require__(30);
 "use strict";
 
 
-var encode = __webpack_require__(8);
+var encode = __webpack_require__(7);
 var alphabet = __webpack_require__(0);
 
 // Ignore all milliseconds before a certain time to reduce the size of the date entropy without sacrificing uniqueness.
@@ -3156,7 +3156,7 @@ module.exports = decode;
 
 
 var alphabet = __webpack_require__(0);
-var encode = __webpack_require__(8);
+var encode = __webpack_require__(7);
 var decode = __webpack_require__(29);
 var build = __webpack_require__(28);
 var isValid = __webpack_require__(31);
@@ -3351,7 +3351,7 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(38)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(38)(module)))
 
 /***/ }),
 /* 37 */
@@ -3429,11 +3429,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 // Context is a store with a bound elem?
 // Context is passed on to the module factory functions
-var _require = __webpack_require__(10),
+var _require = __webpack_require__(9),
     API = _require.API,
     methods = _require.methods;
 
-var _require2 = __webpack_require__(11),
+var _require2 = __webpack_require__(10),
     logger = _require2.logger,
     debugMode = _require2.debugMode;
 
@@ -3475,7 +3475,7 @@ module.exports = Context;
 "use strict";
 
 
-var _require = __webpack_require__(4),
+var _require = __webpack_require__(18),
     createStore = _require.createStore,
     combineReducers = _require.combineReducers;
 
@@ -3549,7 +3549,7 @@ module.exports = state;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var R = __webpack_require__(13);
+var R = __webpack_require__(12);
 
 function _resetState() {
   return Object.assign({}, { services: [], serviceInit: [], modules: [], moduleRefs: [], plugins: [] });
@@ -3689,7 +3689,7 @@ module.exports = { stackState: stackState, stackFunctions: { updateStack: update
  * @author Carlos Moran
  */
 
-var app = __webpack_require__(14);
+var app = __webpack_require__(13);
 
 var previousEXMS = void 0;
 
