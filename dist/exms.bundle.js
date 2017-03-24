@@ -214,6 +214,8 @@ module.exports = encode;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _mitt = __webpack_require__(7);
 
 var _mitt2 = _interopRequireDefault(_mitt);
@@ -223,7 +225,36 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var emitter = (0, _mitt2.default)();
-var emitterAPI = Object.assign({}, emitter);
+var emitterAPI = Object.assign({
+  //  Adapter for T3 users
+  onmessage: function onmessage(fn) {
+    var msgs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+    var handler = void 0,
+        handlers = [];
+    if (typeof fn === 'function') {
+      handler = function (fn, msgs) {
+        return function (type, data) {
+          var index = msgs.indexOf(type);
+          if (index !== -1) {
+            fn(type, data);
+          } else {
+            fn(type, data);
+          }
+        };
+      }(fn, msgs);
+      debugger;
+      this.on('*', handler);
+    } else {
+      if ((typeof fn === 'undefined' ? 'undefined' : _typeof(fn)) === 'object') {
+        for (var _handler in fn) {
+          debugger;
+          this.on(_handler, fn[_handler]);
+        }
+      }
+    }
+  }
+}, emitter);
 
 var API = function () {
   function API() {
@@ -1556,6 +1587,7 @@ var _require = __webpack_require__(18),
 var Context = __webpack_require__(16);
 
 var _require2 = __webpack_require__(2),
+    API = _require2.API,
     emitterAPI = _require2.emitterAPI;
 
 var _require3 = __webpack_require__(3),
@@ -1699,6 +1731,13 @@ var app = {
       if (exmodule && exmodule['fn']) {
         var moduleFn = exmodule['fn'](context);
         if (typeof moduleFn !== 'undefined') {
+          if (moduleFn['onmessage']) {
+            emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
+          }
+          //  messages
+          // message filter?
+          //  onmessage ?
+          // message delegation
           _this3.stacks = { type: 'moduleRefs', name: name, fn: moduleFn }; // fn should have lifecyle methods?
         }
       }

@@ -3,7 +3,7 @@ let util = require('./util');
 let GState = require('./general-state');
 const {stackState, stackFunctions} = require('./stacks-state'); // no redux here
 let Context = require('./context');
-let {emitterAPI} = require('./events');
+let {API, emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
 
 let app = {
@@ -109,6 +109,13 @@ let app = {
       if(exmodule && exmodule['fn']) {
         let moduleFn = exmodule['fn'](context);
         if (typeof moduleFn !== 'undefined') {
+          if(moduleFn['onmessage']) {
+            emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
+          }
+          //  messages
+            // message filter?
+          //  onmessage ?
+            // message delegation
           this.stacks = {type: 'moduleRefs', name, fn:moduleFn};  // fn should have lifecyle methods?
         }
       }

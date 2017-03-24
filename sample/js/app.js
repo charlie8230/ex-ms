@@ -14,6 +14,19 @@ EXMS.stacks = {name:'hi',fn:function(ctx){console.log('module');
     }
   };
 },type:'modules'};
+EXMS.stacks = {name:'msg',fn:function(ctx){
+  log('testing msg on return');
+  return {
+    init() {
+      log('init!')
+      log(ctx.el.id);
+    },
+    messages: ['helloMSG'],
+    onmessage(name, data){
+      log(name, data);
+    }
+  };
+},type:'modules'};
 EXMS.stacks = {name:'list',fn:function(ctx){
   let msg = 'HI!!';
   window.ctx=ctx;
