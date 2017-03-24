@@ -5,9 +5,12 @@ let {logger, debugMode}  = require('./logger');
 
 class Context extends API{
   constructor(elem, App, util) {
+    let id = elem.id || '',
+        shortid = util.shortid.generate(),
+        _id = id || shortid;
     super();
     this.el = this.elem = elem;
-    this._id = util.shortid.generate();
+    this._id = _id;
     this.el.id = `module-${this._id}`;
     this.status = 'created';
     this.getService = App.getService.bind(App);

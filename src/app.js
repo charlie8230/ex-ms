@@ -5,7 +5,7 @@ const {stackState, stackFunctions} = require('./stacks-state'); // no redux here
 let Context = require('./context');
 let {emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
-window.R = R;
+
 let app = {
   globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
   get stacks(){
@@ -44,6 +44,7 @@ let app = {
     let all = this.stacks['moduleRefs'];
     all.forEach(m=>{
       m && m.fn && m.fn['init'] && m.fn['init']();
+      log(m, 'init');
     });
   },
   getService(name=''){

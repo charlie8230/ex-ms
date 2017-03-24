@@ -14,7 +14,7 @@ function _resetState(){
 let STATE = _resetState();
 
 function _getState(){
-  return state;
+  return STATE;
 }
 
 function registerItem(name, fn, itemType, api) {
@@ -103,7 +103,7 @@ let stackState = {
     dispatch(item||{});
   },
   get stack() {
-    let {stack} = getState()||{}; 
+    let stack = _getState()||{}; 
     return stack;
   }
 };

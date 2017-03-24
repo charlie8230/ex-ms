@@ -4,7 +4,7 @@ Todo
   import mitt from 'mitt'
 
   let emitter = mitt()
-
+  -- Behavior 
   Redo store - using ramda -> models? -> views
   Add - onmessage -> listen to all messages? (add to ctx)
   Store - get? - ok

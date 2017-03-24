@@ -1,1 +1,2303 @@
-!function(t,n){"object"==typeof exports&&"object"==typeof module?module.exports=n():"function"==typeof define&&define.amd?define([],n):"object"==typeof exports?exports.EXMS=n():t.EXMS=n()}(this,function(){return function(t){function n(r){if(e[r])return e[r].exports;var o=e[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}var e={};return n.m=t,n.c=e,n.i=function(t){return t},n.d=function(t,e,r){n.o(t,e)||Object.defineProperty(t,e,{configurable:!1,enumerable:!0,get:r})},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="",n(n.s=19)}([function(t,n,e){"use strict";function r(){p=!1}function o(t){if(!t)return void(a!==y&&(a=y,r()));if(t!==a){if(t.length!==y.length)throw new Error("Custom alphabet for shortid must be "+y.length+" unique characters. You submitted "+t.length+" characters: "+t);var n=t.split("").filter(function(t,n,e){return n!==e.lastIndexOf(t)});if(n.length)throw new Error("Custom alphabet for shortid must be "+y.length+" unique characters. These characters were not unique: "+n.join(", "));a=t,r()}}function u(t){return o(t),a}function i(t){d.seed(t),l!==t&&(r(),l=t)}function c(){a||o(y);for(var t,n=a.split(""),e=[],r=d.nextValue();n.length>0;)r=d.nextValue(),t=Math.floor(r*n.length),e.push(n.splice(t,1)[0]);return e.join("")}function f(){return p?p:p=c()}function s(t){var n=f();return n[t]}var a,l,p,d=e(14),y="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";t.exports={characters:u,seed:i,lookup:s,shuffled:f}},function(t,n,e){"use strict";function r(t,n){for(var e,r=0,u="";!e;)u+=t(n>>4*r&15|o()),e=n<Math.pow(16,r+1),r++;return u}var o=e(13);t.exports=r},function(t,n,e){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}function o(t,n){if(!(t instanceof n))throw new TypeError("Cannot call a class as a function")}var u=function(){function t(t,n){for(var e=0;e<n.length;e++){var r=n[e];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}return function(n,e,r){return e&&t(n.prototype,e),r&&t(n,r),n}}(),i=e(7),c=r(i),f=(0,c.default)(),s=Object.assign({},f),a=function(){function t(){o(this,t)}return u(t,[{key:"on",value:function(t,n){f.on(t,n)}},{key:"off",value:function(t,n){f.off(t,n)}},{key:"emit",value:function(t,n){f.emit(t,n)}},{key:"trigger",value:function(){for(var t=arguments.length,n=Array(t),e=0;e<t;e++)n[e]=arguments[e];this.emit(n)}}]),t}();t.exports={API:a,emitterAPI:s}},function(t,n,e){"use strict";var r=e(4),o=r.getQueryVariable,u=o("debug")||o("debugger"),i=u?console:function(){},c=i.log=u?console.log:function(){};t.exports={logger:i,log:c,debugMode:u}},function(t,n,e){"use strict";function r(t){for(var n=window.location.search.substring(1),e=n.split("&"),r=0;r<e.length;r++){var o=e[r].split("=");if(o[0]==t)return o[1]}return!1}var o=e(8);t.exports={shortid:o,getQueryVariable:r}},function(t,n,e){"use strict";var r,o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t};(function(){var u=function(t,n){switch(t){case 0:return function(){return n.apply(this,arguments)};case 1:return function(t){return n.apply(this,arguments)};case 2:return function(t,e){return n.apply(this,arguments)};case 3:return function(t,e,r){return n.apply(this,arguments)};case 4:return function(t,e,r,o){return n.apply(this,arguments)};case 5:return function(t,e,r,o,u){return n.apply(this,arguments)};case 6:return function(t,e,r,o,u,i){return n.apply(this,arguments)};case 7:return function(t,e,r,o,u,i,c){return n.apply(this,arguments)};case 8:return function(t,e,r,o,u,i,c,f){return n.apply(this,arguments)};case 9:return function(t,e,r,o,u,i,c,f,s){return n.apply(this,arguments)};case 10:return function(t,e,r,o,u,i,c,f,s,a){return n.apply(this,arguments)};default:throw new Error("First argument to _arity must be a non-negative integer no greater than ten")}},i=function(t){return{"@@transducer/value":t,"@@transducer/reduced":!0}},c=function(t,n){return Object.prototype.hasOwnProperty.call(n,t)},f=function(){var t=Object.prototype.toString;return"[object Arguments]"===t.call(arguments)?function(n){return"[object Arguments]"===t.call(n)}:function(t){return c("callee",t)}}(),s=Array.isArray||function(t){return null!=t&&t.length>=0&&"[object Array]"===Object.prototype.toString.call(t)},a=function(t){return null!=t&&"object"===("undefined"==typeof t?"undefined":o(t))&&t["@@functional/placeholder"]===!0},l=function(t){return"[object String]"===Object.prototype.toString.call(t)},p=function(t){return"function"==typeof t["@@transducer/step"]},d=function(t,n){for(var e=0,r=n.length,o=Array(r);e<r;)o[e]=t(n[e]),e+=1;return o},y=function(t,n){return function(){return n.call(this,t.apply(this,arguments))}},h={init:function(){return this.xf["@@transducer/init"]()},result:function(t){return this.xf["@@transducer/result"](t)}},g=function(){function t(t){this.f=t}return t.prototype["@@transducer/init"]=function(){throw new Error("init not implemented on XWrap")},t.prototype["@@transducer/result"]=function(t){return t},t.prototype["@@transducer/step"]=function(t,n){return this.f(t,n)},function(n){return new t(n)}}(),v=function(t,n){return function(){var e=arguments.length;if(0===e)return n();var r=arguments[e-1];return s(r)||"function"!=typeof r[t]?n.apply(this,arguments):r[t].apply(r,Array.prototype.slice.call(arguments,0,e-1))}},b=function(t){return function n(e){return 0===arguments.length||a(e)?n:t.apply(this,arguments)}},m=function(t){return function n(e,r){switch(arguments.length){case 0:return n;case 1:return a(e)?n:b(function(n){return t(e,n)});default:return a(e)&&a(r)?n:a(e)?b(function(n){return t(n,r)}):a(r)?b(function(n){return t(e,n)}):t(e,r)}}},w=function(t){return function n(e,r,o){switch(arguments.length){case 0:return n;case 1:return a(e)?n:m(function(n,r){return t(e,n,r)});case 2:return a(e)&&a(r)?n:a(e)?m(function(n,e){return t(n,r,e)}):a(r)?m(function(n,r){return t(e,n,r)}):b(function(n){return t(e,r,n)});default:return a(e)&&a(r)&&a(o)?n:a(e)&&a(r)?m(function(n,e){return t(n,e,o)}):a(e)&&a(o)?m(function(n,e){return t(n,r,e)}):a(r)&&a(o)?m(function(n,r){return t(e,n,r)}):a(e)?b(function(n){return t(n,r,o)}):a(r)?b(function(n){return t(e,n,o)}):a(o)?b(function(n){return t(e,r,n)}):t(e,r,o)}}},S=function t(n,e,r){return function(){for(var o=[],i=0,c=n,f=0;f<e.length||i<arguments.length;){var s;f<e.length&&(!a(e[f])||i>=arguments.length)?s=e[f]:(s=arguments[i],i+=1),o[f]=s,a(s)||(c-=1),f+=1}return c<=0?r.apply(this,o):u(c,t(n,o,r))}},j=function(t,n,e){return function(){if(0===arguments.length)return e();var r=Array.prototype.slice.call(arguments,0),o=r.pop();if(!s(o)){for(var u=0;u<t.length;){if("function"==typeof o[t[u]])return o[t[u]].apply(o,r);u+=1}if(p(o)){var i=n.apply(null,r);return i(o)}}return e.apply(this,arguments)}},x=function(){function t(t,n){this.xf=n,this.f=t}return t.prototype["@@transducer/init"]=h.init,t.prototype["@@transducer/result"]=h.result,t.prototype["@@transducer/step"]=function(t,n){return this.xf["@@transducer/step"](t,this.f(n))},m(function(n,e){return new t(n,e)})}(),O=b(function(t){return function(){return t}}),k=w(function(t,n,e){var r={};for(var o in e)r[o]=e[o];return r[t]=n,r}),E=m(function(t,n){return u(t.length,function(){return t.apply(n,arguments)})}),A=m(function(t,n){return 1===t?b(n):u(t,S(t,[],n))}),M=b(function(t){return!!s(t)||!!t&&("object"===("undefined"==typeof t?"undefined":o(t))&&(!l(t)&&(1===t.nodeType?!!t.length:0===t.length||t.length>0&&(t.hasOwnProperty(0)&&t.hasOwnProperty(t.length-1)))))}),I=function(){var t=!{toString:null}.propertyIsEnumerable("toString"),n=["constructor","valueOf","isPrototypeOf","toString","propertyIsEnumerable","hasOwnProperty","toLocaleString"],e=function(){return arguments.propertyIsEnumerable("length")}(),r=function(t,n){for(var e=0;e<t.length;){if(t[e]===n)return!0;e+=1}return!1};return b("function"!=typeof Object.keys||e?function(o){if(Object(o)!==o)return[];var u,i,s=[],a=e&&f(o);for(u in o)!c(u,o)||a&&"length"===u||(s[s.length]=u);if(t)for(i=n.length-1;i>=0;)u=n[i],c(u,o)&&!r(s,u)&&(s[s.length]=u),i-=1;return s}:function(t){return Object(t)!==t?[]:Object.keys(t)})}(),_=function(){var t=function t(n){return{value:n,map:function(e){return t(e(n))}}};return w(function(n,e,r){return n(function(n){return t(e(n))})(r).value})}(),R=m(function(t,n){return n[t]}),P=b(function(t){return l(t)?t.split("").reverse().join(""):Array.prototype.slice.call(t,0).reverse()}),T=w(function(t,n,e){return _(t,O(n),e)}),C=w(v("slice",function(t,n,e){return Array.prototype.slice.call(e,t,n)})),V=b(v("tail",C(1,1/0))),D=w(function(t,n,e){return t(e)?n(e):e}),F=function(t){return function n(e){for(var r,o,u,i=[],c=0,f=e.length;c<f;){if(M(e[c]))for(r=t?n(e[c]):e[c],u=0,o=r.length;u<o;)i[i.length]=r[u],u+=1;else i[i.length]=e[c];c+=1}return i}},G=function(){function t(t,n,e){for(var r=0,o=e.length;r<o;){if(n=t["@@transducer/step"](n,e[r]),n&&n["@@transducer/reduced"]){n=n["@@transducer/value"];break}r+=1}return t["@@transducer/result"](n)}function n(t,n,e){for(var r=e.next();!r.done;){if(n=t["@@transducer/step"](n,r.value),n&&n["@@transducer/reduced"]){n=n["@@transducer/value"];break}r=e.next()}return t["@@transducer/result"](n)}function e(t,n,e){return t["@@transducer/result"](e.reduce(E(t["@@transducer/step"],t),n))}var r="undefined"!=typeof Symbol?Symbol.iterator:"@@iterator";return function(o,u,i){if("function"==typeof o&&(o=g(o)),M(i))return t(o,u,i);if("function"==typeof i.reduce)return e(o,u,i);if(null!=i[r])return n(o,u,i[r]());if("function"==typeof i.next)return n(o,u,i);throw new TypeError("reduce: list must be array or iterable")}}(),q=b(function(t){return A(t.length,t)}),X=m(j(["map"],x,function(t,n){switch(Object.prototype.toString.call(n)){case"[object Function]":return A(n.length,function(){return t.call(this,n.apply(this,arguments))});case"[object Object]":return G(function(e,r){return e[r]=t(n[r]),e},{},I(n));default:return d(t,n)}})),N=w(G),K=function(){var t=function(t){return{"@@transducer/init":h.init,"@@transducer/result":function(n){return t["@@transducer/result"](n)},"@@transducer/step":function(n,e){var r=t["@@transducer/step"](n,e);return r["@@transducer/reduced"]?i(r):r}}};return function(n){var e=t(n);return{"@@transducer/init":h.init,"@@transducer/result":function(t){return e["@@transducer/result"](t)},"@@transducer/step":function(t,n){return M(n)?G(e,t,n):G(e,t,[n])}}}}(),L=m(function(t,n){return X(t,K(n))}),Q=m(j(["chain"],L,function(t,n){return"function"==typeof n?function(e){return t(n(e))(e)}:F(!1)(X(t,n))})),U=m(function(t,n){return function(e){return function(r){return X(function(t){return n(t,r)},e(t(r)))}}}),W=b(function(t){return U(R(t),k(t))}),Y=function(){if(0===arguments.length)throw new Error("pipe requires at least one argument");return u(arguments[0].length,N(y,arguments[0],V(arguments)))},z=function(){if(0===arguments.length)throw new Error("compose requires at least one argument");return Y.apply(this,P(arguments))},B={chain:Q,compose:z,curry:q,lens:U,lensProp:W,pipe:Y,set:T,when:D};"object"===o(n)?t.exports=B:(r=function(){return B}.call(n,e,n,t),!(void 0!==r&&(t.exports=r)))}).call(void 0)},function(t,n,e){"use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},o=e(5),u=e(4),i=e(17),c=e(18),f=c.stackState,s=c.stackFunctions,a=e(16),l=e(2),p=l.emitterAPI,d=e(3),y=d.logger,h=d.log,g=d.debugMode;window.R=o;var v={globalConfig:new i({debugger:g,initCompleted:!1,moduleSelector:"[data-module]"}),get stacks(){return f&&f.stack||{}},set stacks(t){f.stack=t},get config(){return this.globalConfig.config},set config(t){this.globalConfig.set(t)},init:function(t){this.globalConfig.set(t)},logger:y,getElements:function(){return document.querySelectorAll(this.config.moduleSelector)},getModuleName:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"",e=n.replace(/[\[\]]/g,"");return t?t&&t.attributes&&t.attributes[e]&&t.attributes[e].value:t},getModule:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"";return(this.stacks.modules||[]).reduce(function(n,e){return e.name===t&&e||n})},addService:s.addToStack("services"),addModule:s.addToStack("modules"),startAll:function(){var t=this.stacks.moduleRefs;t.forEach(function(t){t&&t.fn&&t.fn.init&&t.fn.init()})},getService:function(){var t=this,n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e=this.stacks.services.reduce(function(t,e){return e.name===n&&e||t}),o=void 0;if(e){var u=function(){if("api"in e)return h("Got ",e.name," already"),{v:e.api};var n=e.name,r=t.stacks.serviceInit;if(r.length>5)return h("too deep"),{v:void 0};var u=r.some(function(t){return t.name===n});return u?(h("Found a circular ref!",n),{v:void 0}):(h("No circular refs",n),t.stacks={type:"serviceInitAdd",name:n},o=e.fn(t),t.stacks={type:"serviceInitDone",name:n},h(t.stacks.serviceInit),Object.assign(e,{api:o,type:"services"}),{v:o})}();if("object"===("undefined"==typeof u?"undefined":r(u)))return u.v}},asSubModule:function(){},runStart:function(){this.setupModules(),this.startAll()},startModules:function(t){var n=this;t?this.on(t,function(){n.runStart()}):this.runStart()},setupModules:function(){var t=this;if(this.config.initCompleted)return void h("Global Init already done - exit!");var n=this.getElements();n.forEach(function(n){var e=t.getModuleName(n,t.config.moduleSelector);if(e){var r=t.getModule(e),o=new a(n,t,u);if(r&&r.fn){var i=r.fn(o);"undefined"!=typeof i&&(t.stacks={type:"moduleRefs",name:e,fn:i})}}}),this.config={initCompleted:!0}}};Object.assign(v,p),t.exports=v},function(t,n,e){"use strict";function r(t){function n(n){var e=n.toLowerCase();return t[e]||(t[e]=[])}return t=t||{},{on:function(t,e){n(t).push(e)},off:function(t,e){var r=n(t),o=r.indexOf(e);~o&&r.splice(o,1)},emit:function(t,e){n("*").concat(n(t)).forEach(function(t){t(e)})}}}t.exports=r},function(t,n,e){"use strict";t.exports=e(11)},function(t,n,e){"use strict";function r(t){var n="",e=Math.floor(.001*(Date.now()-f));return e===u?o++:(o=0,u=e),n+=i(c.lookup,s),n+=i(c.lookup,t),o>0&&(n+=i(c.lookup,o)),n+=i(c.lookup,e)}var o,u,i=e(1),c=e(0),f=1459707606518,s=6;t.exports=r},function(t,n,e){"use strict";function r(t){var n=o.shuffled();return{version:15&n.indexOf(t.substr(0,1)),worker:15&n.indexOf(t.substr(1,1))}}var o=e(0);t.exports=r},function(t,n,e){"use strict";function r(n){return c.seed(n),t.exports}function o(n){return l=n,t.exports}function u(t){return void 0!==t&&c.characters(t),c.shuffled()}function i(){return s(l)}var c=e(0),f=(e(1),e(10)),s=e(9),a=e(12),l=e(15)||0;t.exports=i,t.exports.generate=i,t.exports.seed=r,t.exports.worker=o,t.exports.characters=u,t.exports.decode=f,t.exports.isValid=a},function(t,n,e){"use strict";function r(t){if(!t||"string"!=typeof t||t.length<6)return!1;for(var n=o.characters(),e=t.length,r=0;r<e;r++)if(n.indexOf(t[r])===-1)return!1;return!0}var o=e(0);t.exports=r},function(t,n,e){"use strict";function r(){if(!u||!u.getRandomValues)return 48&Math.floor(256*Math.random());var t=new Uint8Array(1);return u.getRandomValues(t),48&t[0]}var o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},u="object"===("undefined"==typeof window?"undefined":o(window))&&(window.crypto||window.msCrypto);t.exports=r},function(t,n,e){"use strict";function r(){return u=(9301*u+49297)%233280,u/233280}function o(t){u=t}var u=1;t.exports={nextValue:r,seed:o}},function(t,n,e){"use strict";t.exports=0},function(t,n,e){"use strict";function r(t,n){if(!(t instanceof n))throw new TypeError("Cannot call a class as a function")}function o(t,n){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!n||"object"!=typeof n&&"function"!=typeof n?t:n}function u(t,n){if("function"!=typeof n&&null!==n)throw new TypeError("Super expression must either be null or a function, not "+typeof n);t.prototype=Object.create(n&&n.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),n&&(Object.setPrototypeOf?Object.setPrototypeOf(t,n):t.__proto__=n)}var i=function(){function t(t,n){for(var e=0;e<n.length;e++){var r=n[e];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}return function(n,e,r){return e&&t(n.prototype,e),r&&t(n,r),n}}(),c=e(2),f=c.API,s=(c.methods,e(3)),a=(s.logger,s.debugMode,function(t){function n(t,e,u){r(this,n);var i=o(this,(n.__proto__||Object.getPrototypeOf(n)).call(this));return i.el=i.elem=t,i._id=u.shortid.generate(),i.el.id="module-"+i._id,i.status="created",i.getService=e.getService.bind(e),i.getSubModule=e.asSubModule.bind(e),i}return u(n,t),i(n,[{key:"destroy",value:function(){this.el=null,this.status=null}}]),n}(f));t.exports=a},function(t,n,e){"use strict";function r(t){return t?Object.assign({},c,t):{}}function o(t){c=r(t)}function u(){return c}function i(){function t(t){o(t)}function n(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:void 0,n=u();return t?n[t]:n}var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};return t(e),{get:n,set:t,set config(t){o(t)},get config(){return u()}}}var c={};t.exports=i},function(t,n,e){"use strict";function r(t){if(Array.isArray(t)){for(var n=0,e=Array(t.length);n<t.length;n++)e[n]=t[n];return e}return Array.from(t)}function o(){return Object.assign({},{services:[],serviceInit:[],modules:[],moduleRefs:[],plugins:[]})}function u(t,n,e,r){var o="REGISTER";switch(e){case"serviceInitDone":console.log("Removing Service",t),o="REMOVE_FROM_SVC_STACK",e="serviceInit";break;case"serviceInitAdd":console.log("adding service",t),o="REGISTER",e="serviceInit";break;case"services":o="undefined"==typeof r?"REGISTER":"ADD_API"}return{type:o,itemType:e,name:t,fn:n}}function i(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},n=arguments[1];switch(n.type){case"REGISTER":return{name:n.name,fn:n.fn,itemType:n.itemType};case"ADD_API":return Object.assign({},t,{api:n.api});default:return t}}function c(t,n){var e=n.itemType,o=n.type,u=n.name,c={};if(!e)return t;switch(o){case"REMOVE_FROM_SVC_STACK":return c.serviceInit=(t.serviceInit||[]).filter(function(t){return t.name!==u}),Object.assign({},t,c);case"ADD_API":return c[e]=[(t[e]||[]).map(function(t){return t.name===u?i(t,n):t})],Object.assign({},t,c);case"REGISTER":return c[e]=[].concat(r(t[e]||[]),[i(void 0,n)]),Object.assign({},t,c);default:return t}}function f(t){var n=t.name,e=t.fn,r=t.type,o=t.api,i=u(n,e,r,o);p=c(p,i)}function s(t,n,e){d.stack={type:t,name:n,fn:e}}function a(){return l.curry(s)}var l=e(5),p=o(),d={set stack(t){f(t||{})},get stack(){var t=getState()||{},n=t.stack;return n}};t.exports={stackState:d,stackFunctions:{updateStack:s,addToStack:a}}},function(t,n,e){"use strict";var r=e(6),o=void 0,u=Object.assign(r,{noConflict:function(){return window.EXMS=o,this}});window.EXMS&&(o=window.EXMS),t.exports=u}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["EXMS"] = factory();
+	else
+		root["EXMS"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var randomFromSeed = __webpack_require__(14);
+
+var ORIGINAL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
+var alphabet;
+var previousSeed;
+
+var shuffled;
+
+function reset() {
+    shuffled = false;
+}
+
+function setCharacters(_alphabet_) {
+    if (!_alphabet_) {
+        if (alphabet !== ORIGINAL) {
+            alphabet = ORIGINAL;
+            reset();
+        }
+        return;
+    }
+
+    if (_alphabet_ === alphabet) {
+        return;
+    }
+
+    if (_alphabet_.length !== ORIGINAL.length) {
+        throw new Error('Custom alphabet for shortid must be ' + ORIGINAL.length + ' unique characters. You submitted ' + _alphabet_.length + ' characters: ' + _alphabet_);
+    }
+
+    var unique = _alphabet_.split('').filter(function (item, ind, arr) {
+        return ind !== arr.lastIndexOf(item);
+    });
+
+    if (unique.length) {
+        throw new Error('Custom alphabet for shortid must be ' + ORIGINAL.length + ' unique characters. These characters were not unique: ' + unique.join(', '));
+    }
+
+    alphabet = _alphabet_;
+    reset();
+}
+
+function characters(_alphabet_) {
+    setCharacters(_alphabet_);
+    return alphabet;
+}
+
+function setSeed(seed) {
+    randomFromSeed.seed(seed);
+    if (previousSeed !== seed) {
+        reset();
+        previousSeed = seed;
+    }
+}
+
+function shuffle() {
+    if (!alphabet) {
+        setCharacters(ORIGINAL);
+    }
+
+    var sourceArray = alphabet.split('');
+    var targetArray = [];
+    var r = randomFromSeed.nextValue();
+    var characterIndex;
+
+    while (sourceArray.length > 0) {
+        r = randomFromSeed.nextValue();
+        characterIndex = Math.floor(r * sourceArray.length);
+        targetArray.push(sourceArray.splice(characterIndex, 1)[0]);
+    }
+    return targetArray.join('');
+}
+
+function getShuffled() {
+    if (shuffled) {
+        return shuffled;
+    }
+    shuffled = shuffle();
+    return shuffled;
+}
+
+/**
+ * lookup shuffled letter
+ * @param index
+ * @returns {string}
+ */
+function lookup(index) {
+    var alphabetShuffled = getShuffled();
+    return alphabetShuffled[index];
+}
+
+module.exports = {
+    characters: characters,
+    seed: setSeed,
+    lookup: lookup,
+    shuffled: getShuffled
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var randomByte = __webpack_require__(13);
+
+function encode(lookup, number) {
+    var loopCounter = 0;
+    var done;
+
+    var str = '';
+
+    while (!done) {
+        str = str + lookup(number >> 4 * loopCounter & 0x0f | randomByte());
+        done = number < Math.pow(16, loopCounter + 1);
+        loopCounter++;
+    }
+    return str;
+}
+
+module.exports = encode;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _mitt = __webpack_require__(7);
+
+var _mitt2 = _interopRequireDefault(_mitt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var emitter = (0, _mitt2.default)();
+var emitterAPI = Object.assign({}, emitter);
+
+var API = function () {
+  function API() {
+    _classCallCheck(this, API);
+  }
+
+  _createClass(API, [{
+    key: 'on',
+    value: function on(msg, handler) {
+      emitter.on(msg, handler);
+    }
+  }, {
+    key: 'off',
+    value: function off(msg, handler) {
+      emitter.off(msg, handler);
+    }
+  }, {
+    key: 'emit',
+    value: function emit(msg, data) {
+      emitter.emit(msg, data);
+    }
+  }, {
+    key: 'trigger',
+    value: function trigger() {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      this.emit(args);
+    }
+  }]);
+
+  return API;
+}();
+
+module.exports = { API: API, emitterAPI: emitterAPI };
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(4),
+    getQueryVariable = _require.getQueryVariable;
+
+var debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
+var logger = debugMode ? console : function () {};
+var log = logger.log = debugMode ? console.log : function () {};
+module.exports = { logger: logger, log: log, debugMode: debugMode };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var shortid = __webpack_require__(8);
+function getQueryVariable(variable) {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i = 0; i < vars.length; i++) {
+              var pair = vars[i].split("=");
+              if (pair[0] == variable) {
+                     return pair[1];
+              }
+       }
+       return false;
+}
+module.exports = { shortid: shortid, getQueryVariable: getQueryVariable };
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+;(function () {
+
+    'use strict';
+
+    /* eslint-disable no-unused-vars */
+
+    var _arity = function _arity(n, fn) {
+        /* eslint-disable no-unused-vars */
+        switch (n) {
+            case 0:
+                return function () {
+                    return fn.apply(this, arguments);
+                };
+            case 1:
+                return function (a0) {
+                    return fn.apply(this, arguments);
+                };
+            case 2:
+                return function (a0, a1) {
+                    return fn.apply(this, arguments);
+                };
+            case 3:
+                return function (a0, a1, a2) {
+                    return fn.apply(this, arguments);
+                };
+            case 4:
+                return function (a0, a1, a2, a3) {
+                    return fn.apply(this, arguments);
+                };
+            case 5:
+                return function (a0, a1, a2, a3, a4) {
+                    return fn.apply(this, arguments);
+                };
+            case 6:
+                return function (a0, a1, a2, a3, a4, a5) {
+                    return fn.apply(this, arguments);
+                };
+            case 7:
+                return function (a0, a1, a2, a3, a4, a5, a6) {
+                    return fn.apply(this, arguments);
+                };
+            case 8:
+                return function (a0, a1, a2, a3, a4, a5, a6, a7) {
+                    return fn.apply(this, arguments);
+                };
+            case 9:
+                return function (a0, a1, a2, a3, a4, a5, a6, a7, a8) {
+                    return fn.apply(this, arguments);
+                };
+            case 10:
+                return function (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
+                    return fn.apply(this, arguments);
+                };
+            default:
+                throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
+        }
+    };
+
+    var _forceReduced = function _forceReduced(x) {
+        return {
+            '@@transducer/value': x,
+            '@@transducer/reduced': true
+        };
+    };
+
+    var _has = function _has(prop, obj) {
+        return Object.prototype.hasOwnProperty.call(obj, prop);
+    };
+
+    var _isArguments = function () {
+        var toString = Object.prototype.toString;
+        return toString.call(arguments) === '[object Arguments]' ? function _isArguments(x) {
+            return toString.call(x) === '[object Arguments]';
+        } : function _isArguments(x) {
+            return _has('callee', x);
+        };
+    }();
+
+    /**
+     * Tests whether or not an object is an array.
+     *
+     * @private
+     * @param {*} val The object to test.
+     * @return {Boolean} `true` if `val` is an array, `false` otherwise.
+     * @example
+     *
+     *      _isArray([]); //=> true
+     *      _isArray(null); //=> false
+     *      _isArray({}); //=> false
+     */
+    var _isArray = Array.isArray || function _isArray(val) {
+        return val != null && val.length >= 0 && Object.prototype.toString.call(val) === '[object Array]';
+    };
+
+    var _isPlaceholder = function _isPlaceholder(a) {
+        return a != null && (typeof a === 'undefined' ? 'undefined' : _typeof(a)) === 'object' && a['@@functional/placeholder'] === true;
+    };
+
+    var _isString = function _isString(x) {
+        return Object.prototype.toString.call(x) === '[object String]';
+    };
+
+    var _isTransformer = function _isTransformer(obj) {
+        return typeof obj['@@transducer/step'] === 'function';
+    };
+
+    var _map = function _map(fn, functor) {
+        var idx = 0;
+        var len = functor.length;
+        var result = Array(len);
+        while (idx < len) {
+            result[idx] = fn(functor[idx]);
+            idx += 1;
+        }
+        return result;
+    };
+
+    var _pipe = function _pipe(f, g) {
+        return function () {
+            return g.call(this, f.apply(this, arguments));
+        };
+    };
+
+    var _xfBase = {
+        init: function init() {
+            return this.xf['@@transducer/init']();
+        },
+        result: function result(_result) {
+            return this.xf['@@transducer/result'](_result);
+        }
+    };
+
+    var _xwrap = function () {
+        function XWrap(fn) {
+            this.f = fn;
+        }
+        XWrap.prototype['@@transducer/init'] = function () {
+            throw new Error('init not implemented on XWrap');
+        };
+        XWrap.prototype['@@transducer/result'] = function (acc) {
+            return acc;
+        };
+        XWrap.prototype['@@transducer/step'] = function (acc, x) {
+            return this.f(acc, x);
+        };
+        return function _xwrap(fn) {
+            return new XWrap(fn);
+        };
+    }();
+
+    /**
+     * This checks whether a function has a [methodname] function. If it isn't an
+     * array it will execute that function otherwise it will default to the ramda
+     * implementation.
+     *
+     * @private
+     * @param {Function} fn ramda implemtation
+     * @param {String} methodname property to check for a custom implementation
+     * @return {Object} Whatever the return value of the method is.
+     */
+    var _checkForMethod = function _checkForMethod(methodname, fn) {
+        return function () {
+            var length = arguments.length;
+            if (length === 0) {
+                return fn();
+            }
+            var obj = arguments[length - 1];
+            return _isArray(obj) || typeof obj[methodname] !== 'function' ? fn.apply(this, arguments) : obj[methodname].apply(obj, Array.prototype.slice.call(arguments, 0, length - 1));
+        };
+    };
+
+    /**
+     * Optimized internal one-arity curry function.
+     *
+     * @private
+     * @category Function
+     * @param {Function} fn The function to curry.
+     * @return {Function} The curried function.
+     */
+    var _curry1 = function _curry1(fn) {
+        return function f1(a) {
+            if (arguments.length === 0 || _isPlaceholder(a)) {
+                return f1;
+            } else {
+                return fn.apply(this, arguments);
+            }
+        };
+    };
+
+    /**
+     * Optimized internal two-arity curry function.
+     *
+     * @private
+     * @category Function
+     * @param {Function} fn The function to curry.
+     * @return {Function} The curried function.
+     */
+    var _curry2 = function _curry2(fn) {
+        return function f2(a, b) {
+            switch (arguments.length) {
+                case 0:
+                    return f2;
+                case 1:
+                    return _isPlaceholder(a) ? f2 : _curry1(function (_b) {
+                        return fn(a, _b);
+                    });
+                default:
+                    return _isPlaceholder(a) && _isPlaceholder(b) ? f2 : _isPlaceholder(a) ? _curry1(function (_a) {
+                        return fn(_a, b);
+                    }) : _isPlaceholder(b) ? _curry1(function (_b) {
+                        return fn(a, _b);
+                    }) : fn(a, b);
+            }
+        };
+    };
+
+    /**
+     * Optimized internal three-arity curry function.
+     *
+     * @private
+     * @category Function
+     * @param {Function} fn The function to curry.
+     * @return {Function} The curried function.
+     */
+    var _curry3 = function _curry3(fn) {
+        return function f3(a, b, c) {
+            switch (arguments.length) {
+                case 0:
+                    return f3;
+                case 1:
+                    return _isPlaceholder(a) ? f3 : _curry2(function (_b, _c) {
+                        return fn(a, _b, _c);
+                    });
+                case 2:
+                    return _isPlaceholder(a) && _isPlaceholder(b) ? f3 : _isPlaceholder(a) ? _curry2(function (_a, _c) {
+                        return fn(_a, b, _c);
+                    }) : _isPlaceholder(b) ? _curry2(function (_b, _c) {
+                        return fn(a, _b, _c);
+                    }) : _curry1(function (_c) {
+                        return fn(a, b, _c);
+                    });
+                default:
+                    return _isPlaceholder(a) && _isPlaceholder(b) && _isPlaceholder(c) ? f3 : _isPlaceholder(a) && _isPlaceholder(b) ? _curry2(function (_a, _b) {
+                        return fn(_a, _b, c);
+                    }) : _isPlaceholder(a) && _isPlaceholder(c) ? _curry2(function (_a, _c) {
+                        return fn(_a, b, _c);
+                    }) : _isPlaceholder(b) && _isPlaceholder(c) ? _curry2(function (_b, _c) {
+                        return fn(a, _b, _c);
+                    }) : _isPlaceholder(a) ? _curry1(function (_a) {
+                        return fn(_a, b, c);
+                    }) : _isPlaceholder(b) ? _curry1(function (_b) {
+                        return fn(a, _b, c);
+                    }) : _isPlaceholder(c) ? _curry1(function (_c) {
+                        return fn(a, b, _c);
+                    }) : fn(a, b, c);
+            }
+        };
+    };
+
+    /**
+     * Internal curryN function.
+     *
+     * @private
+     * @category Function
+     * @param {Number} length The arity of the curried function.
+     * @param {Array} received An array of arguments received thus far.
+     * @param {Function} fn The function to curry.
+     * @return {Function} The curried function.
+     */
+    var _curryN = function _curryN(length, received, fn) {
+        return function () {
+            var combined = [];
+            var argsIdx = 0;
+            var left = length;
+            var combinedIdx = 0;
+            while (combinedIdx < received.length || argsIdx < arguments.length) {
+                var result;
+                if (combinedIdx < received.length && (!_isPlaceholder(received[combinedIdx]) || argsIdx >= arguments.length)) {
+                    result = received[combinedIdx];
+                } else {
+                    result = arguments[argsIdx];
+                    argsIdx += 1;
+                }
+                combined[combinedIdx] = result;
+                if (!_isPlaceholder(result)) {
+                    left -= 1;
+                }
+                combinedIdx += 1;
+            }
+            return left <= 0 ? fn.apply(this, combined) : _arity(left, _curryN(length, combined, fn));
+        };
+    };
+
+    /**
+     * Returns a function that dispatches with different strategies based on the
+     * object in list position (last argument). If it is an array, executes [fn].
+     * Otherwise, if it has a function with one of the given method names, it will
+     * execute that function (functor case). Otherwise, if it is a transformer,
+     * uses transducer [xf] to return a new transformer (transducer case).
+     * Otherwise, it will default to executing [fn].
+     *
+     * @private
+     * @param {Array} methodNames properties to check for a custom implementation
+     * @param {Function} xf transducer to initialize if object is transformer
+     * @param {Function} fn default ramda implementation
+     * @return {Function} A function that dispatches on object in list position
+     */
+    var _dispatchable = function _dispatchable(methodNames, xf, fn) {
+        return function () {
+            if (arguments.length === 0) {
+                return fn();
+            }
+            var args = Array.prototype.slice.call(arguments, 0);
+            var obj = args.pop();
+            if (!_isArray(obj)) {
+                var idx = 0;
+                while (idx < methodNames.length) {
+                    if (typeof obj[methodNames[idx]] === 'function') {
+                        return obj[methodNames[idx]].apply(obj, args);
+                    }
+                    idx += 1;
+                }
+                if (_isTransformer(obj)) {
+                    var transducer = xf.apply(null, args);
+                    return transducer(obj);
+                }
+            }
+            return fn.apply(this, arguments);
+        };
+    };
+
+    var _xmap = function () {
+        function XMap(f, xf) {
+            this.xf = xf;
+            this.f = f;
+        }
+        XMap.prototype['@@transducer/init'] = _xfBase.init;
+        XMap.prototype['@@transducer/result'] = _xfBase.result;
+        XMap.prototype['@@transducer/step'] = function (result, input) {
+            return this.xf['@@transducer/step'](result, this.f(input));
+        };
+        return _curry2(function _xmap(f, xf) {
+            return new XMap(f, xf);
+        });
+    }();
+
+    /**
+     * Returns a function that always returns the given value. Note that for
+     * non-primitives the value returned is a reference to the original value.
+     *
+     * This function is known as `const`, `constant`, or `K` (for K combinator) in
+     * other languages and libraries.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Function
+     * @sig a -> (* -> a)
+     * @param {*} val The value to wrap in a function
+     * @return {Function} A Function :: * -> val.
+     * @example
+     *
+     *      var t = R.always('Tee');
+     *      t(); //=> 'Tee'
+     */
+    var always = _curry1(function always(val) {
+        return function () {
+            return val;
+        };
+    });
+
+    /**
+     * Makes a shallow clone of an object, setting or overriding the specified
+     * property with the given value. Note that this copies and flattens prototype
+     * properties onto the new object as well. All non-primitive properties are
+     * copied by reference.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.8.0
+     * @category Object
+     * @sig String -> a -> {k: v} -> {k: v}
+     * @param {String} prop The property name to set
+     * @param {*} val The new value
+     * @param {Object} obj The object to clone
+     * @return {Object} A new object equivalent to the original except for the changed property.
+     * @see R.dissoc
+     * @example
+     *
+     *      R.assoc('c', 3, {a: 1, b: 2}); //=> {a: 1, b: 2, c: 3}
+     */
+    var assoc = _curry3(function assoc(prop, val, obj) {
+        var result = {};
+        for (var p in obj) {
+            result[p] = obj[p];
+        }
+        result[prop] = val;
+        return result;
+    });
+
+    /**
+     * Creates a function that is bound to a context.
+     * Note: `R.bind` does not provide the additional argument-binding capabilities of
+     * [Function.prototype.bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
+     *
+     * @func
+     * @memberOf R
+     * @since v0.6.0
+     * @category Function
+     * @category Object
+     * @sig (* -> *) -> {*} -> (* -> *)
+     * @param {Function} fn The function to bind to context
+     * @param {Object} thisObj The context to bind `fn` to
+     * @return {Function} A function that will execute in the context of `thisObj`.
+     * @see R.partial
+     * @example
+     *
+     *      var log = R.bind(console.log, console);
+     *      R.pipe(R.assoc('a', 2), R.tap(log), R.assoc('a', 3))({a: 1}); //=> {a: 3}
+     *      // logs {a: 2}
+     * @symb R.bind(f, o)(a, b) = f.call(o, a, b)
+     */
+    var bind = _curry2(function bind(fn, thisObj) {
+        return _arity(fn.length, function () {
+            return fn.apply(thisObj, arguments);
+        });
+    });
+
+    /**
+     * Returns a curried equivalent of the provided function, with the specified
+     * arity. The curried function has two unusual capabilities. First, its
+     * arguments needn't be provided one at a time. If `g` is `R.curryN(3, f)`, the
+     * following are equivalent:
+     *
+     *   - `g(1)(2)(3)`
+     *   - `g(1)(2, 3)`
+     *   - `g(1, 2)(3)`
+     *   - `g(1, 2, 3)`
+     *
+     * Secondly, the special placeholder value `R.__` may be used to specify
+     * "gaps", allowing partial application of any combination of arguments,
+     * regardless of their positions. If `g` is as above and `_` is `R.__`, the
+     * following are equivalent:
+     *
+     *   - `g(1, 2, 3)`
+     *   - `g(_, 2, 3)(1)`
+     *   - `g(_, _, 3)(1)(2)`
+     *   - `g(_, _, 3)(1, 2)`
+     *   - `g(_, 2)(1)(3)`
+     *   - `g(_, 2)(1, 3)`
+     *   - `g(_, 2)(_, 3)(1)`
+     *
+     * @func
+     * @memberOf R
+     * @since v0.5.0
+     * @category Function
+     * @sig Number -> (* -> a) -> (* -> a)
+     * @param {Number} length The arity for the returned function.
+     * @param {Function} fn The function to curry.
+     * @return {Function} A new, curried function.
+     * @see R.curry
+     * @example
+     *
+     *      var sumArgs = (...args) => R.sum(args);
+     *
+     *      var curriedAddFourNumbers = R.curryN(4, sumArgs);
+     *      var f = curriedAddFourNumbers(1, 2);
+     *      var g = f(3);
+     *      g(4); //=> 10
+     */
+    var curryN = _curry2(function curryN(length, fn) {
+        if (length === 1) {
+            return _curry1(fn);
+        }
+        return _arity(length, _curryN(length, [], fn));
+    });
+
+    /**
+     * Tests whether or not an object is similar to an array.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.5.0
+     * @category Type
+     * @category List
+     * @sig * -> Boolean
+     * @param {*} x The object to test.
+     * @return {Boolean} `true` if `x` has a numeric length property and extreme indices defined; `false` otherwise.
+     * @deprecated since v0.23.0
+     * @example
+     *
+     *      R.isArrayLike([]); //=> true
+     *      R.isArrayLike(true); //=> false
+     *      R.isArrayLike({}); //=> false
+     *      R.isArrayLike({length: 10}); //=> false
+     *      R.isArrayLike({0: 'zero', 9: 'nine', length: 10}); //=> true
+     */
+    var isArrayLike = _curry1(function isArrayLike(x) {
+        if (_isArray(x)) {
+            return true;
+        }
+        if (!x) {
+            return false;
+        }
+        if ((typeof x === 'undefined' ? 'undefined' : _typeof(x)) !== 'object') {
+            return false;
+        }
+        if (_isString(x)) {
+            return false;
+        }
+        if (x.nodeType === 1) {
+            return !!x.length;
+        }
+        if (x.length === 0) {
+            return true;
+        }
+        if (x.length > 0) {
+            return x.hasOwnProperty(0) && x.hasOwnProperty(x.length - 1);
+        }
+        return false;
+    });
+
+    /**
+     * Returns a list containing the names of all the enumerable own properties of
+     * the supplied object.
+     * Note that the order of the output array is not guaranteed to be consistent
+     * across different JS platforms.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Object
+     * @sig {k: v} -> [k]
+     * @param {Object} obj The object to extract properties from
+     * @return {Array} An array of the object's own properties.
+     * @example
+     *
+     *      R.keys({a: 1, b: 2, c: 3}); //=> ['a', 'b', 'c']
+     */
+    // cover IE < 9 keys issues
+    // Safari bug
+    var keys = function () {
+        // cover IE < 9 keys issues
+        var hasEnumBug = !{ toString: null }.propertyIsEnumerable('toString');
+        var nonEnumerableProps = ['constructor', 'valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+        // Safari bug
+        var hasArgsEnumBug = function () {
+            'use strict';
+
+            return arguments.propertyIsEnumerable('length');
+        }();
+        var contains = function contains(list, item) {
+            var idx = 0;
+            while (idx < list.length) {
+                if (list[idx] === item) {
+                    return true;
+                }
+                idx += 1;
+            }
+            return false;
+        };
+        return typeof Object.keys === 'function' && !hasArgsEnumBug ? _curry1(function keys(obj) {
+            return Object(obj) !== obj ? [] : Object.keys(obj);
+        }) : _curry1(function keys(obj) {
+            if (Object(obj) !== obj) {
+                return [];
+            }
+            var prop, nIdx;
+            var ks = [];
+            var checkArgsLength = hasArgsEnumBug && _isArguments(obj);
+            for (prop in obj) {
+                if (_has(prop, obj) && (!checkArgsLength || prop !== 'length')) {
+                    ks[ks.length] = prop;
+                }
+            }
+            if (hasEnumBug) {
+                nIdx = nonEnumerableProps.length - 1;
+                while (nIdx >= 0) {
+                    prop = nonEnumerableProps[nIdx];
+                    if (_has(prop, obj) && !contains(ks, prop)) {
+                        ks[ks.length] = prop;
+                    }
+                    nIdx -= 1;
+                }
+            }
+            return ks;
+        });
+    }();
+
+    /**
+     * Returns the result of "setting" the portion of the given data structure
+     * focused by the given lens to the result of applying the given function to
+     * the focused value.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.16.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig Lens s a -> (a -> a) -> s -> s
+     * @param {Lens} lens
+     * @param {*} v
+     * @param {*} x
+     * @return {*}
+     * @see R.prop, R.lensIndex, R.lensProp
+     * @example
+     *
+     *      var headLens = R.lensIndex(0);
+     *
+     *      R.over(headLens, R.toUpper, ['foo', 'bar', 'baz']); //=> ['FOO', 'bar', 'baz']
+     */
+    // `Identity` is a functor that holds a single value, where `map` simply
+    // transforms the held value with the provided function.
+    // The value returned by the getter function is first transformed with `f`,
+    // then set as the value of an `Identity`. This is then mapped over with the
+    // setter function of the lens.
+    var over = function () {
+        // `Identity` is a functor that holds a single value, where `map` simply
+        // transforms the held value with the provided function.
+        var Identity = function Identity(x) {
+            return {
+                value: x,
+                map: function map(f) {
+                    return Identity(f(x));
+                }
+            };
+        };
+        return _curry3(function over(lens, f, x) {
+            // The value returned by the getter function is first transformed with `f`,
+            // then set as the value of an `Identity`. This is then mapped over with the
+            // setter function of the lens.
+            return lens(function (y) {
+                return Identity(f(y));
+            })(x).value;
+        });
+    }();
+
+    /**
+     * Returns a function that when supplied an object returns the indicated
+     * property of that object, if it exists.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Object
+     * @sig s -> {s: a} -> a | Undefined
+     * @param {String} p The property name
+     * @param {Object} obj The object to query
+     * @return {*} The value at `obj.p`.
+     * @see R.path
+     * @example
+     *
+     *      R.prop('x', {x: 100}); //=> 100
+     *      R.prop('x', {}); //=> undefined
+     */
+    var prop = _curry2(function prop(p, obj) {
+        return obj[p];
+    });
+
+    /**
+     * Returns a new list or string with the elements or characters in reverse
+     * order.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category List
+     * @sig [a] -> [a]
+     * @sig String -> String
+     * @param {Array|String} list
+     * @return {Array|String}
+     * @example
+     *
+     *      R.reverse([1, 2, 3]);  //=> [3, 2, 1]
+     *      R.reverse([1, 2]);     //=> [2, 1]
+     *      R.reverse([1]);        //=> [1]
+     *      R.reverse([]);         //=> []
+     *
+     *      R.reverse('abc');      //=> 'cba'
+     *      R.reverse('ab');       //=> 'ba'
+     *      R.reverse('a');        //=> 'a'
+     *      R.reverse('');         //=> ''
+     */
+    var reverse = _curry1(function reverse(list) {
+        return _isString(list) ? list.split('').reverse().join('') : Array.prototype.slice.call(list, 0).reverse();
+    });
+
+    /**
+     * Returns the result of "setting" the portion of the given data structure
+     * focused by the given lens to the given value.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.16.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig Lens s a -> a -> s -> s
+     * @param {Lens} lens
+     * @param {*} v
+     * @param {*} x
+     * @return {*}
+     * @see R.prop, R.lensIndex, R.lensProp
+     * @example
+     *
+     *      var xLens = R.lensProp('x');
+     *
+     *      R.set(xLens, 4, {x: 1, y: 2});  //=> {x: 4, y: 2}
+     *      R.set(xLens, 8, {x: 1, y: 2});  //=> {x: 8, y: 2}
+     */
+    var set = _curry3(function set(lens, v, x) {
+        return over(lens, always(v), x);
+    });
+
+    /**
+     * Returns the elements of the given list or string (or object with a `slice`
+     * method) from `fromIndex` (inclusive) to `toIndex` (exclusive).
+     *
+     * Dispatches to the `slice` method of the third argument, if present.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.4
+     * @category List
+     * @sig Number -> Number -> [a] -> [a]
+     * @sig Number -> Number -> String -> String
+     * @param {Number} fromIndex The start index (inclusive).
+     * @param {Number} toIndex The end index (exclusive).
+     * @param {*} list
+     * @return {*}
+     * @example
+     *
+     *      R.slice(1, 3, ['a', 'b', 'c', 'd']);        //=> ['b', 'c']
+     *      R.slice(1, Infinity, ['a', 'b', 'c', 'd']); //=> ['b', 'c', 'd']
+     *      R.slice(0, -1, ['a', 'b', 'c', 'd']);       //=> ['a', 'b', 'c']
+     *      R.slice(-3, -1, ['a', 'b', 'c', 'd']);      //=> ['b', 'c']
+     *      R.slice(0, 3, 'ramda');                     //=> 'ram'
+     */
+    var slice = _curry3(_checkForMethod('slice', function slice(fromIndex, toIndex, list) {
+        return Array.prototype.slice.call(list, fromIndex, toIndex);
+    }));
+
+    /**
+     * Returns all but the first element of the given list or string (or object
+     * with a `tail` method).
+     *
+     * Dispatches to the `slice` method of the first argument, if present.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category List
+     * @sig [a] -> [a]
+     * @sig String -> String
+     * @param {*} list
+     * @return {*}
+     * @see R.head, R.init, R.last
+     * @example
+     *
+     *      R.tail([1, 2, 3]);  //=> [2, 3]
+     *      R.tail([1, 2]);     //=> [2]
+     *      R.tail([1]);        //=> []
+     *      R.tail([]);         //=> []
+     *
+     *      R.tail('abc');  //=> 'bc'
+     *      R.tail('ab');   //=> 'b'
+     *      R.tail('a');    //=> ''
+     *      R.tail('');     //=> ''
+     */
+    var tail = _curry1(_checkForMethod('tail', slice(1, Infinity)));
+
+    /**
+     * Tests the final argument by passing it to the given predicate function. If
+     * the predicate is satisfied, the function will return the result of calling
+     * the `whenTrueFn` function with the same argument. If the predicate is not
+     * satisfied, the argument is returned as is.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.18.0
+     * @category Logic
+     * @sig (a -> Boolean) -> (a -> a) -> a -> a
+     * @param {Function} pred       A predicate function
+     * @param {Function} whenTrueFn A function to invoke when the `condition`
+     *                              evaluates to a truthy value.
+     * @param {*}        x          An object to test with the `pred` function and
+     *                              pass to `whenTrueFn` if necessary.
+     * @return {*} Either `x` or the result of applying `x` to `whenTrueFn`.
+     * @see R.ifElse, R.unless
+     * @example
+     *
+     *      // truncate :: String -> String
+     *      var truncate = R.when(
+     *        R.propSatisfies(R.gt(R.__, 10), 'length'),
+     *        R.pipe(R.take(10), R.append('…'), R.join(''))
+     *      );
+     *      truncate('12345');         //=> '12345'
+     *      truncate('0123456789ABC'); //=> '0123456789…'
+     */
+    var when = _curry3(function when(pred, whenTrueFn, x) {
+        return pred(x) ? whenTrueFn(x) : x;
+    });
+
+    /**
+     * `_makeFlat` is a helper function that returns a one-level or fully recursive
+     * function based on the flag passed in.
+     *
+     * @private
+     */
+    var _makeFlat = function _makeFlat(recursive) {
+        return function flatt(list) {
+            var value, jlen, j;
+            var result = [];
+            var idx = 0;
+            var ilen = list.length;
+            while (idx < ilen) {
+                if (isArrayLike(list[idx])) {
+                    value = recursive ? flatt(list[idx]) : list[idx];
+                    j = 0;
+                    jlen = value.length;
+                    while (j < jlen) {
+                        result[result.length] = value[j];
+                        j += 1;
+                    }
+                } else {
+                    result[result.length] = list[idx];
+                }
+                idx += 1;
+            }
+            return result;
+        };
+    };
+
+    var _reduce = function () {
+        function _arrayReduce(xf, acc, list) {
+            var idx = 0;
+            var len = list.length;
+            while (idx < len) {
+                acc = xf['@@transducer/step'](acc, list[idx]);
+                if (acc && acc['@@transducer/reduced']) {
+                    acc = acc['@@transducer/value'];
+                    break;
+                }
+                idx += 1;
+            }
+            return xf['@@transducer/result'](acc);
+        }
+        function _iterableReduce(xf, acc, iter) {
+            var step = iter.next();
+            while (!step.done) {
+                acc = xf['@@transducer/step'](acc, step.value);
+                if (acc && acc['@@transducer/reduced']) {
+                    acc = acc['@@transducer/value'];
+                    break;
+                }
+                step = iter.next();
+            }
+            return xf['@@transducer/result'](acc);
+        }
+        function _methodReduce(xf, acc, obj) {
+            return xf['@@transducer/result'](obj.reduce(bind(xf['@@transducer/step'], xf), acc));
+        }
+        var symIterator = typeof Symbol !== 'undefined' ? Symbol.iterator : '@@iterator';
+        return function _reduce(fn, acc, list) {
+            if (typeof fn === 'function') {
+                fn = _xwrap(fn);
+            }
+            if (isArrayLike(list)) {
+                return _arrayReduce(fn, acc, list);
+            }
+            if (typeof list.reduce === 'function') {
+                return _methodReduce(fn, acc, list);
+            }
+            if (list[symIterator] != null) {
+                return _iterableReduce(fn, acc, list[symIterator]());
+            }
+            if (typeof list.next === 'function') {
+                return _iterableReduce(fn, acc, list);
+            }
+            throw new TypeError('reduce: list must be array or iterable');
+        };
+    }();
+
+    /**
+     * Returns a curried equivalent of the provided function. The curried function
+     * has two unusual capabilities. First, its arguments needn't be provided one
+     * at a time. If `f` is a ternary function and `g` is `R.curry(f)`, the
+     * following are equivalent:
+     *
+     *   - `g(1)(2)(3)`
+     *   - `g(1)(2, 3)`
+     *   - `g(1, 2)(3)`
+     *   - `g(1, 2, 3)`
+     *
+     * Secondly, the special placeholder value `R.__` may be used to specify
+     * "gaps", allowing partial application of any combination of arguments,
+     * regardless of their positions. If `g` is as above and `_` is `R.__`, the
+     * following are equivalent:
+     *
+     *   - `g(1, 2, 3)`
+     *   - `g(_, 2, 3)(1)`
+     *   - `g(_, _, 3)(1)(2)`
+     *   - `g(_, _, 3)(1, 2)`
+     *   - `g(_, 2)(1)(3)`
+     *   - `g(_, 2)(1, 3)`
+     *   - `g(_, 2)(_, 3)(1)`
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Function
+     * @sig (* -> a) -> (* -> a)
+     * @param {Function} fn The function to curry.
+     * @return {Function} A new, curried function.
+     * @see R.curryN
+     * @example
+     *
+     *      var addFourNumbers = (a, b, c, d) => a + b + c + d;
+     *
+     *      var curriedAddFourNumbers = R.curry(addFourNumbers);
+     *      var f = curriedAddFourNumbers(1, 2);
+     *      var g = f(3);
+     *      g(4); //=> 10
+     */
+    var curry = _curry1(function curry(fn) {
+        return curryN(fn.length, fn);
+    });
+
+    /**
+     * Takes a function and
+     * a [functor](https://github.com/fantasyland/fantasy-land#functor),
+     * applies the function to each of the functor's values, and returns
+     * a functor of the same shape.
+     *
+     * Ramda provides suitable `map` implementations for `Array` and `Object`,
+     * so this function may be applied to `[1, 2, 3]` or `{x: 1, y: 2, z: 3}`.
+     *
+     * Dispatches to the `map` method of the second argument, if present.
+     *
+     * Acts as a transducer if a transformer is given in list position.
+     *
+     * Also treats functions as functors and will compose them together.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category List
+     * @sig Functor f => (a -> b) -> f a -> f b
+     * @param {Function} fn The function to be called on every element of the input `list`.
+     * @param {Array} list The list to be iterated over.
+     * @return {Array} The new list.
+     * @see R.transduce, R.addIndex
+     * @example
+     *
+     *      var double = x => x * 2;
+     *
+     *      R.map(double, [1, 2, 3]); //=> [2, 4, 6]
+     *
+     *      R.map(double, {x: 1, y: 2, z: 3}); //=> {x: 2, y: 4, z: 6}
+     * @symb R.map(f, [a, b]) = [f(a), f(b)]
+     * @symb R.map(f, { x: a, y: b }) = { x: f(a), y: f(b) }
+     * @symb R.map(f, functor_o) = functor_o.map(f)
+     */
+    var map = _curry2(_dispatchable(['map'], _xmap, function map(fn, functor) {
+        switch (Object.prototype.toString.call(functor)) {
+            case '[object Function]':
+                return curryN(functor.length, function () {
+                    return fn.call(this, functor.apply(this, arguments));
+                });
+            case '[object Object]':
+                return _reduce(function (acc, key) {
+                    acc[key] = fn(functor[key]);
+                    return acc;
+                }, {}, keys(functor));
+            default:
+                return _map(fn, functor);
+        }
+    }));
+
+    /**
+     * Returns a single item by iterating through the list, successively calling
+     * the iterator function and passing it an accumulator value and the current
+     * value from the array, and then passing the result to the next call.
+     *
+     * The iterator function receives two values: *(acc, value)*. It may use
+     * `R.reduced` to shortcut the iteration.
+     *
+     * The arguments' order of `reduceRight`'s iterator function is *(value, acc)*.
+     *
+     * Note: `R.reduce` does not skip deleted or unassigned indices (sparse
+     * arrays), unlike the native `Array.prototype.reduce` method. For more details
+     * on this behavior, see:
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#Description
+     *
+     * Dispatches to the `reduce` method of the third argument, if present.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category List
+     * @sig ((a, b) -> a) -> a -> [b] -> a
+     * @param {Function} fn The iterator function. Receives two values, the accumulator and the
+     *        current element from the array.
+     * @param {*} acc The accumulator value.
+     * @param {Array} list The list to iterate over.
+     * @return {*} The final, accumulated value.
+     * @see R.reduced, R.addIndex, R.reduceRight
+     * @example
+     *
+     *      R.reduce(R.subtract, 0, [1, 2, 3, 4]) // => ((((0 - 1) - 2) - 3) - 4) = -10
+     *                -               -10
+     *               / \              / \
+     *              -   4           -6   4
+     *             / \              / \
+     *            -   3   ==>     -3   3
+     *           / \              / \
+     *          -   2           -1   2
+     *         / \              / \
+     *        0   1            0   1
+     *
+     * @symb R.reduce(f, a, [b, c, d]) = f(f(f(a, b), c), d)
+     */
+    var reduce = _curry3(_reduce);
+
+    var _flatCat = function () {
+        var preservingReduced = function preservingReduced(xf) {
+            return {
+                '@@transducer/init': _xfBase.init,
+                '@@transducer/result': function transducerResult(result) {
+                    return xf['@@transducer/result'](result);
+                },
+                '@@transducer/step': function transducerStep(result, input) {
+                    var ret = xf['@@transducer/step'](result, input);
+                    return ret['@@transducer/reduced'] ? _forceReduced(ret) : ret;
+                }
+            };
+        };
+        return function _xcat(xf) {
+            var rxf = preservingReduced(xf);
+            return {
+                '@@transducer/init': _xfBase.init,
+                '@@transducer/result': function transducerResult(result) {
+                    return rxf['@@transducer/result'](result);
+                },
+                '@@transducer/step': function transducerStep(result, input) {
+                    return !isArrayLike(input) ? _reduce(rxf, result, [input]) : _reduce(rxf, result, input);
+                }
+            };
+        };
+    }();
+
+    var _xchain = _curry2(function _xchain(f, xf) {
+        return map(f, _flatCat(xf));
+    });
+
+    /**
+     * `chain` maps a function over a list and concatenates the results. `chain`
+     * is also known as `flatMap` in some libraries
+     *
+     * Dispatches to the `chain` method of the second argument, if present,
+     * according to the [FantasyLand Chain spec](https://github.com/fantasyland/fantasy-land#chain).
+     *
+     * @func
+     * @memberOf R
+     * @since v0.3.0
+     * @category List
+     * @sig Chain m => (a -> m b) -> m a -> m b
+     * @param {Function} fn The function to map with
+     * @param {Array} list The list to map over
+     * @return {Array} The result of flat-mapping `list` with `fn`
+     * @example
+     *
+     *      var duplicate = n => [n, n];
+     *      R.chain(duplicate, [1, 2, 3]); //=> [1, 1, 2, 2, 3, 3]
+     *
+     *      R.chain(R.append, R.head)([1, 2, 3]); //=> [1, 2, 3, 1]
+     */
+    var chain = _curry2(_dispatchable(['chain'], _xchain, function chain(fn, monad) {
+        if (typeof monad === 'function') {
+            return function (x) {
+                return fn(monad(x))(x);
+            };
+        }
+        return _makeFlat(false)(map(fn, monad));
+    }));
+
+    /**
+     * Returns a lens for the given getter and setter functions. The getter "gets"
+     * the value of the focus; the setter "sets" the value of the focus. The setter
+     * should not mutate the data structure.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.8.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig (s -> a) -> ((a, s) -> s) -> Lens s a
+     * @param {Function} getter
+     * @param {Function} setter
+     * @return {Lens}
+     * @see R.view, R.set, R.over, R.lensIndex, R.lensProp
+     * @example
+     *
+     *      var xLens = R.lens(R.prop('x'), R.assoc('x'));
+     *
+     *      R.view(xLens, {x: 1, y: 2});            //=> 1
+     *      R.set(xLens, 4, {x: 1, y: 2});          //=> {x: 4, y: 2}
+     *      R.over(xLens, R.negate, {x: 1, y: 2});  //=> {x: -1, y: 2}
+     */
+    var lens = _curry2(function lens(getter, setter) {
+        return function (toFunctorFn) {
+            return function (target) {
+                return map(function (focus) {
+                    return setter(focus, target);
+                }, toFunctorFn(getter(target)));
+            };
+        };
+    });
+
+    /**
+     * Returns a lens whose focus is the specified property.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.14.0
+     * @category Object
+     * @typedefn Lens s a = Functor f => (a -> f a) -> s -> f s
+     * @sig String -> Lens s a
+     * @param {String} k
+     * @return {Lens}
+     * @see R.view, R.set, R.over
+     * @example
+     *
+     *      var xLens = R.lensProp('x');
+     *
+     *      R.view(xLens, {x: 1, y: 2});            //=> 1
+     *      R.set(xLens, 4, {x: 1, y: 2});          //=> {x: 4, y: 2}
+     *      R.over(xLens, R.negate, {x: 1, y: 2});  //=> {x: -1, y: 2}
+     */
+    var lensProp = _curry1(function lensProp(k) {
+        return lens(prop(k), assoc(k));
+    });
+
+    /**
+     * Performs left-to-right function composition. The leftmost function may have
+     * any arity; the remaining functions must be unary.
+     *
+     * In some libraries this function is named `sequence`.
+     *
+     * **Note:** The result of pipe is not automatically curried.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Function
+     * @sig (((a, b, ..., n) -> o), (o -> p), ..., (x -> y), (y -> z)) -> ((a, b, ..., n) -> z)
+     * @param {...Function} functions
+     * @return {Function}
+     * @see R.compose
+     * @example
+     *
+     *      var f = R.pipe(Math.pow, R.negate, R.inc);
+     *
+     *      f(3, 4); // -(3^4) + 1
+     * @symb R.pipe(f, g, h)(a, b) = h(g(f(a, b)))
+     */
+    var pipe = function pipe() {
+        if (arguments.length === 0) {
+            throw new Error('pipe requires at least one argument');
+        }
+        return _arity(arguments[0].length, reduce(_pipe, arguments[0], tail(arguments)));
+    };
+
+    /**
+     * Performs right-to-left function composition. The rightmost function may have
+     * any arity; the remaining functions must be unary.
+     *
+     * **Note:** The result of compose is not automatically curried.
+     *
+     * @func
+     * @memberOf R
+     * @since v0.1.0
+     * @category Function
+     * @sig ((y -> z), (x -> y), ..., (o -> p), ((a, b, ..., n) -> o)) -> ((a, b, ..., n) -> z)
+     * @param {...Function} ...functions The functions to compose
+     * @return {Function}
+     * @see R.pipe
+     * @example
+     *
+     *      var classyGreeting = (firstName, lastName) => "The name's " + lastName + ", " + firstName + " " + lastName
+     *      var yellGreeting = R.compose(R.toUpper, classyGreeting);
+     *      yellGreeting('James', 'Bond'); //=> "THE NAME'S BOND, JAMES BOND"
+     *
+     *      R.compose(Math.abs, R.add(1), R.multiply(2))(-4) //=> 7
+     *
+     * @symb R.compose(f, g, h)(a, b) = f(g(h(a, b)))
+     */
+    var compose = function compose() {
+        if (arguments.length === 0) {
+            throw new Error('compose requires at least one argument');
+        }
+        return pipe.apply(this, reverse(arguments));
+    };
+
+    var R = {
+        chain: chain,
+        compose: compose,
+        curry: curry,
+        lens: lens,
+        lensProp: lensProp,
+        pipe: pipe,
+        set: set,
+        when: when
+    };
+    /* eslint-env amd */
+
+    /* TEST_ENTRY_POINT */
+
+    if (( false ? 'undefined' : _typeof(exports)) === 'object') {
+        module.exports = R;
+    } else if (true) {
+        !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+            return R;
+        }.call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {
+        this.R = R;
+    }
+}).call(undefined);
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var R = __webpack_require__(5);
+var util = __webpack_require__(4);
+var GState = __webpack_require__(17);
+
+var _require = __webpack_require__(18),
+    stackState = _require.stackState,
+    stackFunctions = _require.stackFunctions; // no redux here
+
+
+var Context = __webpack_require__(16);
+
+var _require2 = __webpack_require__(2),
+    emitterAPI = _require2.emitterAPI;
+
+var _require3 = __webpack_require__(3),
+    logger = _require3.logger,
+    log = _require3.log,
+    debugMode = _require3.debugMode;
+
+var app = {
+  globalConfig: new GState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]' }),
+  get stacks() {
+    return stackState && stackState.stack || {};
+  },
+  set stacks(item) {
+    stackState.stack = item;
+  },
+  get config() {
+    return this.globalConfig.config;
+  },
+  set config(val) {
+    this.globalConfig.set(val);
+  },
+  init: function init(config) {
+    this.globalConfig.set(config);
+  },
+
+  logger: logger,
+  getElements: function getElements() {
+    return document.querySelectorAll(this.config.moduleSelector);
+  },
+  getModuleName: function getModuleName() {
+    var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+    var key = selector.replace(/[\[\]]/g, '');
+    if (e) {
+      return e && e.attributes && e.attributes[key] && e.attributes[key].value;
+    } else {
+      return e;
+    }
+  },
+  getModule: function getModule() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    return (this.stacks['modules'] || []).reduce(function (acc, val) {
+      return val.name === name && val || acc;
+    });
+  },
+
+  addService: stackFunctions.addToStack('services'),
+  addModule: stackFunctions.addToStack('modules'),
+  startAll: function startAll() {
+    var all = this.stacks['moduleRefs'];
+    all.forEach(function (m) {
+      m && m.fn && m.fn['init'] && m.fn['init']();
+      log(m, 'init');
+    });
+  },
+  getService: function getService() {
+    var _this = this;
+
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    var svcFn = this.stacks['services'].reduce(function (acc, val) {
+      return val.name === name && val || acc;
+    });
+    var svc = void 0;
+    if (svcFn) {
+      var _ret = function () {
+        if ('api' in svcFn) {
+          log('Got ', svcFn['name'], ' already');
+          return {
+            v: svcFn['api']
+          };
+        }
+
+        // bails out on circular ref checks
+
+        var svcName = svcFn['name'];
+        var servicesInProgress = _this.stacks['serviceInit'];
+        if (servicesInProgress.length > 5) {
+          log('too deep');
+          return {
+            v: void 0
+          };
+        }
+        var circular = servicesInProgress.some(function (val) {
+          return val.name === svcName;
+        });
+        if (circular) {
+          log('Found a circular ref!', svcName);
+          return {
+            v: void 0
+          };
+        } else {
+          log('No circular refs', svcName);
+        }
+        _this.stacks = { type: 'serviceInitAdd', name: svcName };
+        svc = svcFn['fn'](_this);
+        _this.stacks = { type: 'serviceInitDone', name: svcName };
+        log(_this.stacks['serviceInit']);
+        Object.assign(svcFn, { api: svc, type: 'services' }); // incomplete implementation
+        return {
+          v: svc
+        };
+      }();
+
+      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+    }
+  },
+  asSubModule: function asSubModule() {},
+  runStart: function runStart() {
+    this.setupModules();
+    this.startAll();
+  },
+  startModules: function startModules(kickoffmsg) {
+    var _this2 = this;
+
+    if (kickoffmsg) {
+      this.on(kickoffmsg, function () {
+        _this2.runStart();
+      });
+    } else {
+      this.runStart();
+    }
+  },
+  setupModules: function setupModules() {
+    var _this3 = this;
+
+    if (this.config['initCompleted']) {
+      log('Global Init already done - exit!');
+      return;
+    }
+    var elems = this.getElements();
+    elems.forEach(function (e) {
+      var name = _this3.getModuleName(e, _this3.config.moduleSelector);
+      if (!name) return;
+      var exmodule = _this3.getModule(name);
+
+      var context = new Context(e, _this3, util);
+      //  this.stacks = {}
+      if (exmodule && exmodule['fn']) {
+        var moduleFn = exmodule['fn'](context);
+        if (typeof moduleFn !== 'undefined') {
+          _this3.stacks = { type: 'moduleRefs', name: name, fn: moduleFn }; // fn should have lifecyle methods?
+        }
+      }
+    });
+    this.config = { initCompleted: true };
+  }
+};
+
+//  Extend
+Object.assign(app, emitterAPI);
+
+/*
+
+  Needs Plugin system - requires conventions be followed returns chainable
+  Services -
+    Public - done
+    require done
+    Singleton done
+  Needs States - done
+  Needs stacks - done
+  Needs Modules - 
+  Modules - run init!
+  Use fetch ponyfill;
+    Module should return init within a closure??
+                    Module context should be able to request plugin or submodule
+  Needs config - done
+  Needs data-* - done
+  Has Mini Pub Sub - done
+  Allows Views (how does data flow?)
+  Allows Streams
+  Allows delegation
+  Enable custom build
+  Allows composition (rambda?)
+
+  todo:
+    short hand query All
+
+  What about?
+    XHR - fetch
+
+
+*/
+
+module.exports = app;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function n(n) {
+  function o(o) {
+    var t = o.toLowerCase();return n[t] || (n[t] = []);
+  }return n = n || {}, { on: function on(n, t) {
+      o(n).push(t);
+    }, off: function off(n, t) {
+      var c = o(n),
+          f = c.indexOf(t);~f && c.splice(f, 1);
+    }, emit: function emit(n, t) {
+      o("*").concat(o(n)).forEach(function (n) {
+        n(t);
+      });
+    } };
+}module.exports = n;
+//# sourceMappingURL=mitt.js.map
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(11);
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var encode = __webpack_require__(1);
+var alphabet = __webpack_require__(0);
+
+// Ignore all milliseconds before a certain time to reduce the size of the date entropy without sacrificing uniqueness.
+// This number should be updated every year or so to keep the generated id short.
+// To regenerate `new Date() - 0` and bump the version. Always bump the version!
+var REDUCE_TIME = 1459707606518;
+
+// don't change unless we change the algos or REDUCE_TIME
+// must be an integer and less than 16
+var version = 6;
+
+// Counter is used when shortid is called multiple times in one second.
+var counter;
+
+// Remember the last time shortid was called in case counter is needed.
+var previousSeconds;
+
+/**
+ * Generate unique id
+ * Returns string id
+ */
+function build(clusterWorkerId) {
+
+    var str = '';
+
+    var seconds = Math.floor((Date.now() - REDUCE_TIME) * 0.001);
+
+    if (seconds === previousSeconds) {
+        counter++;
+    } else {
+        counter = 0;
+        previousSeconds = seconds;
+    }
+
+    str = str + encode(alphabet.lookup, version);
+    str = str + encode(alphabet.lookup, clusterWorkerId);
+    if (counter > 0) {
+        str = str + encode(alphabet.lookup, counter);
+    }
+    str = str + encode(alphabet.lookup, seconds);
+
+    return str;
+}
+
+module.exports = build;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet = __webpack_require__(0);
+
+/**
+ * Decode the id to get the version and worker
+ * Mainly for debugging and testing.
+ * @param id - the shortid-generated id.
+ */
+function decode(id) {
+    var characters = alphabet.shuffled();
+    return {
+        version: characters.indexOf(id.substr(0, 1)) & 0x0f,
+        worker: characters.indexOf(id.substr(1, 1)) & 0x0f
+    };
+}
+
+module.exports = decode;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet = __webpack_require__(0);
+var encode = __webpack_require__(1);
+var decode = __webpack_require__(10);
+var build = __webpack_require__(9);
+var isValid = __webpack_require__(12);
+
+// if you are using cluster or multiple servers use this to make each instance
+// has a unique value for worker
+// Note: I don't know if this is automatically set when using third
+// party cluster solutions such as pm2.
+var clusterWorkerId = __webpack_require__(15) || 0;
+
+/**
+ * Set the seed.
+ * Highly recommended if you don't want people to try to figure out your id schema.
+ * exposed as shortid.seed(int)
+ * @param seed Integer value to seed the random alphabet.  ALWAYS USE THE SAME SEED or you might get overlaps.
+ */
+function seed(seedValue) {
+  alphabet.seed(seedValue);
+  return module.exports;
+}
+
+/**
+ * Set the cluster worker or machine id
+ * exposed as shortid.worker(int)
+ * @param workerId worker must be positive integer.  Number less than 16 is recommended.
+ * returns shortid module so it can be chained.
+ */
+function worker(workerId) {
+  clusterWorkerId = workerId;
+  return module.exports;
+}
+
+/**
+ *
+ * sets new characters to use in the alphabet
+ * returns the shuffled alphabet
+ */
+function characters(newCharacters) {
+  if (newCharacters !== undefined) {
+    alphabet.characters(newCharacters);
+  }
+
+  return alphabet.shuffled();
+}
+
+/**
+ * Generate unique id
+ * Returns string id
+ */
+function generate() {
+  return build(clusterWorkerId);
+}
+
+// Export all other functions as properties of the generate function
+module.exports = generate;
+module.exports.generate = generate;
+module.exports.seed = seed;
+module.exports.worker = worker;
+module.exports.characters = characters;
+module.exports.decode = decode;
+module.exports.isValid = isValid;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet = __webpack_require__(0);
+
+function isShortId(id) {
+    if (!id || typeof id !== 'string' || id.length < 6) {
+        return false;
+    }
+
+    var characters = alphabet.characters();
+    var len = id.length;
+    for (var i = 0; i < len; i++) {
+        if (characters.indexOf(id[i]) === -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+module.exports = isShortId;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var crypto = (typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object' && (window.crypto || window.msCrypto); // IE 11 uses window.msCrypto
+
+function randomByte() {
+    if (!crypto || !crypto.getRandomValues) {
+        return Math.floor(Math.random() * 256) & 0x30;
+    }
+    var dest = new Uint8Array(1);
+    crypto.getRandomValues(dest);
+    return dest[0] & 0x30;
+}
+
+module.exports = randomByte;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// Found this seed-based random generator somewhere
+// Based on The Central Randomizer 1.3 (C) 1997 by Paul Houle (houle@msc.cornell.edu)
+
+var seed = 1;
+
+/**
+ * return a random number based on a seed
+ * @param seed
+ * @returns {number}
+ */
+function getNextValue() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280.0;
+}
+
+function setSeed(_seed_) {
+    seed = _seed_;
+}
+
+module.exports = {
+    nextValue: getNextValue,
+    seed: setSeed
+};
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = 0;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// Context is a store with a bound elem?
+// Context is passed on to the module factory functions
+var _require = __webpack_require__(2),
+    API = _require.API,
+    methods = _require.methods;
+
+var _require2 = __webpack_require__(3),
+    logger = _require2.logger,
+    debugMode = _require2.debugMode;
+
+var Context = function (_API) {
+  _inherits(Context, _API);
+
+  function Context(elem, App, util) {
+    _classCallCheck(this, Context);
+
+    var id = elem.id || '',
+        shortid = util.shortid.generate(),
+        _id = id || shortid;
+
+    var _this = _possibleConstructorReturn(this, (Context.__proto__ || Object.getPrototypeOf(Context)).call(this));
+
+    _this.el = _this.elem = elem;
+    _this._id = _id;
+    _this.el.id = 'module-' + _this._id;
+    _this.status = 'created';
+    _this.getService = App.getService.bind(App);
+    _this.getSubModule = App.asSubModule.bind(App);
+    return _this;
+  }
+
+  _createClass(Context, [{
+    key: 'destroy',
+    value: function destroy() {
+      this.el = null;
+      this.status = null;
+    }
+  }]);
+
+  return Context;
+}(API);
+
+module.exports = Context;
+// needs init & life cycle
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var STATE = {};
+
+function updateState(item) {
+  if (item) return Object.assign({}, STATE, item);
+  return {};
+}
+
+function setState(item) {
+  STATE = updateState(item);
+}
+
+function getState() {
+  return STATE;
+}
+
+function state() {
+  var init = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+  function set(item) {
+    setState(item);
+  }
+
+  function get() {
+    var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+
+    var state = getState();
+    if (prop) {
+      return state[prop];
+    } else {
+      return state;
+    }
+  }
+
+  set(init);
+
+  return {
+    get: get,
+    set: set,
+    set config(item) {
+      setState(item);
+    },
+    get config() {
+      return getState();
+    }
+  };
+}
+
+module.exports = state;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var R = __webpack_require__(5);
+
+function _resetState() {
+  return Object.assign({}, {
+    services: [],
+    serviceInit: [],
+    modules: [],
+    moduleRefs: [],
+    plugins: []
+  });
+};
+
+var STATE = _resetState();
+
+function _getState() {
+  return STATE;
+}
+
+function registerItem(name, fn, itemType, api) {
+  var type = 'REGISTER';
+  switch (itemType) {
+    case 'serviceInitDone':
+      console.log('Removing Service', name);
+      type = 'REMOVE_FROM_SVC_STACK';
+      itemType = 'serviceInit';
+      break;
+    case 'serviceInitAdd':
+      console.log('adding service', name);
+      type = 'REGISTER';
+      itemType = 'serviceInit';
+      break;
+    case 'services':
+      type = typeof api === 'undefined' ? 'REGISTER' : 'ADD_API';
+      break;
+    default:
+      break;
+  }
+  return {
+    type: type,
+    itemType: itemType,
+    name: name,
+    fn: fn
+  };
+}
+
+function item() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'REGISTER':
+      return {
+        name: action.name,
+        fn: action.fn,
+        itemType: action.itemType
+      };
+    case 'ADD_API':
+      return Object.assign({}, state, { api: action.api });
+    default:
+      return state;
+  }
+}
+
+function stack(state, action) {
+  var itemType = action.itemType,
+      type = action.type,
+      name = action.name;
+
+  var itemObj = {};
+  if (itemType) {
+    switch (type) {
+      case 'REMOVE_FROM_SVC_STACK':
+        itemObj['serviceInit'] = (state['serviceInit'] || []).filter(function (val) {
+          return val.name !== name;
+        });
+        return Object.assign({}, state, itemObj);
+      case 'ADD_API':
+        // specific stack
+        itemObj[itemType] = [(state[itemType] || []).map(function (val) {
+          if (val.name === name) {
+            return item(val, action);
+          } else {
+            return val;
+          }
+        })];
+        return Object.assign({}, state, itemObj);
+      case 'REGISTER':
+        // specific stack
+        itemObj[itemType] = [].concat(_toConsumableArray(state[itemType] || []), [item(undefined, action)]);
+        return Object.assign({}, state, itemObj);
+      default:
+        return state;
+    }
+  } else {
+    return state;
+  }
+}
+
+//handler
+function dispatch(_ref) {
+  var name = _ref.name,
+      fn = _ref.fn,
+      type = _ref.type,
+      api = _ref.api;
+
+  // dispatch
+  var action = registerItem(name, fn, type, api);
+  // new state
+  STATE = stack(STATE, action);
+}
+
+var stackState = {
+  set stack(item) {
+    dispatch(item || {});
+  },
+  get stack() {
+    var stack = _getState() || {};
+    return stack;
+  }
+};
+
+/* General functions */
+function updateStack(type, name, fn) {
+  stackState.stack = { type: type, name: name, fn: fn };
+}
+
+function addToStack() {
+  return R.curry(updateStack);
+}
+
+module.exports = { stackState: stackState, stackFunctions: { updateStack: updateStack, addToStack: addToStack } };
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @fileoverview Main library
+ * @author Carlos Moran
+ */
+
+var app = __webpack_require__(6);
+
+var previousEXMS = void 0;
+
+var __EXMS = Object.assign(app, {
+  noConflict: function noConflict() {
+    window.EXMS = previousEXMS;
+    return this;
+  }
+});
+
+if (window['EXMS']) previousEXMS = window['EXMS'];
+
+module.exports = __EXMS;
+
+/***/ })
+/******/ ]);
+});
