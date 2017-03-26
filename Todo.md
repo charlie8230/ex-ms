@@ -4,9 +4,13 @@ Todo
   import mitt from 'mitt'
 
   let emitter = mitt()
-  -- Behavior 
+  -- Behavior
+  -- Get global
+  -- Error emitter
+  -- Views??
+  -- Fetch??
   Redo store - using ramda -> models? -> views
-  Add - onmessage -> listen to all messages? (add to ctx)
+  Add - onmessage -> listen to all messages? - ok on CTX and app inc.alias
   Store - get? - ok
   Global State? - ok
   Logging - ok

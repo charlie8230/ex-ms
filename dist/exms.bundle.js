@@ -185,154 +185,6 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-var randomByte = __webpack_require__(13);
-
-function encode(lookup, number) {
-    var loopCounter = 0;
-    var done;
-
-    var str = '';
-
-    while (!done) {
-        str = str + lookup(number >> 4 * loopCounter & 0x0f | randomByte());
-        done = number < Math.pow(16, loopCounter + 1);
-        loopCounter++;
-    }
-    return str;
-}
-
-module.exports = encode;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _mitt = __webpack_require__(7);
-
-var _mitt2 = _interopRequireDefault(_mitt);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var emitter = (0, _mitt2.default)();
-var emitterAPI = Object.assign({
-  //  Adapter for T3 users
-  onmessage: function onmessage(fn) {
-    var msgs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-
-    var handler = void 0,
-        handlers = [];
-    if (typeof fn === 'function') {
-      handler = function (fn, msgs) {
-        return function (type, data) {
-          var index = msgs.indexOf(type);
-          if (index !== -1) {
-            fn(type, data);
-          } else {
-            fn(type, data);
-          }
-        };
-      }(fn, msgs);
-      debugger;
-      this.on('*', handler);
-    } else {
-      if ((typeof fn === 'undefined' ? 'undefined' : _typeof(fn)) === 'object') {
-        for (var _handler in fn) {
-          debugger;
-          this.on(_handler, fn[_handler]);
-        }
-      }
-    }
-  }
-}, emitter);
-
-var API = function () {
-  function API() {
-    _classCallCheck(this, API);
-  }
-
-  _createClass(API, [{
-    key: 'on',
-    value: function on(msg, handler) {
-      emitter.on(msg, handler);
-    }
-  }, {
-    key: 'off',
-    value: function off(msg, handler) {
-      emitter.off(msg, handler);
-    }
-  }, {
-    key: 'emit',
-    value: function emit(msg, data) {
-      emitter.emit(msg, data);
-    }
-  }, {
-    key: 'trigger',
-    value: function trigger() {
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      this.emit(args);
-    }
-  }]);
-
-  return API;
-}();
-
-module.exports = { API: API, emitterAPI: emitterAPI };
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _require = __webpack_require__(4),
-    getQueryVariable = _require.getQueryVariable;
-
-var debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
-var logger = debugMode ? console : function () {};
-var log = logger.log = debugMode ? console.log : function () {};
-module.exports = { logger: logger, log: log, debugMode: debugMode };
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var shortid = __webpack_require__(8);
-function getQueryVariable(variable) {
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i = 0; i < vars.length; i++) {
-              var pair = vars[i].split("=");
-              if (pair[0] == variable) {
-                     return pair[1];
-              }
-       }
-       return false;
-}
-module.exports = { shortid: shortid, getQueryVariable: getQueryVariable };
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 var __WEBPACK_AMD_DEFINE_RESULT__;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -1567,6 +1419,146 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 }).call(undefined);
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var randomByte = __webpack_require__(13);
+
+function encode(lookup, number) {
+    var loopCounter = 0;
+    var done;
+
+    var str = '';
+
+    while (!done) {
+        str = str + lookup(number >> 4 * loopCounter & 0x0f | randomByte());
+        done = number < Math.pow(16, loopCounter + 1);
+        loopCounter++;
+    }
+    return str;
+}
+
+module.exports = encode;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var mitt = __webpack_require__(7);
+var R = __webpack_require__(1);
+
+var emitter = mitt();
+var emitterAPI = Object.assign({
+  //  Adapter for T3 users
+  onmessage: function onmessage(fn) {
+    var _this = this;
+
+    var msgs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+    if (typeof fn === 'function' && msgs.length > 0) {
+      (function () {
+        var handler = R.curry(fn);
+        msgs.forEach(function (e) {
+          var fx = handler(e);
+          _this.on(e, fx);
+        });
+      })();
+    } else {
+      if ((typeof fn === 'undefined' ? 'undefined' : _typeof(fn)) === 'object') {
+        for (var _handler in fn) {
+          this.on(_handler, fn[_handler]);
+        }
+      }
+    }
+  },
+  broadcast: function broadcast() {
+    this.emit.apply(this, arguments);
+  }
+}, emitter);
+
+var API = function () {
+  function API() {
+    _classCallCheck(this, API);
+
+    this.broadcast = this.trigger = this.emit = emitter.emit;
+  }
+
+  _createClass(API, [{
+    key: 'on',
+    value: function on(msg, handler) {
+      emitter.on(msg, handler);
+    }
+  }, {
+    key: 'off',
+    value: function off(msg, handler) {
+      emitter.off(msg, handler);
+    }
+    // emit(msg, data) {
+    //   emitter.emit(msg, data);
+    // }
+    // broadcast(msg, data) {
+    //   this.emit(msg, data);
+    // }
+    // trigger(...args) {
+    //   this.emit(...args);
+    // }
+
+  }]);
+
+  return API;
+}();
+
+module.exports = { API: API, emitterAPI: emitterAPI };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(5),
+    getQueryVariable = _require.getQueryVariable;
+
+var debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
+var logger = debugMode ? console : function () {};
+var log = logger.log = debugMode ? console.log : function () {};
+module.exports = { logger: logger, log: log, debugMode: debugMode };
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var shortid = __webpack_require__(8);
+function getQueryVariable(variable) {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i = 0; i < vars.length; i++) {
+              var pair = vars[i].split("=");
+              if (pair[0] == variable) {
+                     return pair[1];
+              }
+       }
+       return false;
+}
+module.exports = { shortid: shortid, getQueryVariable: getQueryVariable };
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1575,8 +1567,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var R = __webpack_require__(5);
-var util = __webpack_require__(4);
+var R = __webpack_require__(1);
+var util = __webpack_require__(5);
 var GState = __webpack_require__(17);
 
 var _require = __webpack_require__(18),
@@ -1586,11 +1578,11 @@ var _require = __webpack_require__(18),
 
 var Context = __webpack_require__(16);
 
-var _require2 = __webpack_require__(2),
+var _require2 = __webpack_require__(3),
     API = _require2.API,
     emitterAPI = _require2.emitterAPI;
 
-var _require3 = __webpack_require__(3),
+var _require3 = __webpack_require__(4),
     logger = _require3.logger,
     log = _require3.log,
     debugMode = _require3.debugMode;
@@ -1822,7 +1814,7 @@ module.exports = __webpack_require__(11);
 "use strict";
 
 
-var encode = __webpack_require__(1);
+var encode = __webpack_require__(2);
 var alphabet = __webpack_require__(0);
 
 // Ignore all milliseconds before a certain time to reduce the size of the date entropy without sacrificing uniqueness.
@@ -1901,7 +1893,7 @@ module.exports = decode;
 
 
 var alphabet = __webpack_require__(0);
-var encode = __webpack_require__(1);
+var encode = __webpack_require__(2);
 var decode = __webpack_require__(10);
 var build = __webpack_require__(9);
 var isValid = __webpack_require__(12);
@@ -2069,11 +2061,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 // Context is a store with a bound elem?
 // Context is passed on to the module factory functions
-var _require = __webpack_require__(2),
+var _require = __webpack_require__(3),
     API = _require.API,
     methods = _require.methods;
 
-var _require2 = __webpack_require__(3),
+var _require2 = __webpack_require__(4),
     logger = _require2.logger,
     debugMode = _require2.debugMode;
 
@@ -2178,7 +2170,7 @@ module.exports = state;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var R = __webpack_require__(5);
+var R = __webpack_require__(1);
 
 function _resetState() {
   return Object.assign({}, {

@@ -1,47 +1,48 @@
-import mitt from 'mitt'
+let mitt = require('mitt');
+let R = require('../vendor/ramda/dist/ramda.custom');
 
 let emitter = mitt();
 let emitterAPI = Object.assign({
   //  Adapter for T3 users
   onmessage(fn, msgs=[]){
-    let handler, handlers = [];
-    if (typeof fn ==='function') {
-      handler = (function(fn, msgs){
-        return function (type, data) {
-          let index = msgs.indexOf(type);
-          if(index!==-1) {
-            fn(type, data);
-          } else {
-            fn(type, data)
-          }
-        }
-      })(fn, msgs);
-      debugger;
-      this.on('*',handler);
+    if (typeof fn ==='function' && msgs.length>0) {
+      let handler = R.curry(fn);
+      msgs.forEach(e=>{
+        let fx = handler(e);
+        this.on(e, fx);
+      });
     } else {
       if(typeof fn ==='object') {
         for (var _handler in fn) {
-          debugger;
           this.on(_handler, fn[_handler]);
         }
       }
     }
+  },
+  broadcast(...args){
+    this.emit(...args);
   }
 },emitter);
 
 class API {
+  constructor(){
+    this.broadcast = this.trigger = this.emit = emitter.emit;
+  }
   on(msg, handler) {
     emitter.on(msg, handler);
   }
   off(msg, handler) {
     emitter.off(msg, handler);
   }
-  emit(msg, data) {
-    emitter.emit(msg, data);
-  }
-  trigger(...args) {
-    this.emit(args);
-  }
+  // emit(msg, data) {
+  //   emitter.emit(msg, data);
+  // }
+  // broadcast(msg, data) {
+  //   this.emit(msg, data);
+  // }
+  // trigger(...args) {
+  //   this.emit(...args);
+  // }
 }
 
 module.exports = {API,emitterAPI};

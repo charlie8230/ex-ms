@@ -11,6 +11,12 @@ EXMS.stacks = {name:'hi',fn:function(ctx){console.log('module');
     init() {
       log('init!')
       log(ctx.el.id);
+    },
+    onmessage: {
+      helloMSG(){
+        log('another pattern');
+        ctx.broadcast('anotherPatter',{data: 'another'});
+      }
     }
   };
 },type:'modules'};
@@ -21,8 +27,8 @@ EXMS.stacks = {name:'msg',fn:function(ctx){
       log('init!')
       log(ctx.el.id);
     },
-    messages: ['helloMSG'],
-    onmessage(name, data){
+    messages: ['helloMSG','anotherPattern'],
+    onmessage(name, data){;
       log(name, data);
     }
   };
