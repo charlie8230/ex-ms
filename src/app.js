@@ -36,10 +36,11 @@ let app = {
     }
   },
   getModule(name=''){
-    return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc));
+    return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc), null);
   },
   addService: stackFunctions.addToStack('services'),
   addModule: stackFunctions.addToStack('modules'),
+  addAction: stackFunctions.addToStack('actions'),
   startAll(){
     let all = this.stacks['moduleRefs'];
     all.forEach(m=>{
@@ -48,7 +49,7 @@ let app = {
     });
   },
   getService(name=''){
-    let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc));
+    let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc),null);
     let svc;
     if (svcFn) {
       if ('api' in svcFn) {
@@ -79,6 +80,12 @@ let app = {
       return svc;
     }
   },
+  getGlobal(name){
+    return typeof window[name]==='undefined'?null:window[name];
+  },
+  getAction(name=''){
+    return (this.stacks['actions']||[]).reduce((acc,val)=>((val.name===name&&val)||acc),null);
+  },
   asSubModule(){},
   runStart(){    
     this.setupModules();
@@ -105,17 +112,26 @@ let app = {
       let exmodule = this.getModule(name);
       
       let context = new Context(e, this, util);
-      //  this.stacks = {}
       if(exmodule && exmodule['fn']) {
         let moduleFn = exmodule['fn'](context);
         if (typeof moduleFn !== 'undefined') {
           if(moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
           }
-          //  messages
-            // message filter?
-          //  onmessage ?
-            // message delegation
+          // ? stack item was not added?
+          let actions = moduleFn['actions'] || moduleFn['behaviors']||[];
+
+          if(actions && actions.length>0) {
+            actions.forEach(name=>{
+              let act = this.getAction(name);
+              if (act) {
+                let process = act(context);
+                log(process);
+              }
+            });
+            //  returns event handlers- attach
+            //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
+          }
           this.stacks = {type: 'moduleRefs', name, fn:moduleFn};  // fn should have lifecyle methods?
         }
       }
@@ -126,38 +142,5 @@ let app = {
 
 //  Extend
 Object.assign(app,emitterAPI);
-
-/*
-
-  Needs Plugin system - requires conventions be followed returns chainable
-  Services -
-    Public - done
-    require done
-    Singleton done
-  Needs States - done
-  Needs stacks - done
-  Needs Modules - 
-  Modules - run init!
-  Use fetch ponyfill;
-    Module should return init within a closure??
-                    Module context should be able to request plugin or submodule
-  Needs config - done
-  Needs data-* - done
-  Has Mini Pub Sub - done
-  Allows Views (how does data flow?)
-  Allows Streams
-  Allows delegation
-  Enable custom build
-  Allows composition (rambda?)
-
-  todo:
-    short hand query All
-
-  What about?
-    XHR - fetch
-
-
-*/
-
 
 module.exports = app;

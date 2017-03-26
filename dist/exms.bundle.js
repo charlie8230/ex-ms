@@ -1505,16 +1505,6 @@ var API = function () {
     value: function off(msg, handler) {
       emitter.off(msg, handler);
     }
-    // emit(msg, data) {
-    //   emitter.emit(msg, data);
-    // }
-    // broadcast(msg, data) {
-    //   this.emit(msg, data);
-    // }
-    // trigger(...args) {
-    //   this.emit(...args);
-    // }
-
   }]);
 
   return API;
@@ -1625,11 +1615,12 @@ var app = {
 
     return (this.stacks['modules'] || []).reduce(function (acc, val) {
       return val.name === name && val || acc;
-    });
+    }, null);
   },
 
   addService: stackFunctions.addToStack('services'),
   addModule: stackFunctions.addToStack('modules'),
+  addAction: stackFunctions.addToStack('actions'),
   startAll: function startAll() {
     var all = this.stacks['moduleRefs'];
     all.forEach(function (m) {
@@ -1644,7 +1635,7 @@ var app = {
 
     var svcFn = this.stacks['services'].reduce(function (acc, val) {
       return val.name === name && val || acc;
-    });
+    }, null);
     var svc = void 0;
     if (svcFn) {
       var _ret = function () {
@@ -1689,6 +1680,16 @@ var app = {
       if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
     }
   },
+  getGlobal: function getGlobal(name) {
+    return typeof window[name] === 'undefined' ? null : window[name];
+  },
+  getAction: function getAction() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    return (this.stacks['actions'] || []).reduce(function (acc, val) {
+      return val.name === name && val || acc;
+    }, null);
+  },
   asSubModule: function asSubModule() {},
   runStart: function runStart() {
     this.setupModules();
@@ -1719,17 +1720,26 @@ var app = {
       var exmodule = _this3.getModule(name);
 
       var context = new Context(e, _this3, util);
-      //  this.stacks = {}
       if (exmodule && exmodule['fn']) {
         var moduleFn = exmodule['fn'](context);
         if (typeof moduleFn !== 'undefined') {
           if (moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
           }
-          //  messages
-          // message filter?
-          //  onmessage ?
-          // message delegation
+          // ? stack item was not added?
+          var actions = moduleFn['actions'] || moduleFn['behaviors'] || [];
+
+          if (actions && actions.length > 0) {
+            actions.forEach(function (name) {
+              var act = _this3.getAction(name);
+              if (act) {
+                var process = act(context);
+                log(process);
+              }
+            });
+            //  returns event handlers- attach
+            //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
+          }
           _this3.stacks = { type: 'moduleRefs', name: name, fn: moduleFn }; // fn should have lifecyle methods?
         }
       }
@@ -1740,38 +1750,6 @@ var app = {
 
 //  Extend
 Object.assign(app, emitterAPI);
-
-/*
-
-  Needs Plugin system - requires conventions be followed returns chainable
-  Services -
-    Public - done
-    require done
-    Singleton done
-  Needs States - done
-  Needs stacks - done
-  Needs Modules - 
-  Modules - run init!
-  Use fetch ponyfill;
-    Module should return init within a closure??
-                    Module context should be able to request plugin or submodule
-  Needs config - done
-  Needs data-* - done
-  Has Mini Pub Sub - done
-  Allows Views (how does data flow?)
-  Allows Streams
-  Allows delegation
-  Enable custom build
-  Allows composition (rambda?)
-
-  todo:
-    short hand query All
-
-  What about?
-    XHR - fetch
-
-
-*/
 
 module.exports = app;
 
@@ -2087,10 +2065,16 @@ var Context = function (_API) {
     _this.status = 'created';
     _this.getService = App.getService.bind(App);
     _this.getSubModule = App.asSubModule.bind(App);
+    _this.getGlobal = App.getGlobal.bind(App);
     return _this;
   }
 
   _createClass(Context, [{
+    key: 'getElement',
+    value: function getElement() {
+      return this.el;
+    }
+  }, {
     key: 'destroy',
     value: function destroy() {
       this.el = null;
@@ -2102,7 +2086,6 @@ var Context = function (_API) {
 }(API);
 
 module.exports = Context;
-// needs init & life cycle
 
 /***/ }),
 /* 17 */
@@ -2177,6 +2160,7 @@ function _resetState() {
     services: [],
     serviceInit: [],
     modules: [],
+    actions: [],
     moduleRefs: [],
     plugins: []
   });

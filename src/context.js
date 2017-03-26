@@ -15,6 +15,10 @@ class Context extends API{
     this.status = 'created';
     this.getService = App.getService.bind(App);
     this.getSubModule = App.asSubModule.bind(App);
+    this.getGlobal = App.getGlobal.bind(App);
+  }
+  getElement(){
+    return this.el;
   }
   destroy() {
     this.el = null;
@@ -23,4 +27,3 @@ class Context extends API{
 }
 
 module.exports = Context;
-// needs init & life cycle

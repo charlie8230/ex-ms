@@ -1,4 +1,46 @@
 Todo
+# Event Delegation
+  Streams? Pass in elem type?
+  Actions - unique??
+# Get global adapter - done
+
+# Get Module config as store? or just object?
+  or data-config
+  # More error handling?
+  # Fire outside events?
+  # destroy module should release event handlers, call passed in cb & call context.destroy
+
+/*
+
+  Needs Plugin system - requires conventions be followed returns chainable
+  Services -
+    Public - done
+    require done
+    Singleton done
+  Needs States - done
+  Needs stacks - done
+  Needs Modules - done
+  Modules - run init!
+  Use fetch ponyfill;
+    Module should return init within a closure??
+                    Module context should be able to request plugin or submodule
+  Needs config - done
+  Needs data-* - done
+  Has Mini Pub Sub - done
+  Allows Views (how does data flow?)
+  Allows Streams
+  Allows delegation
+  Enable custom build
+  Allows composition (rambda?)
+
+  todo:
+    short hand query All
+
+  What about?
+    XHR - fetch
+
+
+*/
 * Init services first
 * Add micro pub sub
   import mitt from 'mitt'

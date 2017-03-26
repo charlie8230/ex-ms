@@ -6,6 +6,7 @@ function _resetState(){
     services:[],
     serviceInit:[],
     modules:[],
+    actions: [],
     moduleRefs:[],
     plugins:[]
   });

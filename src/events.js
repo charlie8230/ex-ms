@@ -34,15 +34,6 @@ class API {
   off(msg, handler) {
     emitter.off(msg, handler);
   }
-  // emit(msg, data) {
-  //   emitter.emit(msg, data);
-  // }
-  // broadcast(msg, data) {
-  //   this.emit(msg, data);
-  // }
-  // trigger(...args) {
-  //   this.emit(...args);
-  // }
 }
 
 module.exports = {API,emitterAPI};

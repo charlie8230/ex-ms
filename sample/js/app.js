@@ -4,7 +4,7 @@
 */
 console.log(typeof EXMS);
 let log = EXMS.logger.log;
-EXMS.stacks = {name:'hi',fn:function(ctx){console.log('module');
+EXMS.stacks = {name:'hfffi',fn:function(ctx){console.log('module');
   ctx.on('event2', (data)=>{ console.log('Inside Hiiii', data);});
   log('returning from hi');
   return {
@@ -27,12 +27,16 @@ EXMS.stacks = {name:'msg',fn:function(ctx){
       log('init!')
       log(ctx.el.id);
     },
+    actions: ['menu'],
     messages: ['helloMSG','anotherPattern'],
     onmessage(name, data){;
       log(name, data);
     }
   };
 },type:'modules'};
+EXMS.addAction('menu',function(context){
+  log('I am a behavior attached to', context.getElement().id);
+});
 EXMS.stacks = {name:'list',fn:function(ctx){
   let msg = 'HI!!';
   window.ctx=ctx;
