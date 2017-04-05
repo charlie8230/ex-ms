@@ -8,4 +8,10 @@ function getQueryVariable(variable){
        }
        return(false);
 }
-module.exports = {shortid, getQueryVariable};
+/*      Actually partial application of one parameter... may be extended to multiple params */
+function basic_curry(fn) {
+  return function(first) {
+    return fn.bind(this,first);
+  }
+}
+module.exports = {shortid, getQueryVariable, basic_curry};

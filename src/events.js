@@ -1,12 +1,12 @@
 let mitt = require('mitt');
-let R = require('../vendor/ramda/dist/ramda.custom');
+let {basic_curry} = require('./util');
 
 let emitter = mitt();
 let emitterAPI = Object.assign({
   //  Adapter for T3 users
   onmessage(fn, msgs=[]){
     if (typeof fn ==='function' && msgs.length>0) {
-      let handler = R.curry(fn);
+      let handler = basic_curry(fn);
       msgs.forEach(e=>{
         let fx = handler(e);
         this.on(e, fx);
@@ -21,19 +21,14 @@ let emitterAPI = Object.assign({
   },
   broadcast(...args){
     this.emit(...args);
-  }
-},emitter);
-
-class API {
-  constructor(){
-    this.broadcast = this.trigger = this.emit = emitter.emit;
-  }
+  },
   on(msg, handler) {
     emitter.on(msg, handler);
-  }
+  },
   off(msg, handler) {
     emitter.off(msg, handler);
   }
-}
+},emitter);
 
-module.exports = {API,emitterAPI};
+
+module.exports = {emitterAPI, emitter};

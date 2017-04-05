@@ -1,5 +1,5 @@
 
-let R = require('../vendor/ramda/dist/ramda.custom');
+let {basic_curry} = require('./util');
 
 function _resetState(){
   return Object.assign({},{
@@ -115,7 +115,7 @@ function updateStack(type, name, fn) {
 }
 
 function addToStack(){
-  return R.curry(updateStack);
+  return basic_curry(updateStack);
 }
 
 module.exports = { stackState, stackFunctions: {updateStack, addToStack}};

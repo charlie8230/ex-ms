@@ -1,4 +1,4 @@
-let R = require('../vendor/ramda/dist/ramda.custom');
+//  let R = require('../vendor/ramda/dist/ramda.custom');
 let util = require('./util');
 let GState = require('./general-state');
 const {stackState, stackFunctions} = require('./stacks-state'); // no redux here

@@ -9,6 +9,7 @@ Todo
   # More error handling?
   # Fire outside events?
   # destroy module should release event handlers, call passed in cb & call context.destroy
+# do not use class system
 
 /*
 
