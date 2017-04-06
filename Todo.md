@@ -1,5 +1,6 @@
 Todo
 # Event Delegation
+  Event delegation adapter
   Streams? Pass in elem type?
   Actions - unique??
 # Get global adapter - done
@@ -21,7 +22,7 @@ Todo
   Needs States - done
   Needs stacks - done
   Needs Modules - done
-  Modules - run init!
+  Modules - run init! - done
   Use fetch ponyfill;
     Module should return init within a closure??
                     Module context should be able to request plugin or submodule

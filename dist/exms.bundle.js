@@ -471,7 +471,13 @@ var app = {
 
       var context = new Context(e, _this3, util);
       if (exmodule && exmodule['fn']) {
-        var moduleFn = exmodule['fn'](context);
+        var moduleFn = void 0;
+        try {
+          moduleFn = exmodule['fn'](context);
+        } catch (e) {
+          log('Could not start ' + name + ' on ' + context + ': ' + e);
+        }
+
         if (typeof moduleFn !== 'undefined') {
           if (moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);

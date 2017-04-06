@@ -113,7 +113,13 @@ let app = {
       
       let context = new Context(e, this, util);
       if(exmodule && exmodule['fn']) {
-        let moduleFn = exmodule['fn'](context);
+        let moduleFn;
+        try {
+          moduleFn = exmodule['fn'](context);
+        } catch (e) {
+          log(`Could not start ${name} on ${context}: ${e}`);
+        }
+         
         if (typeof moduleFn !== 'undefined') {
           if(moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
