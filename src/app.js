@@ -126,13 +126,17 @@ let app = {
           }
           // ? stack item was not added?
           let actions = moduleFn['actions'] || moduleFn['behaviors']||[];
-
+// dedupe the actions
           if(actions && actions.length>0) {
             actions.forEach(name=>{
               let act = this.getAction(name);
-              if (act) {
-                let process = act(context);
-                log(process);
+              if (act && act['fn']) {
+                try {
+                  let process = act['fn'](context); // take context and add event delegation
+                  log(process);
+                } catch(e){
+                  log(`could not start behavior ${name}: ${e}`);
+                }
               }
             });
             //  returns event handlers- attach

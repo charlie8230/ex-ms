@@ -484,13 +484,17 @@ var app = {
           }
           // ? stack item was not added?
           var actions = moduleFn['actions'] || moduleFn['behaviors'] || [];
-
+          // dedupe the actions
           if (actions && actions.length > 0) {
             actions.forEach(function (name) {
               var act = _this3.getAction(name);
-              if (act) {
-                var process = act(context);
-                log(process);
+              if (act && act['fn']) {
+                try {
+                  var process = act['fn'](context); // take context and add event delegation
+                  log(process);
+                } catch (e) {
+                  log('could not start behavior ' + name + ': ' + e);
+                }
               }
             });
             //  returns event handlers- attach
@@ -1014,8 +1018,8 @@ function updateStack(type, name, fn) {
   stackState.stack = { type: type, name: name, fn: fn };
 }
 
-function addToStack() {
-  return basic_curry(updateStack);
+function addToStack(type) {
+  return basic_curry(updateStack)(type);
 }
 
 module.exports = { stackState: stackState, stackFunctions: { updateStack: updateStack, addToStack: addToStack } };

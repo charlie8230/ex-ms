@@ -114,8 +114,8 @@ function updateStack(type, name, fn) {
   stackState.stack = {type, name, fn};
 }
 
-function addToStack(){
-  return basic_curry(updateStack);
+function addToStack(type){
+  return basic_curry(updateStack)(type);
 }
 
 module.exports = { stackState, stackFunctions: {updateStack, addToStack}};

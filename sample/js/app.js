@@ -27,15 +27,16 @@ EXMS.stacks = {name:'msg',fn:function(ctx){
       log('init!')
       log(ctx.el.id);
     },
-    actions: ['menu'],
+    actions: ['menu','menu2'],
     messages: ['helloMSG','anotherPattern'],
     onmessage(name, data){;
       log(name, data);
     }
   };
 },type:'modules'};
-EXMS.addAction('menu',function(context){
-  log('I am a behavior attached to', context.getElement().id);
+EXMS.stacks = {name:'menu', fn: function(context){log('I am a behavior');}, type:'actions'};
+EXMS.addAction('menu2',function(context){
+  log('I am a behavior2 attached to', context.getElement().id);
 });
 EXMS.stacks = {name:'list',fn:function(ctx){
   let msg = 'HI!!';
