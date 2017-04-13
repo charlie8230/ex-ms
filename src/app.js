@@ -1,7 +1,7 @@
 //  let R = require('../vendor/ramda/dist/ramda.custom');
 let util = require('./util');
 let GState = require('./general-state');
-const {stackState, stackFunctions} = require('./stacks-state'); // no redux here
+const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 let Context = require('./context');
 let {API, emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
@@ -100,6 +100,7 @@ let app = {
       this.runStart();
     }
   },
+  reset,
   setupModules() {
     if (this.config['initCompleted']) {
       log('Global Init already done - exit!');

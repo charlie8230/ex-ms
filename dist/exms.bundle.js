@@ -313,7 +313,8 @@ var GState = __webpack_require__(16);
 
 var _require = __webpack_require__(17),
     stackState = _require.stackState,
-    stackFunctions = _require.stackFunctions; // no redux here
+    stackFunctions = _require.stackFunctions,
+    reset = _require.reset; // no redux here
 
 
 var Context = __webpack_require__(15);
@@ -456,6 +457,8 @@ var app = {
       this.runStart();
     }
   },
+
+  reset: reset,
   setupModules: function setupModules() {
     var _this3 = this;
 
@@ -1022,7 +1025,7 @@ function addToStack(type) {
   return basic_curry(updateStack)(type);
 }
 
-module.exports = { stackState: stackState, stackFunctions: { updateStack: updateStack, addToStack: addToStack } };
+module.exports = { stackState: stackState, reset: _resetState, stackFunctions: { updateStack: updateStack, addToStack: addToStack } };
 
 /***/ }),
 /* 18 */

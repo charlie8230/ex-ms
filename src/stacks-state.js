@@ -118,4 +118,4 @@ function addToStack(type){
   return basic_curry(updateStack)(type);
 }
 
-module.exports = { stackState, stackFunctions: {updateStack, addToStack}};
+module.exports = { stackState, reset: _resetState, stackFunctions: {updateStack, addToStack}};
