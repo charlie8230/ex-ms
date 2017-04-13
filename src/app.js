@@ -1,7 +1,7 @@
 //  let R = require('../vendor/ramda/dist/ramda.custom');
 let util = require('./util');
 let GState = require('./general-state');
-const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
+//  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 let Context = require('./context');
 let {API, emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
@@ -9,10 +9,10 @@ let {logger, log, debugMode}  = require('./logger');
 let app = {
   globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
   get stacks(){
-    return (stackState && stackState.stack) || {};
+    return this.globalConfig.stack || {};
   },
   set stacks(item){
-    stackState.stack = item;
+    this.getGlobal.stack = item;
   },
   get config() {
     return this.globalConfig.config;
@@ -22,6 +22,7 @@ let app = {
   },
   init(config){
     this.globalConfig.set(config);
+    this.aliasAddFunctions();
   },
   logger,
   getElements(){
@@ -36,11 +37,14 @@ let app = {
     }
   },
   getModule(name=''){
-    return (this.stacks['modules']||[]).reduce((acc,val)=>((val.name===name&&val)||acc), null);
+    let stack = this.stacks['modules'];
+    return stack && stack.get(name);
   },
-  addService: stackFunctions.addToStack('services'),
-  addModule: stackFunctions.addToStack('modules'),
-  addAction: stackFunctions.addToStack('actions'),
+  aliasAddFunctions(){
+    this.addService = this.globalConfig.addToStack('services');
+    this.addModule = this.globalConfig.addToStack('modules');
+    this.addAction = this.globalConfig.addToStack('actions');
+  },
   startAll(){
     let all = this.stacks['moduleRefs'];
     all.forEach(m=>{
@@ -49,7 +53,8 @@ let app = {
     });
   },
   getService(name=''){
-    let svcFn = (this.stacks['services']).reduce((acc, val)=>((val.name===name&&val)||acc),null);
+    let stack = this.stacks['services'];
+    let svcFn = stack && stack.get(name);
     let svc;
     if (svcFn) {
       if ('api' in svcFn) {
@@ -65,18 +70,18 @@ let app = {
         log('too deep');
         return;
       }
-      let circular = servicesInProgress.some(val=>val.name===svcName);
+      let circular = servicesInProgress.has(svcName);
       if (circular) {
         log('Found a circular ref!', svcName);
         return;
       } else {
         log('No circular refs', svcName);
       }
-      this.stacks = {type:'serviceInitAdd', name: svcName};
-      svc = svcFn['fn'](this);
-      this.stacks = {type: 'serviceInitDone', name: svcName};
+      this.stacks = {type:'serviceInit', name: svcName};
+      svc = svcFn['fn'](this);  // this = app
+      this.globalConfig.removeStackItem('serviceInit',svcName);
       log(this.stacks['serviceInit']);
-      Object.assign(svcFn, {api:svc, type:'services'}); // incomplete implementation
+      Object.assign(svcFn, {api:svc}); // ok
       return svc;
     }
   },
@@ -100,7 +105,9 @@ let app = {
       this.runStart();
     }
   },
-  reset,
+  reset(){
+    this.getGlobal.reset();
+  },
   setupModules() {
     if (this.config['initCompleted']) {
       log('Global Init already done - exit!');

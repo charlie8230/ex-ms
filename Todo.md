@@ -1,4 +1,6 @@
 Todo
+#### FINISH simplify stack state
+# rename Global config
 # Event Delegation
   Event delegation adapter
   Streams? Pass in elem type?

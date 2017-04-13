@@ -1,23 +1,33 @@
+let {basic_curry} = require('./util');
 
-let STATE = {};
-
-function updateState(item){
-  if (item) return Object.assign({},STATE,item);
-  return {};
+function reset() {
+    return Object.assign({},{
+      config: {},
+      stack: {
+        services:new Map(),
+        serviceInit:new Map(),
+        modules:new Map(),
+        actions: new Map(),
+        moduleRefs:new Map(),
+        plugins:new Map()
+      }
+  });
 }
 
-function setState(item) {
-  STATE = updateState(item);
+let STATE = reset();
+
+function updateConfig(item=null){
+  if (item) return Object.assign(STATE.config,item);
 }
 
-function getState() {
-  return STATE;
+function getState(prop=null) {
+  return STATE[prop] || {};
 }
 
 function state(init={}) {
 
   function set(item){
-   setState(item);
+    updateConfig(item);
   }
 
   function get(prop=undefined) {
@@ -25,8 +35,31 @@ function state(init={}) {
     if (prop) {
       return state[prop];
     } else {
-      return state;
+      return state.config;
     }
+  }
+
+  /* General functions */
+  function updateStack(type, name, fn) {
+    let stack = STATE.stack;
+    if (type in stack) {
+      stack[type].set(name, {type, name, fn});
+    }
+  }
+
+  function addToStack(type){
+    return basic_curry(updateStack)(type);
+  }
+
+  function removeStackItem(type, name) {
+    let stack = STATE.stack;
+    if (type in stack) {
+      stack[type].delete(name);
+    }
+  }
+
+  function clearStack(type) {
+    STATE.stack && STATE.stack[type] && STATE.stack[type].clear();
   }
 
   set(init);
@@ -34,11 +67,23 @@ function state(init={}) {
   return { 
     get, 
     set,
+    reset,
+    addToStack,
+    removeStackItem,
+    clearStack,
     set config(item){
-      setState(item);
+      this.set(item);
     },
     get config(){
-      return getState();
+      return this.get();
+    },
+    set stack(item) {
+      let {type, name, fn} = item;
+      updateStack(type, name, fn);
+    },
+    get stack() {
+      let stack = STATE.stack;
+      return stack;
     }
   };
   
