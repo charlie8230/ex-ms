@@ -1,18 +1,19 @@
 //  let R = require('../vendor/ramda/dist/ramda.custom');
 let util = require('./util');
-let GState = require('./general-state');
+let generalState = require('./general-state');
+const globalConfig = new generalState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'});
 //  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 let Context = require('./context');
 let {API, emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
 
 let app = {
-  globalConfig: new GState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'}),
+  globalConfig,
   get stacks(){
     return this.globalConfig.stack || {};
   },
   set stacks(item){
-    this.getGlobal.stack = item;
+    this.globalConfig.stack = item;
   },
   get config() {
     return this.globalConfig.config;
@@ -22,11 +23,19 @@ let app = {
   },
   init(config){
     this.globalConfig.set(config);
-    this.aliasAddFunctions();
   },
   logger,
   getElements(){
     return document.querySelectorAll(this.config.moduleSelector);
+  },
+  addModule(name, fn) {
+    globalConfig.addToStack('modules')(name, fn);  
+  },
+  addService(name, fn){
+    globalConfig.addToStack('services')(name, fn);  
+  },
+  addAction(name, fn) {
+    globalConfig.addToStack('actions')(name, fn);
   },
   getModuleName(e='',selector='') {
     let key = selector.replace(/[\[\]]/g,'');
@@ -39,11 +48,6 @@ let app = {
   getModule(name=''){
     let stack = this.stacks['modules'];
     return stack && stack.get(name);
-  },
-  aliasAddFunctions(){
-    this.addService = this.globalConfig.addToStack('services');
-    this.addModule = this.globalConfig.addToStack('modules');
-    this.addAction = this.globalConfig.addToStack('actions');
   },
   startAll(){
     let all = this.stacks['moduleRefs'];
@@ -89,7 +93,8 @@ let app = {
     return typeof window[name]==='undefined'?null:window[name];
   },
   getAction(name=''){
-    return (this.stacks['actions']||[]).reduce((acc,val)=>((val.name===name&&val)||acc),null);
+    let stack = this.stacks['actions'];
+    return stack && stack.get(name);
   },
   asSubModule(){},
   runStart(){    
@@ -157,7 +162,6 @@ let app = {
     this.config = {initCompleted: true};
   }
 };
-
 //  Extend
 Object.assign(app,emitterAPI);
 

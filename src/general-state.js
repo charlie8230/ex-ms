@@ -30,15 +30,6 @@ function state(init={}) {
     updateConfig(item);
   }
 
-  function get(prop=undefined) {
-    let state = getState();
-    if (prop) {
-      return state[prop];
-    } else {
-      return state.config;
-    }
-  }
-
   /* General functions */
   function updateStack(type, name, fn) {
     let stack = STATE.stack;
@@ -65,7 +56,6 @@ function state(init={}) {
   set(init);
 
   return { 
-    get, 
     set,
     reset,
     addToStack,
@@ -75,7 +65,7 @@ function state(init={}) {
       this.set(item);
     },
     get config(){
-      return this.get();
+      return getState('config');
     },
     set stack(item) {
       let {type, name, fn} = item;
@@ -86,7 +76,6 @@ function state(init={}) {
       return stack;
     }
   };
-  
 }
 
 module.exports = state;
