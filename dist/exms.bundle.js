@@ -1,1 +1,938 @@
-!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.EXMS=e():t.EXMS=e()}(this,function(){return function(t){function e(o){if(n[o])return n[o].exports;var r=n[o]={i:o,l:!1,exports:{}};return t[o].call(r.exports,r,r.exports,e),r.l=!0,r.exports}var n={};return e.m=t,e.c=n,e.i=function(t){return t},e.d=function(t,n,o){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:o})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=17)}([function(t,e,n){"use strict";function o(){d=!1}function r(t){if(!t)return void(f!==p&&(f=p,o()));if(t!==f){if(t.length!==p.length)throw new Error("Custom alphabet for shortid must be "+p.length+" unique characters. You submitted "+t.length+" characters: "+t);var e=t.split("").filter(function(t,e,n){return e!==n.lastIndexOf(t)});if(e.length)throw new Error("Custom alphabet for shortid must be "+p.length+" unique characters. These characters were not unique: "+e.join(", "));f=t,o()}}function i(t){return r(t),f}function u(t){g.seed(t),l!==t&&(o(),l=t)}function s(){f||r(p);for(var t,e=f.split(""),n=[],o=g.nextValue();e.length>0;)o=g.nextValue(),t=Math.floor(o*e.length),n.push(e.splice(t,1)[0]);return n.join("")}function c(){return d?d:d=s()}function a(t){var e=c();return e[t]}var f,l,d,g=n(13),p="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";t.exports={characters:i,seed:u,lookup:a,shuffled:c}},function(t,e,n){"use strict";function o(t){for(var e=window.location.search.substring(1),n=e.split("&"),o=0;o<n.length;o++){var r=n[o].split("=");if(r[0]==t)return r[1]}return!1}function r(t){return function(e){return t.bind(this,e)}}var i=n(7);t.exports={shortid:i,getQueryVariable:o,basic_curry:r}},function(t,e,n){"use strict";function o(t,e){for(var n,o=0,i="";!n;)i+=t(e>>4*o&15|r()),n=e<Math.pow(16,o+1),o++;return i}var r=n(12);t.exports=o},function(t,e,n){"use strict";var o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},r=n(6),i=n(1),u=i.basic_curry,s=r(),c=Object.assign({onmessage:function(t){var e=this,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:[];if("function"==typeof t&&n.length>0)!function(){var o=u(t);n.forEach(function(t){var n=o(t);e.on(t,n)})}();else if("object"===("undefined"==typeof t?"undefined":o(t)))for(var r in t)this.on(r,t[r])},broadcast:function(){this.emit.apply(this,arguments)},on:function(t,e){s.on(t,e)},off:function(t,e){s.off(t,e)}},s);t.exports={emitterAPI:c,emitter:s}},function(t,e,n){"use strict";var o=n(1),r=o.getQueryVariable,i=r("debug")||r("debugger"),u=i?console:function(){},s=u.log=i?console.log:function(){};t.exports={logger:u,log:s,debugMode:i}},function(t,e,n){"use strict";var o=n(1),r=n(16),i=new r({debugger:d,initCompleted:!1,moduleSelector:"[data-module]"}),u=n(15),s=n(3),c=(s.API,s.emitterAPI),a=n(4),f=a.logger,l=a.log,d=a.debugMode,g={globalConfig:i,get stacks(){return this.globalConfig.stack||{}},set stacks(t){this.globalConfig.stack=t},get config(){return this.globalConfig.config},set config(t){this.globalConfig.set(t)},init:function(t){this.globalConfig.set(t)},logger:f,getElements:function(){return document.querySelectorAll(this.config.moduleSelector)},addModule:function(t,e){i.addToStack("modules")(t,e)},addService:function(t,e){i.addToStack("services")(t,e)},addAction:function(t,e){i.addToStack("actions")(t,e)},getModuleName:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"",n=e.replace(/[\[\]]/g,"");return t?t&&t.attributes&&t.attributes[n]&&t.attributes[n].value:t},getModule:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e=this.stacks.modules;return e&&e.get(t)},startAll:function(){var t=this.stacks.moduleRefs;t.forEach(function(t){t&&t.fn&&t.fn.init&&t.fn.init(),l(t,"init")})},getService:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e=this.stacks.services,n=e&&e.get(t),o=void 0;if(n){if("api"in n)return l("Got ",n.name," already"),n.api;var r=n.name,i=this.stacks.serviceInit;if(i.length>5)return void l("too deep");var u=i.has(r);return u?void l("Found a circular ref!",r):(l("No circular refs",r),this.stacks={type:"serviceInit",name:r},o=n.fn(this),this.globalConfig.removeStackItem("serviceInit",r),l(this.stacks.serviceInit),Object.assign(n,{api:o}),o)}},getGlobal:function(t){return"undefined"==typeof window[t]?null:window[t]},getAction:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",e=this.stacks.actions;return e&&e.get(t)},asSubModule:function(){},runStart:function(){this.setupModules(),this.startAll()},startModules:function(t){var e=this;t?this.on(t,function(){e.runStart()}):this.runStart()},reset:function(){this.getGlobal.reset()},setupModules:function(){var t=this;if(this.config.initCompleted)return void l("Global Init already done - exit!");var e=this.getElements();e.forEach(function(e){var n=t.getModuleName(e,t.config.moduleSelector);if(n){var r=t.getModule(n),i=new u(e,t,o);if(r&&r.fn){var s=void 0;try{s=r.fn(i)}catch(t){l("Could not start "+n+" on "+i+": "+t)}if("undefined"!=typeof s){s.onmessage&&c.onmessage(s.onmessage,s.messages);var a=s.actions||s.behaviors||[];a&&a.length>0&&a.forEach(function(e){var n=t.getAction(e);if(n&&n.fn)try{var o=n.fn(i);l(o)}catch(t){l("could not start behavior "+e+": "+t)}}),t.stacks={type:"moduleRefs",name:n,fn:s}}}}}),this.config={initCompleted:!0}}};Object.assign(g,c),t.exports=g},function(t,e,n){"use strict";function o(t){function e(e){var n=e.toLowerCase();return t[n]||(t[n]=[])}return t=t||{},{on:function(t,n){e(t).push(n)},off:function(t,n){var o=e(t),r=o.indexOf(n);~r&&o.splice(r,1)},emit:function(t,n){e("*").concat(e(t)).forEach(function(t){t(n)})}}}t.exports=o},function(t,e,n){"use strict";t.exports=n(10)},function(t,e,n){"use strict";function o(t){var e="",n=Math.floor(.001*(Date.now()-c));return n===i?r++:(r=0,i=n),e+=u(s.lookup,a),e+=u(s.lookup,t),r>0&&(e+=u(s.lookup,r)),e+=u(s.lookup,n)}var r,i,u=n(2),s=n(0),c=1459707606518,a=6;t.exports=o},function(t,e,n){"use strict";function o(t){var e=r.shuffled();return{version:15&e.indexOf(t.substr(0,1)),worker:15&e.indexOf(t.substr(1,1))}}var r=n(0);t.exports=o},function(t,e,n){"use strict";function o(e){return s.seed(e),t.exports}function r(e){return l=e,t.exports}function i(t){return void 0!==t&&s.characters(t),s.shuffled()}function u(){return a(l)}var s=n(0),c=(n(2),n(9)),a=n(8),f=n(11),l=n(14)||0;t.exports=u,t.exports.generate=u,t.exports.seed=o,t.exports.worker=r,t.exports.characters=i,t.exports.decode=c,t.exports.isValid=f},function(t,e,n){"use strict";function o(t){if(!t||"string"!=typeof t||t.length<6)return!1;for(var e=r.characters(),n=t.length,o=0;o<n;o++)if(e.indexOf(t[o])===-1)return!1;return!0}var r=n(0);t.exports=o},function(t,e,n){"use strict";function o(){if(!i||!i.getRandomValues)return 48&Math.floor(256*Math.random());var t=new Uint8Array(1);return i.getRandomValues(t),48&t[0]}var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},i="object"===("undefined"==typeof window?"undefined":r(window))&&(window.crypto||window.msCrypto);t.exports=o},function(t,e,n){"use strict";function o(){return i=(9301*i+49297)%233280,i/233280}function r(t){i=t}var i=1;t.exports={nextValue:o,seed:r}},function(t,e,n){"use strict";t.exports=0},function(t,e,n){"use strict";function o(t,e,n){var o=t.id||"",r=n.shortid.generate(),i=o||r;this.el=this.elem=t,this._id=i,this.el.id="module-"+this._id,this.status="created",this.getService=e.getService.bind(e),this.getSubModule=e.asSubModule.bind(e),this.getGlobal=e.getGlobal.bind(e)}var r=n(3),i=r.emitterAPI,u=n(4);u.logger,u.debugMode;o.prototype=Object.assign(o.prototype,i,{getElement:function(){return this.el},destroy:function(){this.el=null,this.status=null}}),t.exports=o},function(t,e,n){"use strict";function o(){return Object.assign({},{config:{},stack:{services:new Map,serviceInit:new Map,modules:new Map,actions:new Map,moduleRefs:new Map,plugins:new Map}})}function r(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;if(t)return Object.assign(a.config,t)}function i(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;return a[t]||{}}function u(){function t(t){r(t)}function e(t,e,n){var o=a.stack;t in o&&o[t].set(e,{type:t,name:e,fn:n})}function n(t){return c(e)(t)}function u(t,e){var n=a.stack;t in n&&n[t].delete(e)}function s(t){a.stack&&a.stack[t]&&a.stack[t].clear()}var f=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};return t(f),{set:t,reset:o,addToStack:n,removeStackItem:u,clearStack:s,set config(t){this.set(t)},get config(){return i("config")},set stack(t){var n=t.type,o=t.name,r=t.fn;e(n,o,r)},get stack(){var t=a.stack;return t}}}var s=n(1),c=s.basic_curry,a=o();t.exports=u},function(t,e,n){"use strict";var o=n(5),r=void 0,i=Object.assign(o,{noConflict:function(){return window.EXMS=r,this}});window.EXMS&&(r=window.EXMS),t.exports=i}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["EXMS"] = factory();
+	else
+		root["EXMS"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var randomFromSeed = __webpack_require__(13);
+
+var ORIGINAL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
+var alphabet;
+var previousSeed;
+
+var shuffled;
+
+function reset() {
+    shuffled = false;
+}
+
+function setCharacters(_alphabet_) {
+    if (!_alphabet_) {
+        if (alphabet !== ORIGINAL) {
+            alphabet = ORIGINAL;
+            reset();
+        }
+        return;
+    }
+
+    if (_alphabet_ === alphabet) {
+        return;
+    }
+
+    if (_alphabet_.length !== ORIGINAL.length) {
+        throw new Error('Custom alphabet for shortid must be ' + ORIGINAL.length + ' unique characters. You submitted ' + _alphabet_.length + ' characters: ' + _alphabet_);
+    }
+
+    var unique = _alphabet_.split('').filter(function (item, ind, arr) {
+        return ind !== arr.lastIndexOf(item);
+    });
+
+    if (unique.length) {
+        throw new Error('Custom alphabet for shortid must be ' + ORIGINAL.length + ' unique characters. These characters were not unique: ' + unique.join(', '));
+    }
+
+    alphabet = _alphabet_;
+    reset();
+}
+
+function characters(_alphabet_) {
+    setCharacters(_alphabet_);
+    return alphabet;
+}
+
+function setSeed(seed) {
+    randomFromSeed.seed(seed);
+    if (previousSeed !== seed) {
+        reset();
+        previousSeed = seed;
+    }
+}
+
+function shuffle() {
+    if (!alphabet) {
+        setCharacters(ORIGINAL);
+    }
+
+    var sourceArray = alphabet.split('');
+    var targetArray = [];
+    var r = randomFromSeed.nextValue();
+    var characterIndex;
+
+    while (sourceArray.length > 0) {
+        r = randomFromSeed.nextValue();
+        characterIndex = Math.floor(r * sourceArray.length);
+        targetArray.push(sourceArray.splice(characterIndex, 1)[0]);
+    }
+    return targetArray.join('');
+}
+
+function getShuffled() {
+    if (shuffled) {
+        return shuffled;
+    }
+    shuffled = shuffle();
+    return shuffled;
+}
+
+/**
+ * lookup shuffled letter
+ * @param index
+ * @returns {string}
+ */
+function lookup(index) {
+    var alphabetShuffled = getShuffled();
+    return alphabetShuffled[index];
+}
+
+module.exports = {
+    characters: characters,
+    seed: setSeed,
+    lookup: lookup,
+    shuffled: getShuffled
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var shortid = __webpack_require__(7);
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  }
+  return false;
+}
+/*      Actually partial application of one parameter... may be extended to multiple params */
+function basic_curry(fn) {
+  return function (first) {
+    return fn.bind(this, first);
+  };
+}
+module.exports = { shortid: shortid, getQueryVariable: getQueryVariable, basic_curry: basic_curry };
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var randomByte = __webpack_require__(12);
+
+function encode(lookup, number) {
+    var loopCounter = 0;
+    var done;
+
+    var str = '';
+
+    while (!done) {
+        str = str + lookup(number >> 4 * loopCounter & 0x0f | randomByte());
+        done = number < Math.pow(16, loopCounter + 1);
+        loopCounter++;
+    }
+    return str;
+}
+
+module.exports = encode;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var mitt = __webpack_require__(6);
+
+var _require = __webpack_require__(1),
+    basic_curry = _require.basic_curry;
+
+var emitter = mitt();
+var emitterAPI = Object.assign({
+  //  Adapter for T3 users
+  onmessage: function onmessage(fn) {
+    var _this = this;
+
+    var msgs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+    if (typeof fn === 'function' && msgs.length > 0) {
+      (function () {
+        var handler = basic_curry(fn);
+        msgs.forEach(function (e) {
+          var fx = handler(e);
+          _this.on(e, fx);
+        });
+      })();
+    } else {
+      if ((typeof fn === 'undefined' ? 'undefined' : _typeof(fn)) === 'object') {
+        for (var _handler in fn) {
+          this.on(_handler, fn[_handler]);
+        }
+      }
+    }
+  },
+  broadcast: function broadcast() {
+    this.emit.apply(this, arguments);
+  },
+  on: function on(msg, handler) {
+    emitter.on(msg, handler);
+  },
+  off: function off(msg, handler) {
+    emitter.off(msg, handler);
+  }
+}, emitter);
+
+module.exports = { emitterAPI: emitterAPI, emitter: emitter };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(1),
+    getQueryVariable = _require.getQueryVariable;
+
+var debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
+var logger = debugMode ? console : function () {};
+var log = logger.log = debugMode ? console.log : function () {};
+module.exports = { logger: logger, log: log, debugMode: debugMode };
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+//  let R = require('../vendor/ramda/dist/ramda.custom');
+var util = __webpack_require__(1);
+var generalState = __webpack_require__(16);
+var globalConfig = new generalState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]' });
+//  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
+var Context = __webpack_require__(15);
+
+var _require = __webpack_require__(3),
+    API = _require.API,
+    emitterAPI = _require.emitterAPI;
+
+var _require2 = __webpack_require__(4),
+    logger = _require2.logger,
+    log = _require2.log,
+    debugMode = _require2.debugMode;
+
+var app = {
+  globalConfig: globalConfig,
+  get stacks() {
+    return this.globalConfig.stack || {};
+  },
+  set stacks(item) {
+    this.globalConfig.stack = item;
+  },
+  get config() {
+    return this.globalConfig.config;
+  },
+  set config(val) {
+    this.globalConfig.set(val);
+  },
+  init: function init(config) {
+    this.globalConfig.set(config);
+  },
+
+  logger: logger,
+  getElements: function getElements() {
+    return document.querySelectorAll(this.config.moduleSelector);
+  },
+  addModule: function addModule(name, fn) {
+    globalConfig.addToStack('modules')(name, fn);
+  },
+  addService: function addService(name, fn) {
+    globalConfig.addToStack('services')(name, fn);
+  },
+  addAction: function addAction(name, fn) {
+    globalConfig.addToStack('actions')(name, fn);
+  },
+  getModuleName: function getModuleName() {
+    var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+    var key = selector.replace(/[\[\]]/g, '');
+    if (e) {
+      return e && e.attributes && e.attributes[key] && e.attributes[key].value;
+    } else {
+      return e;
+    }
+  },
+  getModule: function getModule() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    var stack = this.stacks['modules'];
+    return stack && stack.get(name);
+  },
+  startAll: function startAll() {
+    var stacks = this.stacks;
+    var all = stacks['moduleRefs'];
+    all.forEach(function (m) {
+      m && m.fn && m.fn['init'] && m.fn['init']();
+      log(m, 'init');
+    });
+  },
+  getService: function getService() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    var stack = this.stacks['services'];
+    var svcFn = stack && stack.get(name);
+    var svc = void 0;
+    if (svcFn) {
+      if ('api' in svcFn) {
+        log('Got ', svcFn['name'], ' already');
+        return svcFn['api'];
+      }
+
+      // bails out on circular ref checks
+
+      var svcName = svcFn['name'];
+      var servicesInProgress = this.stacks['serviceInit'];
+      if (servicesInProgress.length > 5) {
+        log('too deep');
+        return;
+      }
+      var circular = servicesInProgress.has(svcName);
+      if (circular) {
+        log('Found a circular ref!', svcName);
+        return;
+      } else {
+        log('No circular refs', svcName);
+      }
+      this.stacks = { type: 'serviceInit', name: svcName };
+      svc = svcFn['fn'](this); // this = app
+      this.globalConfig.removeStackItem('serviceInit', svcName);
+      log(this.stacks['serviceInit']);
+      Object.assign(svcFn, { api: svc }); // ok
+      return svc;
+    }
+  },
+  getGlobal: function getGlobal(name) {
+    return typeof window[name] === 'undefined' ? null : window[name];
+  },
+  getAction: function getAction() {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    var stack = this.stacks['actions'];
+    return stack && stack.get(name);
+  },
+  asSubModule: function asSubModule() {},
+  runStart: function runStart() {
+    if (this.config['initCompleted']) {
+      log('Global Init already done - exit!');
+      return true;
+    }
+    this.setupModules();
+    this.startAll();
+  },
+  startModules: function startModules(kickoffmsg) {
+    var _this = this;
+
+    if (kickoffmsg) {
+      this.on(kickoffmsg, function () {
+        _this.runStart();
+      });
+    } else {
+      this.runStart();
+    }
+  },
+  reset: function reset() {
+    this.globalConfig.reset();
+  },
+  setupModules: function setupModules() {
+    var _this2 = this;
+
+    var elems = this.getElements();
+    elems.forEach(function (e) {
+      var name = _this2.getModuleName(e, _this2.config.moduleSelector);
+      if (!name) return;
+      var exmodule = _this2.getModule(name);
+
+      var context = new Context(e, _this2, util);
+      if (exmodule && exmodule['fn']) {
+        var moduleFn = void 0;
+        try {
+          moduleFn = exmodule['fn'](context);
+        } catch (e) {
+          log('Could not start ' + name + ' on ' + context + ': ' + e);
+        }
+
+        if (typeof moduleFn !== 'undefined') {
+          if (moduleFn['onmessage']) {
+            emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
+          }
+          // ? stack item was not added?
+          var actions = moduleFn['actions'] || moduleFn['behaviors'] || [];
+          // dedupe the actions
+          if (actions && actions.length > 0) {
+            actions.forEach(function (name) {
+              var act = _this2.getAction(name);
+              if (act && act['fn']) {
+                try {
+                  var process = act['fn'](context); // take context and add event delegation
+                  log(process);
+                } catch (e) {
+                  log('could not start behavior ' + name + ': ' + e);
+                }
+              }
+            });
+            //  returns event handlers- attach
+            //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
+          }
+
+          _this2.stacks = { type: 'moduleRefs', name: name, fn: moduleFn }; // fn should have lifecyle methods?
+        }
+      }
+    });
+    this.config = { initCompleted: true };
+  }
+};
+//  Extend
+Object.assign(app, emitterAPI);
+
+module.exports = app;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function n(n) {
+  function o(o) {
+    var t = o.toLowerCase();return n[t] || (n[t] = []);
+  }return n = n || {}, { on: function on(n, t) {
+      o(n).push(t);
+    }, off: function off(n, t) {
+      var c = o(n),
+          f = c.indexOf(t);~f && c.splice(f, 1);
+    }, emit: function emit(n, t) {
+      o("*").concat(o(n)).forEach(function (n) {
+        n(t);
+      });
+    } };
+}module.exports = n;
+//# sourceMappingURL=mitt.js.map
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(10);
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var encode = __webpack_require__(2);
+var alphabet = __webpack_require__(0);
+
+// Ignore all milliseconds before a certain time to reduce the size of the date entropy without sacrificing uniqueness.
+// This number should be updated every year or so to keep the generated id short.
+// To regenerate `new Date() - 0` and bump the version. Always bump the version!
+var REDUCE_TIME = 1459707606518;
+
+// don't change unless we change the algos or REDUCE_TIME
+// must be an integer and less than 16
+var version = 6;
+
+// Counter is used when shortid is called multiple times in one second.
+var counter;
+
+// Remember the last time shortid was called in case counter is needed.
+var previousSeconds;
+
+/**
+ * Generate unique id
+ * Returns string id
+ */
+function build(clusterWorkerId) {
+
+    var str = '';
+
+    var seconds = Math.floor((Date.now() - REDUCE_TIME) * 0.001);
+
+    if (seconds === previousSeconds) {
+        counter++;
+    } else {
+        counter = 0;
+        previousSeconds = seconds;
+    }
+
+    str = str + encode(alphabet.lookup, version);
+    str = str + encode(alphabet.lookup, clusterWorkerId);
+    if (counter > 0) {
+        str = str + encode(alphabet.lookup, counter);
+    }
+    str = str + encode(alphabet.lookup, seconds);
+
+    return str;
+}
+
+module.exports = build;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet = __webpack_require__(0);
+
+/**
+ * Decode the id to get the version and worker
+ * Mainly for debugging and testing.
+ * @param id - the shortid-generated id.
+ */
+function decode(id) {
+    var characters = alphabet.shuffled();
+    return {
+        version: characters.indexOf(id.substr(0, 1)) & 0x0f,
+        worker: characters.indexOf(id.substr(1, 1)) & 0x0f
+    };
+}
+
+module.exports = decode;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet = __webpack_require__(0);
+var encode = __webpack_require__(2);
+var decode = __webpack_require__(9);
+var build = __webpack_require__(8);
+var isValid = __webpack_require__(11);
+
+// if you are using cluster or multiple servers use this to make each instance
+// has a unique value for worker
+// Note: I don't know if this is automatically set when using third
+// party cluster solutions such as pm2.
+var clusterWorkerId = __webpack_require__(14) || 0;
+
+/**
+ * Set the seed.
+ * Highly recommended if you don't want people to try to figure out your id schema.
+ * exposed as shortid.seed(int)
+ * @param seed Integer value to seed the random alphabet.  ALWAYS USE THE SAME SEED or you might get overlaps.
+ */
+function seed(seedValue) {
+  alphabet.seed(seedValue);
+  return module.exports;
+}
+
+/**
+ * Set the cluster worker or machine id
+ * exposed as shortid.worker(int)
+ * @param workerId worker must be positive integer.  Number less than 16 is recommended.
+ * returns shortid module so it can be chained.
+ */
+function worker(workerId) {
+  clusterWorkerId = workerId;
+  return module.exports;
+}
+
+/**
+ *
+ * sets new characters to use in the alphabet
+ * returns the shuffled alphabet
+ */
+function characters(newCharacters) {
+  if (newCharacters !== undefined) {
+    alphabet.characters(newCharacters);
+  }
+
+  return alphabet.shuffled();
+}
+
+/**
+ * Generate unique id
+ * Returns string id
+ */
+function generate() {
+  return build(clusterWorkerId);
+}
+
+// Export all other functions as properties of the generate function
+module.exports = generate;
+module.exports.generate = generate;
+module.exports.seed = seed;
+module.exports.worker = worker;
+module.exports.characters = characters;
+module.exports.decode = decode;
+module.exports.isValid = isValid;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var alphabet = __webpack_require__(0);
+
+function isShortId(id) {
+    if (!id || typeof id !== 'string' || id.length < 6) {
+        return false;
+    }
+
+    var characters = alphabet.characters();
+    var len = id.length;
+    for (var i = 0; i < len; i++) {
+        if (characters.indexOf(id[i]) === -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+module.exports = isShortId;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var crypto = (typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object' && (window.crypto || window.msCrypto); // IE 11 uses window.msCrypto
+
+function randomByte() {
+    if (!crypto || !crypto.getRandomValues) {
+        return Math.floor(Math.random() * 256) & 0x30;
+    }
+    var dest = new Uint8Array(1);
+    crypto.getRandomValues(dest);
+    return dest[0] & 0x30;
+}
+
+module.exports = randomByte;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// Found this seed-based random generator somewhere
+// Based on The Central Randomizer 1.3 (C) 1997 by Paul Houle (houle@msc.cornell.edu)
+
+var seed = 1;
+
+/**
+ * return a random number based on a seed
+ * @param seed
+ * @returns {number}
+ */
+function getNextValue() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280.0;
+}
+
+function setSeed(_seed_) {
+    seed = _seed_;
+}
+
+module.exports = {
+    nextValue: getNextValue,
+    seed: setSeed
+};
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = 0;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// Context is a store with a bound elem?
+// Context is passed on to the module factory functions
+var _require = __webpack_require__(3),
+    emitterAPI = _require.emitterAPI;
+
+var _require2 = __webpack_require__(4),
+    logger = _require2.logger,
+    debugMode = _require2.debugMode;
+
+function Context(elem, App, util) {
+  var id = elem.id || '',
+      shortid = util.shortid.generate(),
+      _id = id || shortid;
+  this.el = this.elem = elem;
+  this._id = _id;
+  this.el.id = 'module-' + this._id;
+  this.status = 'created';
+  /*  Needs to be abstracted out of App */
+  this.getService = App.getService.bind(App);
+  this.getSubModule = App.asSubModule.bind(App);
+  this.getGlobal = App.getGlobal.bind(App);
+}
+
+Context.prototype = Object.assign(Context.prototype, emitterAPI, {
+  getElement: function getElement() {
+    return this.el;
+  },
+  destroy: function destroy() {
+    this.el = null;
+    this.status = null;
+  }
+});
+
+module.exports = Context;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(1),
+    basic_curry = _require.basic_curry;
+
+var STATE = { config: {}, stack: {} };
+
+function reset() {
+  return Object.assign(STATE.stack, {
+    services: new Map(),
+    serviceInit: new Map(),
+    modules: new Map(),
+    actions: new Map(),
+    moduleRefs: new Map(),
+    plugins: new Map()
+  });
+}
+
+reset();
+
+function updateConfig() {
+  var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+  if (item) return Object.assign(STATE.config, item);
+}
+
+function getState() {
+  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+  return STATE[prop] || {};
+}
+
+function state() {
+  var init = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+  function set(item) {
+    updateConfig(item);
+  }
+
+  /* General functions */
+  function updateStack(type, name, fn) {
+    var stack = STATE.stack;
+    if (type in stack) {
+      stack[type].set(name, { type: type, name: name, fn: fn });
+    }
+  }
+
+  function addToStack(type) {
+    return basic_curry(updateStack)(type);
+  }
+
+  function removeStackItem(type, name) {
+    var stack = STATE.stack;
+    if (type in stack) {
+      stack[type].delete(name);
+    }
+  }
+
+  function clearStack(type) {
+    STATE.stack && STATE.stack[type] && STATE.stack[type].clear();
+  }
+
+  set(init);
+
+  return {
+    set: set,
+    reset: reset,
+    addToStack: addToStack,
+    removeStackItem: removeStackItem,
+    clearStack: clearStack,
+    set config(item) {
+      this.set(item);
+    },
+    get config() {
+      return getState('config');
+    },
+    set stack(item) {
+      var type = item.type,
+          name = item.name,
+          fn = item.fn;
+
+      updateStack(type, name, fn);
+    },
+    get stack() {
+      var stack = STATE.stack;
+      return stack;
+    }
+  };
+}
+
+module.exports = state;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @fileoverview Main library
+ * @author Carlos Moran
+ */
+
+var app = __webpack_require__(5);
+
+var previousEXMS = void 0;
+
+var __EXMS = Object.assign(app, {
+  noConflict: function noConflict() {
+    window.EXMS = previousEXMS;
+    return this;
+  }
+});
+
+if (window['EXMS']) previousEXMS = window['EXMS'];
+
+module.exports = __EXMS;
+
+/***/ })
+/******/ ]);
+});

@@ -50,7 +50,8 @@ let app = {
     return stack && stack.get(name);
   },
   startAll(){
-    let all = this.stacks['moduleRefs'];
+    let stacks = this.stacks;
+    let all = stacks['moduleRefs'];
     all.forEach(m=>{
       m && m.fn && m.fn['init'] && m.fn['init']();
       log(m, 'init');
@@ -97,7 +98,11 @@ let app = {
     return stack && stack.get(name);
   },
   asSubModule(){},
-  runStart(){    
+  runStart(){
+    if (this.config['initCompleted']) {
+      log('Global Init already done - exit!');
+      return true;
+    }    
     this.setupModules();
     this.startAll();
   },
@@ -111,13 +116,10 @@ let app = {
     }
   },
   reset(){
-    this.getGlobal.reset();
+    this.globalConfig.reset();
   },
   setupModules() {
-    if (this.config['initCompleted']) {
-      log('Global Init already done - exit!');
-      return;
-    }
+
     let elems = this.getElements();
     elems.forEach(e=>{
       let name = this.getModuleName(e, this.config.moduleSelector);
@@ -155,6 +157,7 @@ let app = {
             //  returns event handlers- attach
             //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
           }
+
           this.stacks = {type: 'moduleRefs', name, fn:moduleFn};  // fn should have lifecyle methods?
         }
       }

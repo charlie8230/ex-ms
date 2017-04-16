@@ -1,20 +1,19 @@
 let {basic_curry} = require('./util');
 
+let STATE = {config:{},stack:{}};
+
 function reset() {
-    return Object.assign({},{
-      config: {},
-      stack: {
-        services:new Map(),
-        serviceInit:new Map(),
-        modules:new Map(),
-        actions: new Map(),
-        moduleRefs:new Map(),
-        plugins:new Map()
-      }
+  return Object.assign(STATE.stack,{
+      services:new Map(),
+      serviceInit:new Map(),
+      modules:new Map(),
+      actions: new Map(),
+      moduleRefs:new Map(),
+      plugins:new Map()
   });
 }
 
-let STATE = reset();
+reset();
 
 function updateConfig(item=null){
   if (item) return Object.assign(STATE.config,item);
