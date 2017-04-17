@@ -308,7 +308,7 @@ module.exports = { logger: logger, log: log, debugMode: debugMode };
 //  let R = require('../vendor/ramda/dist/ramda.custom');
 var util = __webpack_require__(1);
 var generalState = __webpack_require__(16);
-var globalConfig = new generalState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]' });
+var globalConfig = new generalState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]', maxServiceDepth: 8 });
 //  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 var Context = __webpack_require__(15);
 
@@ -353,14 +353,14 @@ var app = {
     globalConfig.addToStack('actions')(name, fn);
   },
   getModuleName: function getModuleName() {
-    var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var elem = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     var selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 
     var key = selector.replace(/[\[\]]/g, '');
-    if (e) {
-      return e && e.attributes && e.attributes[key] && e.attributes[key].value;
+    if (elem) {
+      return elem && elem.attributes && elem.attributes[key] && elem.attributes[key].value;
     } else {
-      return e;
+      return elem;
     }
   },
   getModule: function getModule() {
@@ -371,10 +371,10 @@ var app = {
   },
   startAll: function startAll() {
     var stacks = this.stacks;
-    var all = stacks['moduleRefs'];
-    all.forEach(function (m) {
-      m && m.fn && m.fn['init'] && m.fn['init']();
-      log(m, 'init');
+    var mRefs = stacks['moduleRefs'];
+    mRefs.forEach(function (moduleInit) {
+      moduleInit['fn'] && moduleInit.fn['init'] && moduleInit.fn['init']();
+      log(moduleInit, 'init');
     });
   },
   getService: function getService() {
@@ -385,7 +385,7 @@ var app = {
     var svc = void 0;
     if (svcFn) {
       if ('api' in svcFn) {
-        log('Got ', svcFn['name'], ' already');
+        log('Got ', svcFn['name'], ' already'); // Singleton cannot be inited again
         return svcFn['api'];
       }
 
@@ -393,7 +393,7 @@ var app = {
 
       var svcName = svcFn['name'];
       var servicesInProgress = this.stacks['serviceInit'];
-      if (servicesInProgress.length > 5) {
+      if (servicesInProgress.size > globalConfig.maxServiceDepth) {
         log('too deep');
         return;
       }
@@ -408,7 +408,7 @@ var app = {
       svc = svcFn['fn'](this); // this = app
       this.globalConfig.removeStackItem('serviceInit', svcName);
       log(this.stacks['serviceInit']);
-      Object.assign(svcFn, { api: svc }); // ok
+      svcFn['api'] = svc; // ok
       return svc;
     }
   },
@@ -474,8 +474,21 @@ var app = {
               var act = _this2.getAction(name);
               if (act && act['fn']) {
                 try {
-                  var process = act['fn'](context); // take context and add event delegation
-                  log(process);
+                  (function () {
+                    var process = act['fn'](context); // take context and add event delegation
+                    var keys = Object.keys(process);
+                    var handlers = keys.filter(function (val) {
+                      return (/on/.test(val)
+                      );
+                    });
+                    /// LIST of events!!!?
+                    handlers.forEach(function (value) {
+                      var _handler = process[value];
+                      var _name = value.replace(/^on/, '');
+                      context.el.addEventListener(_name, _handler);
+                    });
+                    log(process);
+                  })();
                 } catch (e) {
                   log('could not start behavior ' + name + ': ' + e);
                 }
@@ -823,7 +836,7 @@ var STATE = { config: {}, stack: {} };
 function reset() {
   return Object.assign(STATE.stack, {
     services: new Map(),
-    serviceInit: new Map(),
+    serviceInit: new Set(),
     modules: new Map(),
     actions: new Map(),
     moduleRefs: new Map(),
@@ -856,7 +869,9 @@ function state() {
   /* General functions */
   function updateStack(type, name, fn) {
     var stack = STATE.stack;
-    if (type in stack) {
+    if (type == 'serviceInit') {
+      stack[type].add(name);
+    } else if (type in stack) {
       stack[type].set(name, { type: type, name: name, fn: fn });
     }
   }

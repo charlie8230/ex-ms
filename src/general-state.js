@@ -5,7 +5,7 @@ let STATE = {config:{},stack:{}};
 function reset() {
   return Object.assign(STATE.stack,{
       services:new Map(),
-      serviceInit:new Map(),
+      serviceInit:new Set(),
       modules:new Map(),
       actions: new Map(),
       moduleRefs:new Map(),
@@ -32,7 +32,10 @@ function state(init={}) {
   /* General functions */
   function updateStack(type, name, fn) {
     let stack = STATE.stack;
-    if (type in stack) {
+    if (type == 'serviceInit') {
+      stack[type].add(name);
+    }
+    else if (type in stack) {
       stack[type].set(name, {type, name, fn});
     }
   }

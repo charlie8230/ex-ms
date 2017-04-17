@@ -1,7 +1,7 @@
 //  let R = require('../vendor/ramda/dist/ramda.custom');
 let util = require('./util');
 let generalState = require('./general-state');
-const globalConfig = new generalState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]'});
+const globalConfig = new generalState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]', maxServiceDepth: 8});
 //  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 let Context = require('./context');
 let {API, emitterAPI} = require('./events');
@@ -37,12 +37,12 @@ let app = {
   addAction(name, fn) {
     globalConfig.addToStack('actions')(name, fn);
   },
-  getModuleName(e='',selector='') {
+  getModuleName(elem='',selector='') {
     let key = selector.replace(/[\[\]]/g,'');
-    if (e) {
-      return e && e.attributes && e.attributes[key] && e.attributes[key].value;
+    if (elem) {
+      return elem && elem.attributes && elem.attributes[key] && elem.attributes[key].value;
     } else {
-      return e;
+      return elem;
     }
   },
   getModule(name=''){
@@ -51,10 +51,10 @@ let app = {
   },
   startAll(){
     let stacks = this.stacks;
-    let all = stacks['moduleRefs'];
-    all.forEach(m=>{
-      m && m.fn && m.fn['init'] && m.fn['init']();
-      log(m, 'init');
+    let mRefs = stacks['moduleRefs'];
+    mRefs.forEach(moduleInit=>{
+      moduleInit['fn'] && moduleInit.fn['init'] && moduleInit.fn['init']();
+      log(moduleInit, 'init');
     });
   },
   getService(name=''){
@@ -63,7 +63,7 @@ let app = {
     let svc;
     if (svcFn) {
       if ('api' in svcFn) {
-        log('Got ', svcFn['name'], ' already');
+        log('Got ', svcFn['name'], ' already'); // Singleton cannot be inited again
         return svcFn['api'];
       }
 
@@ -71,7 +71,7 @@ let app = {
       
       let svcName = svcFn['name'];
       let servicesInProgress = this.stacks['serviceInit'];
-      if(servicesInProgress.length>5) {
+      if(servicesInProgress.size>globalConfig.maxServiceDepth) {
         log('too deep');
         return;
       }
@@ -86,7 +86,7 @@ let app = {
       svc = svcFn['fn'](this);  // this = app
       this.globalConfig.removeStackItem('serviceInit',svcName);
       log(this.stacks['serviceInit']);
-      Object.assign(svcFn, {api:svc}); // ok
+      svcFn['api'] = svc; // ok
       return svc;
     }
   },
@@ -148,6 +148,14 @@ let app = {
               if (act && act['fn']) {
                 try {
                   let process = act['fn'](context); // take context and add event delegation
+                  let keys = Object.keys(process);
+                  let handlers = keys.filter(val=>/on/.test(val));
+/// LIST of events!!!?
+                  handlers.forEach(value=>{
+                    let _handler = process[value];
+                    let _name = value.replace(/^on/,'');
+                    context.el.addEventListener(_name,_handler);
+                  });
                   log(process);
                 } catch(e){
                   log(`could not start behavior ${name}: ${e}`);

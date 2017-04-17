@@ -22,6 +22,7 @@ EXMS.stacks = {name:'hfffi',fn:function(ctx){console.log('module');
 },type:'modules'};
 EXMS.stacks = {name:'msg',fn:function(ctx){
   log('testing msg on return');
+  debugger;
   return {
     init() {
       log('init!')
@@ -29,7 +30,7 @@ EXMS.stacks = {name:'msg',fn:function(ctx){
     },
     actions: ['menu','menu2'],
     messages: ['helloMSG','anotherPattern'],
-    onmessage(name, data){;
+    onmessage(name, data){
       log(name, data);
     }
   };
@@ -37,6 +38,12 @@ EXMS.stacks = {name:'msg',fn:function(ctx){
 EXMS.stacks = {name:'menu', fn: function(context){log('I am a behavior');}, type:'actions'};
 EXMS.addAction('menu2',function(context){
   log('I am a behavior2 attached to', context.getElement().id);
+  return {
+    onclick(e){
+      console.log(e, 'was clicked');
+    }
+  }
+
 });
 EXMS.stacks = {name:'list',fn:function(ctx){
   let msg = 'HI!!';

@@ -1,12 +1,12 @@
 Todo
 #### FINISH simplify stack state
-# rename Global config
-# Event Delegation
+# rename Global config ##
+# Event Delegation 
   Event delegation adapter
   Streams? Pass in elem type?
   Actions - unique??
 # Get global adapter - done
-
+#expose unique ID utility
 # Get Module config as store? or just object?
   or data-config
   # More error handling?
