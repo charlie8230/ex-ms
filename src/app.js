@@ -133,6 +133,7 @@ let app = {
       cache.map(this.cleanUpName).forEach(e=>{
         this.stacks = e;
       });
+      this.cache = null;
     }
   },
   setupModules() {

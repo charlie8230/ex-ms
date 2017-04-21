@@ -11,41 +11,41 @@
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -56,7 +56,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -65,15 +65,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -255,13 +255,11 @@ var emitterAPI = Object.assign({
     var msgs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
     if (typeof fn === 'function' && msgs.length > 0) {
-      (function () {
-        var handler = basic_curry(fn);
-        msgs.forEach(function (e) {
-          var fx = handler(e);
-          _this.on(e, fx);
-        });
-      })();
+      var handler = basic_curry(fn);
+      msgs.forEach(function (e) {
+        var fx = handler(e);
+        _this.on(e, fx);
+      });
     } else {
       if ((typeof fn === 'undefined' ? 'undefined' : _typeof(fn)) === 'object') {
         for (var _handler in fn) {
@@ -307,7 +305,7 @@ module.exports = { logger: logger, log: log, debugMode: debugMode };
 
 //  let R = require('../vendor/ramda/dist/ramda.custom');
 var util = __webpack_require__(1);
-var generalState = __webpack_require__(16);
+var generalState = __webpack_require__(17);
 var globalConfig = new generalState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]', maxServiceDepth: 8 });
 //  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 var Context = __webpack_require__(15);
@@ -461,6 +459,7 @@ var app = {
       cache.map(this.cleanUpName).forEach(function (e) {
         _this2.stacks = e;
       });
+      this.cache = null;
     }
   },
   setupModules: function setupModules() {
@@ -495,21 +494,19 @@ var app = {
               var act = _this3.getAction(name);
               if (act && act['fn']) {
                 try {
-                  (function () {
-                    var process = act['fn'](context); // take context and add event delegation
-                    var keys = Object.keys(process);
-                    var handlers = keys.filter(function (val) {
-                      return (/on/.test(val)
-                      );
-                    });
-                    /// LIST of events!!!?
-                    handlers.forEach(function (value) {
-                      var _handler = process[value];
-                      var _name = value.replace(/^on/, '');
-                      context.el.addEventListener(_name, _handler);
-                    });
-                    log(process);
-                  })();
+                  var process = act['fn'](context); // take context and add event delegation
+                  var keys = Object.keys(process);
+                  var handlers = keys.filter(function (val) {
+                    return (/on/.test(val)
+                    );
+                  });
+                  /// LIST of events!!!?
+                  handlers.forEach(function (value) {
+                    var _handler = process[value];
+                    var _name = value.replace(/^on/, '');
+                    context.el.addEventListener(_name, _handler);
+                  });
+                  log(process);
                 } catch (e) {
                   log('could not start behavior ' + name + ': ' + e);
                 }
@@ -538,21 +535,71 @@ module.exports = app;
 "use strict";
 
 
-function n(n) {
-  function o(o) {
-    var t = o.toLowerCase();return n[t] || (n[t] = []);
-  }return n = n || {}, { on: function on(n, t) {
-      o(n).push(t);
-    }, off: function off(n, t) {
-      var c = o(n),
-          f = c.indexOf(t);~f && c.splice(f, 1);
-    }, emit: function emit(n, t) {
-      o("*").concat(o(n)).forEach(function (n) {
-        n(t);
-      });
-    } };
-}module.exports = n;
-//# sourceMappingURL=mitt.js.map
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+//      
+// An event handler can take an optional event argument
+// and should not return a value
+
+// An array of all currently registered event handlers for a type
+
+// A map of event types and their corresponding event handlers.
+
+
+/** Mitt: Tiny (~200b) functional event emitter / pubsub.
+ *  @name mitt
+ *  @returns {Mitt}
+ */
+function mitt(all) {
+	all = all || Object.create(null);
+
+	return {
+		/**
+   * Register an event handler for the given type.
+   *
+   * @param  {String} type	Type of event to listen for, or `"*"` for all events
+   * @param  {Function} handler Function to call in response to given event
+   * @memberOf mitt
+   */
+		on: function on(type, handler) {
+			(all[type] || (all[type] = [])).push(handler);
+		},
+
+		/**
+   * Remove an event handler for the given type.
+   *
+   * @param  {String} type	Type of event to unregister `handler` from, or `"*"`
+   * @param  {Function} handler Handler function to remove
+   * @memberOf mitt
+   */
+		off: function off(type, handler) {
+			if (all[type]) {
+				all[type].splice(all[type].indexOf(handler) >>> 0, 1);
+			}
+		},
+
+		/**
+   * Invoke all handlers for the given type.
+   * If present, `"*"` handlers are invoked after type-matched handlers.
+   *
+   * @param {String} type  The event type to invoke
+   * @param {Any} [evt]  Any value (object is recommended and powerful), passed to each handler
+   * @memberof mitt
+   */
+		emit: function emit(type, evt) {
+			(all[type] || []).map(function (handler) {
+				handler(evt);
+			});
+			(all['*'] || []).map(function (handler) {
+				handler(type, evt);
+			});
+		}
+	};
+}
+
+exports.default = mitt;
+//# sourceMappingURL=mitt.es.js.map
 
 /***/ }),
 /* 7 */
@@ -849,6 +896,33 @@ module.exports = Context;
 "use strict";
 
 
+/**
+ * @fileoverview Main library
+ * @author Carlos Moran
+ */
+
+var app = __webpack_require__(5);
+
+var previousEXMS = void 0;
+
+var __EXMS = Object.assign(app, {
+  noConflict: function noConflict() {
+    window.EXMS = previousEXMS;
+    return this;
+  }
+});
+
+if (window['EXMS']) previousEXMS = window['EXMS'];
+
+module.exports = __EXMS;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _require = __webpack_require__(1),
     basic_curry = _require.basic_curry;
 
@@ -945,33 +1019,6 @@ function state() {
 }
 
 module.exports = state;
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * @fileoverview Main library
- * @author Carlos Moran
- */
-
-var app = __webpack_require__(5);
-
-var previousEXMS = void 0;
-
-var __EXMS = Object.assign(app, {
-  noConflict: function noConflict() {
-    window.EXMS = previousEXMS;
-    return this;
-  }
-});
-
-if (window['EXMS']) previousEXMS = window['EXMS'];
-
-module.exports = __EXMS;
 
 /***/ })
 /******/ ]);
