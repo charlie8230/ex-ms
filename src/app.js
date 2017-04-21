@@ -118,7 +118,26 @@ let app = {
   reset(){
     this.globalConfig.reset();
   },
+  cleanUpName(item){
+    if (item['name']) {
+      let name = String(item['name']);
+      let shortName = name.replace(/^.*[\\\/]/, '');
+      let noExt = shortName.substr(0, shortName.lastIndexOf('.')) || shortName;
+      item['name'] = `${noExt}`;
+    }
+    return item;
+  },
+  processCache(){
+    if (this.cache && this.cache.length>0) {
+      let cache = this.cache;
+      cache.map(this.cleanUpName).forEach(e=>{
+        this.stacks = e;
+      });
+    }
+  },
   setupModules() {
+    
+    this.processCache();  // register modules, behaviors & services that were imported as common JS
 
     let elems = this.getElements();
     elems.forEach(e=>{
@@ -166,7 +185,7 @@ let app = {
             //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
           }
 
-          this.stacks = {type: 'moduleRefs', name, fn:moduleFn};  // fn should have lifecyle methods?
+          this.stacks = {type: 'moduleRefs', name, fn:moduleFn, id: context._id};  // fn should have lifecyle methods?
         }
       }
     });

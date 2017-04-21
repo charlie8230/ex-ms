@@ -4,7 +4,7 @@
 */
 console.log(typeof EXMS);
 let log = EXMS.logger.log;
-EXMS.stacks = {name:'hfffi',fn:function(ctx){console.log('module');
+EXMS.stacks = {name:'hi',fn:function(ctx){console.log('module');
   ctx.on('event2', (data)=>{ console.log('Inside Hiiii', data);});
   log('returning from hi');
   return {
@@ -22,7 +22,6 @@ EXMS.stacks = {name:'hfffi',fn:function(ctx){console.log('module');
 },type:'modules'};
 EXMS.stacks = {name:'msg',fn:function(ctx){
   log('testing msg on return');
-  debugger;
   return {
     init() {
       log('init!')
@@ -58,4 +57,11 @@ EXMS.stacks = {name: 'time', fn: function(App){let dt = App.getService('date'); 
 EXMS.stacks = {name: 'datetime', fn: function(App){let dt = App.getService('date'); /*let t = App.getService('all')*/}, type: 'services'};
 EXMS.stacks = {name: 'all', fn: function(App){let dt = App.getService('time'); let t = App.getService('alltime')}, type: 'services'};
 EXMS.stacks = {name: 'alltime', fn: function(App){let dt = App.getService('time'); let t = App.getService('datetime')}, type: 'services'};
+EXMS.cache = [];
+function importModules (r) {
+  r.keys().forEach(key => EXMS.cache.push({name:key, fn: r(key), type:'modules'}));
+}
+
+importModules(require.context('../modules/', true, /\.js$/));
+
 EXMS.startModules();

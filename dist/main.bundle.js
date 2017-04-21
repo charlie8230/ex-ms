@@ -458,7 +458,8 @@ var app = {
 
     if (this.cache && this.cache.length > 0) {
       var cache = this.cache;
-      cache.map(this.cleanUpName).forEach(function (e) {
+      cache.map(cleanUpName).forEach(function (e) {
+        debugger;
         _this2.stacks = e;
       });
     }
@@ -466,7 +467,7 @@ var app = {
   setupModules: function setupModules() {
     var _this3 = this;
 
-    this.processCache(); // register modules, behaviors & services that were imported as common JS
+    this.processCache();
 
     var elems = this.getElements();
     elems.forEach(function (e) {
@@ -519,7 +520,7 @@ var app = {
             //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
           }
 
-          _this3.stacks = { type: 'moduleRefs', name: name, fn: moduleFn, id: context._id }; // fn should have lifecyle methods?
+          _this3.stacks = { type: 'moduleRefs', name: name, fn: moduleFn }; // fn should have lifecyle methods?
         }
       }
     });
@@ -888,12 +889,10 @@ function state() {
   }
 
   /* General functions */
-  function updateStack(type, name, fn, id) {
+  function updateStack(type, name, fn) {
     var stack = STATE.stack;
     if (type == 'serviceInit') {
       stack[type].add(name);
-    } else if (type == 'moduleRefs') {
-      stack[type].set(id, { type: type, name: name, fn: fn });
     } else if (type in stack) {
       stack[type].set(name, { type: type, name: name, fn: fn });
     }
@@ -931,11 +930,9 @@ function state() {
     set stack(item) {
       var type = item.type,
           name = item.name,
-          fn = item.fn,
-          _item$id = item.id,
-          id = _item$id === undefined ? 0 : _item$id;
+          fn = item.fn;
 
-      updateStack(type, name, fn, id);
+      updateStack(type, name, fn);
     },
     get stack() {
       var stack = STATE.stack;

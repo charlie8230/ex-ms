@@ -30,10 +30,13 @@ function state(init={}) {
   }
 
   /* General functions */
-  function updateStack(type, name, fn) {
+  function updateStack(type, name, fn, id) {
     let stack = STATE.stack;
     if (type == 'serviceInit') {
       stack[type].add(name);
+    }
+    else if (type=='moduleRefs') {
+      stack[type].set(id, {type, name, fn});
     }
     else if (type in stack) {
       stack[type].set(name, {type, name, fn});
@@ -70,8 +73,8 @@ function state(init={}) {
       return getState('config');
     },
     set stack(item) {
-      let {type, name, fn} = item;
-      updateStack(type, name, fn);
+      let {type, name, fn, id=0} = item;
+      updateStack(type, name, fn, id);
     },
     get stack() {
       let stack = STATE.stack;
