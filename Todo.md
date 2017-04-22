@@ -1,11 +1,17 @@
 Todo
-#### FINISH simplify stack state
-# rename Global config ##
-## Process common JS modules too
-## fixed moduleRefs stack
+# Event Delegation ??
 ## Still need life cycle
    # Support vdom view layer
-# Event Delegation ??
+   # Stop a module - removed ref - ok
+  # Stop module - remove handlers!
+# Start module? already started or START
+--Done
+#### FINISH simplify stack state
+# rename Global config ##
+## Process common JS modules too - done
+## fixed moduleRefs stack
+
+
   Event delegation adapter
   Streams? Pass in elem type?
   Actions - unique??

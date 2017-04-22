@@ -115,6 +115,22 @@ let app = {
       this.runStart();
     }
   },
+  stop(elem){
+    let id = String(elem.id).replace(/module-/,'');
+    if (typeof id !=='undefined'||id!=='') {
+      let refs = this.stacks['moduleRefs'];
+      if(refs.has(id)) {
+        let moduleRef = refs.get(id);
+        if(moduleRef['destroy']) {
+          moduleRef.destroy();
+        }
+        this.globalConfig.removeStackItem('moduleRefs', id); // remove event handlers???
+      } else {
+        return; // no need to remove from refs
+      }
+
+    }
+  },
   reset(){
     this.globalConfig.reset();
   },

@@ -1,4 +1,4 @@
-let mitt = require('mitt');
+let mitt = require('mitt').default;
 let {basic_curry} = require('./util');
 
 let emitter = mitt();

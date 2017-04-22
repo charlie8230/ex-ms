@@ -241,7 +241,7 @@ module.exports = encode;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var mitt = __webpack_require__(6);
+var mitt = __webpack_require__(6).default;
 
 var _require = __webpack_require__(1),
     basic_curry = _require.basic_curry;
@@ -437,6 +437,21 @@ var app = {
       });
     } else {
       this.runStart();
+    }
+  },
+  stop: function stop(elem) {
+    var id = String(elem.id).replace(/module-/, '');
+    if (typeof id !== 'undefined' || id !== '') {
+      var refs = this.stacks['moduleRefs'];
+      if (refs.has(id)) {
+        var moduleRef = refs.get(id);
+        if (moduleRef['destroy']) {
+          moduleRef.destroy();
+        }
+        this.globalConfig.removeStackItem('moduleRefs', id); // remove event handlers???
+      } else {
+          return; // no need to remove from refs
+        }
     }
   },
   reset: function reset() {
