@@ -50,7 +50,12 @@ EXMS.stacks = {name:'list',fn:function(ctx){
   let t = ctx.getService('time');
   console.log(t);
   console.log('module', ctx)
-  ctx.on('event', (data)=>{ console.log('Inside CTX', msg, data);})
+  ctx.on('event', (data)=>{ console.log('Inside CTX', msg, data);});
+  return {
+    onclick(event){
+      console.log(event);
+    }
+  }
 },type:'modules'};
 EXMS.stacks = {name: 'date', fn: function(App){return new Date();}, type: 'services'};
 EXMS.stacks = {name: 'time', fn: function(App){let dt = App.getService('date'); console.log(dt); return Date.now();}, type: 'services'};

@@ -10,6 +10,7 @@ function Context (elem, App, util){
     this.el = this.elem = elem;
     this._id = _id;
     this.el.id = `module-${this._id}`;
+    this.el.dataset._id = _id;
     this.status = 'created';
     /*  Needs to be abstracted out of App */  
     this.getService = App.getService.bind(App);

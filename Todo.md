@@ -1,5 +1,6 @@
 Todo
 # Event Delegation ??
+  - Basic ... need to pass in eventType :P (needs a wrapper)
 ## Still need life cycle
    # Support vdom view layer
    # Stop a module - removed ref - ok

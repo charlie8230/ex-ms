@@ -440,9 +440,20 @@ var app = {
     }
   },
   stop: function stop(elem) {
-    var id = String(elem.id).replace(/module-/, '');
+    var _this2 = this;
+
+    var id = elem.dataset['_id'] && elem.dataset['_id'] || String(elem.id).replace(/module-/, '');
     if (typeof id !== 'undefined' || id !== '') {
       var refs = this.stacks['moduleRefs'];
+      var actionRefs = this.stacks['actionRefs'];
+      if (actionRefs.has(id)) {
+        var actions = actionRefs.get(id);
+        actions.forEach(function (val) {
+          log('detaching', val);
+          _this2.detachHandler(elem, val.name, val.fn);
+        });
+        this.globalConfig.removeStackItem('actionRefs', id);
+      }
       if (refs.has(id)) {
         var moduleRef = refs.get(id);
         if (moduleRef['destroy']) {
@@ -458,6 +469,7 @@ var app = {
     this.globalConfig.reset();
   },
   cleanUpName: function cleanUpName(item) {
+    // Clean up an ES module name as provided by webpack into our cache
     if (item['name']) {
       var name = String(item['name']);
       var shortName = name.replace(/^.*[\\\/]/, '');
@@ -467,28 +479,62 @@ var app = {
     return item;
   },
   processCache: function processCache() {
-    var _this2 = this;
+    var _this3 = this;
 
     if (this.cache && this.cache.length > 0) {
       var cache = this.cache;
       cache.map(this.cleanUpName).forEach(function (e) {
-        _this2.stacks = e;
+        _this3.stacks = e;
       });
-      this.cache = null;
+      this.cache = null; // clear all references
     }
   },
+
+  _EVENT_TYPES: ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup', 'mouseenter', 'mouseleave', 'mousemove', 'keydown', 'keyup', 'submit', 'change', 'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'],
+  attachHandler: function attachHandler(elem, name, handler) {
+    if (elem instanceof Node) {
+      elem.dataset.hasEvents = true;
+      elem.addEventListener(name, handler);
+    }
+  },
+  detachHandler: function detachHandler(elem, name, handler) {
+    if (elem instanceof Node) {
+      elem.dataset.hasEvents = false;
+      elem.removeEventListener(name, handler);
+    }
+  },
+  collectEvents: function collectEvents(processType, process, elem) {
+    var _this4 = this;
+
+    // process = module || behavior
+    var keys = Object.keys(process);
+    var handlers = keys.filter(function (val) {
+      return _this4._EVENT_TYPES.lastIndexOf(val.replace(/^on/, '')) >= 0;
+    }).filter(function (val) {
+      return (/on/.test(val)
+      );
+    });
+
+    handlers.forEach(function (value) {
+      var _handler = process[value];
+      var _name = value.replace(/^on/, '');
+      var _track_name = processType + _name;
+      _this4.attachHandler(elem, _name, _handler);
+      _this4.stacks = { type: 'actionRefs', fn: _handler, name: _name, id: elem.dataset._id };
+    });
+  },
   setupModules: function setupModules() {
-    var _this3 = this;
+    var _this5 = this;
 
     this.processCache(); // register modules, behaviors & services that were imported as common JS
 
     var elems = this.getElements();
     elems.forEach(function (e) {
-      var name = _this3.getModuleName(e, _this3.config.moduleSelector);
+      var name = _this5.getModuleName(e, _this5.config.moduleSelector);
       if (!name) return;
-      var exmodule = _this3.getModule(name);
+      var exmodule = _this5.getModule(name);
 
-      var context = new Context(e, _this3, util);
+      var context = new Context(e, _this5, util);
       if (exmodule && exmodule['fn']) {
         var moduleFn = void 0;
         try {
@@ -501,27 +547,17 @@ var app = {
           if (moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
           }
+          _this5.collectEvents('module', moduleFn, context.el);
           // ? stack item was not added?
           var actions = moduleFn['actions'] || moduleFn['behaviors'] || [];
           // dedupe the actions
           if (actions && actions.length > 0) {
             actions.forEach(function (name) {
-              var act = _this3.getAction(name);
+              var act = _this5.getAction(name);
               if (act && act['fn']) {
                 try {
-                  var process = act['fn'](context); // take context and add event delegation
-                  var keys = Object.keys(process);
-                  var handlers = keys.filter(function (val) {
-                    return (/on/.test(val)
-                    );
-                  });
-                  /// LIST of events!!!?
-                  handlers.forEach(function (value) {
-                    var _handler = process[value];
-                    var _name = value.replace(/^on/, '');
-                    context.el.addEventListener(_name, _handler);
-                  });
-                  log(process);
+                  var process = act['fn'](context); // take context and get events
+                  _this5.collectEvents('behavior', process, context.el);
                 } catch (e) {
                   log('could not start behavior ' + name + ': ' + e);
                 }
@@ -531,7 +567,7 @@ var app = {
             //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
           }
 
-          _this3.stacks = { type: 'moduleRefs', name: name, fn: moduleFn, id: context._id }; // fn should have lifecyle methods?
+          _this5.stacks = { type: 'moduleRefs', name: name, fn: moduleFn, id: context._id }; // fn should have lifecyle methods?
         }
       }
     });
@@ -885,6 +921,7 @@ function Context(elem, App, util) {
   this.el = this.elem = elem;
   this._id = _id;
   this.el.id = 'module-' + this._id;
+  this.el.dataset._id = _id;
   this.status = 'created';
   /*  Needs to be abstracted out of App */
   this.getService = App.getService.bind(App);
@@ -950,6 +987,7 @@ function reset() {
     modules: new Map(),
     actions: new Map(),
     moduleRefs: new Map(),
+    actionRefs: new Map(),
     plugins: new Map()
   });
 }
@@ -983,6 +1021,15 @@ function state() {
       stack[type].add(name);
     } else if (type == 'moduleRefs') {
       stack[type].set(id, { type: type, name: name, fn: fn });
+    } else if (type == 'actionRefs') {
+      var refs = stack[type];
+      if (refs.has(id)) {
+        var ref = refs.get(id);
+        ref.push({ type: type, name: name, fn: fn }); // multiple handlers with the same name should differentiate by the handler function 'fn'
+      } else {
+        var item = [{ type: type, name: name, fn: fn }];
+        refs.set(id, item);
+      }
     } else if (type in stack) {
       stack[type].set(name, { type: type, name: name, fn: fn });
     }

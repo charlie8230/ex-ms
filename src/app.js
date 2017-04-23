@@ -116,9 +116,18 @@ let app = {
     }
   },
   stop(elem){
-    let id = String(elem.id).replace(/module-/,'');
+    let id = elem.dataset['_id']&& elem.dataset['_id'] || String(elem.id).replace(/module-/,'');
     if (typeof id !=='undefined'||id!=='') {
       let refs = this.stacks['moduleRefs'];
+      let actionRefs = this.stacks['actionRefs'];
+      if (actionRefs.has(id)) {
+        let actions = actionRefs.get(id);
+        actions.forEach(val=>{
+          log('detaching', val);
+          this.detachHandler(elem, val.name, val.fn);
+        });
+        this.globalConfig.removeStackItem('actionRefs', id);
+      }
       if(refs.has(id)) {
         let moduleRef = refs.get(id);
         if(moduleRef['destroy']) {
@@ -128,13 +137,12 @@ let app = {
       } else {
         return; // no need to remove from refs
       }
-
     }
   },
   reset(){
     this.globalConfig.reset();
   },
-  cleanUpName(item){
+  cleanUpName(item){  // Clean up an ES module name as provided by webpack into our cache
     if (item['name']) {
       let name = String(item['name']);
       let shortName = name.replace(/^.*[\\\/]/, '');
@@ -149,8 +157,35 @@ let app = {
       cache.map(this.cleanUpName).forEach(e=>{
         this.stacks = e;
       });
-      this.cache = null;
+      this.cache = null;  // clear all references
     }
+  },
+  _EVENT_TYPES: ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
+			          'mouseenter', 'mouseleave', 'mousemove', 'keydown', 'keyup', 'submit', 'change',
+			          'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'],
+  attachHandler(elem,name,handler){
+    if (elem instanceof Node) {
+      elem.dataset.hasEvents = true;
+      elem.addEventListener(name, handler);
+    }
+  },
+  detachHandler(elem, name, handler){
+    if (elem instanceof Node) {
+      elem.dataset.hasEvents = false;
+      elem.removeEventListener(name, handler);
+    }
+  },
+  collectEvents(processType, process, elem){  // process = module || behavior
+    let keys = Object.keys(process);
+    let handlers = keys.filter(val=>this._EVENT_TYPES.lastIndexOf(val.replace(/^on/,''))>=0).filter(val=>/on/.test(val));
+
+    handlers.forEach(value=>{
+      let _handler = process[value];
+      let _name = value.replace(/^on/,'');
+      let _track_name = processType + _name;
+      this.attachHandler(elem,_name,_handler);
+      this.stacks = {type:'actionRefs', fn: _handler, name: _name, id: elem.dataset._id};
+    });
   },
   setupModules() {
     
@@ -175,6 +210,7 @@ let app = {
           if(moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
           }
+          this.collectEvents('module', moduleFn, context.el);
           // ? stack item was not added?
           let actions = moduleFn['actions'] || moduleFn['behaviors']||[];
 // dedupe the actions
@@ -183,16 +219,8 @@ let app = {
               let act = this.getAction(name);
               if (act && act['fn']) {
                 try {
-                  let process = act['fn'](context); // take context and add event delegation
-                  let keys = Object.keys(process);
-                  let handlers = keys.filter(val=>/on/.test(val));
-/// LIST of events!!!?
-                  handlers.forEach(value=>{
-                    let _handler = process[value];
-                    let _name = value.replace(/^on/,'');
-                    context.el.addEventListener(_name,_handler);
-                  });
-                  log(process);
+                  let process = act['fn'](context); // take context and get events
+                  this.collectEvents('behavior', process, context.el);
                 } catch(e){
                   log(`could not start behavior ${name}: ${e}`);
                 }

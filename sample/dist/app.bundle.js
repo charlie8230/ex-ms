@@ -204,6 +204,11 @@ EXMS.stacks = { name: 'list', fn: function fn(ctx) {
     ctx.on('event', function (data) {
       console.log('Inside CTX', msg, data);
     });
+    return {
+      onclick: function onclick(event) {
+        console.log(event);
+      }
+    };
   }, type: 'modules' };
 EXMS.stacks = { name: 'date', fn: function fn(App) {
     return new Date();

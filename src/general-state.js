@@ -9,6 +9,7 @@ function reset() {
       modules:new Map(),
       actions: new Map(),
       moduleRefs:new Map(),
+      actionRefs: new Map(),
       plugins:new Map()
   });
 }
@@ -37,6 +38,16 @@ function state(init={}) {
     }
     else if (type=='moduleRefs') {
       stack[type].set(id, {type, name, fn});
+    }
+    else if (type=='actionRefs') {
+      let refs = stack[type];
+      if (refs.has(id)) {
+        let ref = refs.get(id);
+        ref.push({type, name, fn}); // multiple handlers with the same name should differentiate by the handler function 'fn'
+      } else {
+        let item = [{type, name, fn}];
+        refs.set(id,item);
+      }
     }
     else if (type in stack) {
       stack[type].set(name, {type, name, fn});
