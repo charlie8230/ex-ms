@@ -22,6 +22,20 @@ Context.prototype = Object.assign(Context.prototype,emitterAPI,{
   getElement(){
     return this.el;
   },
+  getConfig(){
+    let children = this.el.children;
+    let config = null;
+    try {
+      [].forEach.call(children,elem=>{
+        if(!config && elem.type=="text/x-config") {
+          config = JSON.parse(elem.innerHTML);
+        }
+      });
+    } catch(e) {
+      logger.log('Could not Parse config');
+    }
+    return config||{};
+  },
   destroy(){
     this.el = null;
     this.status = null;

@@ -350,6 +350,10 @@ var app = {
   addAction: function addAction(name, fn) {
     globalConfig.addToStack('actions')(name, fn);
   },
+  addBehavior: function addBehavior(name, fn) {
+    // T3 Adapter
+    globalConfig.addToStack('actions')(name, fn);
+  },
   getModuleName: function getModuleName() {
     var elem = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     var selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -557,7 +561,7 @@ var app = {
               if (act && act['fn']) {
                 try {
                   var process = act['fn'](context); // take context and get events
-                  _this5.collectEvents('behavior', process, context.el);
+                  if (process) _this5.collectEvents('behavior', process, context.el);
                 } catch (e) {
                   log('could not start behavior ' + name + ': ' + e);
                 }
@@ -932,6 +936,20 @@ function Context(elem, App, util) {
 Context.prototype = Object.assign(Context.prototype, emitterAPI, {
   getElement: function getElement() {
     return this.el;
+  },
+  getConfig: function getConfig() {
+    var children = this.el.children;
+    var config = null;
+    try {
+      [].forEach.call(children, function (elem) {
+        if (!config && elem.type == "text/x-config") {
+          config = JSON.parse(elem.innerHTML);
+        }
+      });
+    } catch (e) {
+      logger.log('Could not Parse config');
+    }
+    return config || {};
   },
   destroy: function destroy() {
     this.el = null;

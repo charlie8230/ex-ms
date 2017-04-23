@@ -50,7 +50,8 @@ EXMS.stacks = {name:'list',fn:function(ctx){
   let t = ctx.getService('time');
   console.log(t);
   console.log('module', ctx)
-  ctx.on('event', (data)=>{ console.log('Inside CTX', msg, data);});
+  let cfg = ctx.getConfig();
+  ctx.on('event', (data)=>{ console.log('Inside CTX', msg, data, cfg);});
   return {
     onclick(event){
       console.log(event);

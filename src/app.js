@@ -37,6 +37,9 @@ let app = {
   addAction(name, fn) {
     globalConfig.addToStack('actions')(name, fn);
   },
+  addBehavior(name, fn) { // T3 Adapter
+    globalConfig.addToStack('actions')(name, fn);
+  },
   getModuleName(elem='',selector='') {
     let key = selector.replace(/[\[\]]/g,'');
     if (elem) {
@@ -220,7 +223,7 @@ let app = {
               if (act && act['fn']) {
                 try {
                   let process = act['fn'](context); // take context and get events
-                  this.collectEvents('behavior', process, context.el);
+                  if(process) this.collectEvents('behavior', process, context.el);
                 } catch(e){
                   log(`could not start behavior ${name}: ${e}`);
                 }
