@@ -14,7 +14,7 @@ function Context (elem, App, util){
     this.status = 'created';
     /*  Needs to be abstracted out of App */  
     this.getService = App.getService.bind(App);
-    this.getSubModule = App.asSubModule.bind(App);
+    //  this.getSubModule = App.asSubModule.bind(App);
     this.getGlobal = App.getGlobal.bind(App);
 }
 

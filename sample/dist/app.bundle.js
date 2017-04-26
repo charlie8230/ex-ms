@@ -150,14 +150,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 console.log(typeof EXMS === 'undefined' ? 'undefined' : _typeof(EXMS));
 var log = EXMS.logger.log;
 EXMS.stacks = { name: 'hi', fn: function fn(ctx) {
-    console.log('module');
+    coznsole.log('module');
     ctx.on('event2', function (data) {
       console.log('Inside Hiiii', data);
     });
     log('returning from hi');
     return {
       init: function init() {
-        log('init!');
+        lxog('init!');
         log(ctx.el.id);
       },
 
@@ -215,7 +215,7 @@ EXMS.stacks = { name: 'date', fn: function fn(App) {
     return new Date();
   }, type: 'services' };
 EXMS.stacks = { name: 'time', fn: function fn(App) {
-    var dt = App.getService('date');console.log(dt);return Date.now();
+    var dt = EApp.getService('date');console.log(dt);return Date.now();
   }, type: 'services' };
 EXMS.stacks = { name: 'datetime', fn: function fn(App) {
     var dt = App.getService('date'); /*let t = App.getService('all')*/

@@ -1,10 +1,10 @@
 Todo
 # Event Delegation ??
-  - Basic ... need to pass in eventType :P (needs a wrapper)
-   - Tracking handlers!
+  - Basic ... need to pass in eventType :P (needs a wrapper) (no wrapper needed)
+   - Tracking handlers! - done
    - Lastly - need to start individual module!
-## Need get x-config
-## Still need life cycle
+## Need get x-config - done
+## Still need life cycle - done
    # Support vdom view layer
    # Stop a module - removed ref - ok
   # Stop module - remove handlers!

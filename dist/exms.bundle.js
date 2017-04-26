@@ -292,8 +292,13 @@ var _require = __webpack_require__(1),
     getQueryVariable = _require.getQueryVariable;
 
 var debugMode = getQueryVariable('debug') || getQueryVariable('debugger');
-var logger = debugMode ? console : function () {};
-var log = logger.log = debugMode ? console.log : function () {};
+var _noopConsole = {
+  log: function log() {},
+  error: function error() {},
+  warn: function warn() {}
+};
+var logger = debugMode ? console : _noopConsole;
+var log = logger.log = debugMode ? console.log : _noopConsole.log;
 module.exports = { logger: logger, log: log, debugMode: debugMode };
 
 /***/ }),
@@ -303,11 +308,11 @@ module.exports = { logger: logger, log: log, debugMode: debugMode };
 "use strict";
 
 
-//  let R = require('../vendor/ramda/dist/ramda.custom');
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var util = __webpack_require__(1);
 var generalState = __webpack_require__(17);
 var globalConfig = new generalState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]', maxServiceDepth: 8 });
-//  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 var Context = __webpack_require__(15);
 
 var _require = __webpack_require__(3),
@@ -372,11 +377,14 @@ var app = {
     return stack && stack.get(name);
   },
   startAll: function startAll() {
+    var _this = this;
+
     var stacks = this.stacks;
     var mRefs = stacks['moduleRefs'];
     mRefs.forEach(function (moduleInit) {
-      moduleInit['fn'] && moduleInit.fn['init'] && moduleInit.fn['init']();
-      log(moduleInit, 'init');
+      if (moduleInit['fn'] && moduleInit.fn['init']) {
+        _this.runFunction(moduleInit.fn, 'init', 'could not initialize ' + moduleInit.name, false);
+      }
     });
   },
   getService: function getService() {
@@ -403,14 +411,12 @@ var app = {
       if (circular) {
         log('Found a circular ref!', svcName);
         return;
-      } else {
-        log('No circular refs', svcName);
       }
       this.stacks = { type: 'serviceInit', name: svcName };
-      svc = svcFn['fn'](this); // this = app
-      this.globalConfig.removeStackItem('serviceInit', svcName);
-      log(this.stacks['serviceInit']);
+      svc = this.runFunction(svcFn, 'fn', 'Could not start ' + svcFn.name, this);
       svcFn['api'] = svc; // ok
+      this.globalConfig.removeStackItem('serviceInit', svcName);
+
       return svc;
     }
   },
@@ -423,7 +429,6 @@ var app = {
     var stack = this.stacks['actions'];
     return stack && stack.get(name);
   },
-  asSubModule: function asSubModule() {},
   runStart: function runStart() {
     if (this.config['initCompleted']) {
       log('Global Init already done - exit!');
@@ -433,18 +438,18 @@ var app = {
     this.startAll();
   },
   startModules: function startModules(kickoffmsg) {
-    var _this = this;
+    var _this2 = this;
 
     if (kickoffmsg) {
       this.on(kickoffmsg, function () {
-        _this.runStart();
+        _this2.runStart();
       });
     } else {
       this.runStart();
     }
   },
   stop: function stop(elem) {
-    var _this2 = this;
+    var _this3 = this;
 
     var id = elem.dataset['_id'] && elem.dataset['_id'] || String(elem.id).replace(/module-/, '');
     if (typeof id !== 'undefined' || id !== '') {
@@ -454,7 +459,7 @@ var app = {
         var actions = actionRefs.get(id);
         actions.forEach(function (val) {
           log('detaching', val);
-          _this2.detachHandler(elem, val.name, val.fn);
+          _this3.detachHandler(elem, val.name, val.fn);
         });
         this.globalConfig.removeStackItem('actionRefs', id);
       }
@@ -483,12 +488,12 @@ var app = {
     return item;
   },
   processCache: function processCache() {
-    var _this3 = this;
+    var _this4 = this;
 
     if (this.cache && this.cache.length > 0) {
       var cache = this.cache;
       cache.map(this.cleanUpName).forEach(function (e) {
-        _this3.stacks = e;
+        _this4.stacks = e;
       });
       this.cache = null; // clear all references
     }
@@ -508,12 +513,12 @@ var app = {
     }
   },
   collectEvents: function collectEvents(processType, process, elem) {
-    var _this4 = this;
+    var _this5 = this;
 
     // process = module || behavior
     var keys = Object.keys(process);
     var handlers = keys.filter(function (val) {
-      return _this4._EVENT_TYPES.lastIndexOf(val.replace(/^on/, '')) >= 0;
+      return _this5._EVENT_TYPES.lastIndexOf(val.replace(/^on/, '')) >= 0;
     }).filter(function (val) {
       return (/on/.test(val)
       );
@@ -523,55 +528,62 @@ var app = {
       var _handler = process[value];
       var _name = value.replace(/^on/, '');
       var _track_name = processType + _name;
-      _this4.attachHandler(elem, _name, _handler);
-      _this4.stacks = { type: 'actionRefs', fn: _handler, name: _name, id: elem.dataset._id };
+      _this5.attachHandler(elem, _name, _handler);
+      _this5.stacks = { type: 'actionRefs', fn: _handler, name: _name, id: elem.dataset._id };
     });
   },
+  runFunction: function runFunction(API) {
+    var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'fn';
+    var errorMsg = arguments[2];
+
+    var result = void 0;
+    if (name in API) {
+      try {
+        for (var _len = arguments.length, params = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+          params[_key - 3] = arguments[_key];
+        }
+
+        result = API[name].apply(API, _toConsumableArray(params));
+      } catch (e) {
+        logger.error(errorMsg, '\n', e);
+      }
+    }
+    return result;
+  },
   setupModules: function setupModules() {
-    var _this5 = this;
+    var _this6 = this;
 
     this.processCache(); // register modules, behaviors & services that were imported as common JS
 
     var elems = this.getElements();
     elems.forEach(function (e) {
-      var name = _this5.getModuleName(e, _this5.config.moduleSelector);
+      var name = _this6.getModuleName(e, _this6.config.moduleSelector);
       if (!name) return;
-      var exmodule = _this5.getModule(name);
+      var exmodule = _this6.getModule(name);
 
-      var context = new Context(e, _this5, util);
+      var context = new Context(e, _this6, util);
       if (exmodule && exmodule['fn']) {
         var moduleFn = void 0;
-        try {
-          moduleFn = exmodule['fn'](context);
-        } catch (e) {
-          log('Could not start ' + name + ' on ' + context + ': ' + e);
-        }
+        moduleFn = _this6.runFunction(exmodule, 'fn', 'Could not start ' + name + ' on ' + context, context);
 
-        if (typeof moduleFn !== 'undefined') {
+        if (moduleFn) {
           if (moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
           }
-          _this5.collectEvents('module', moduleFn, context.el);
-          // ? stack item was not added?
+          _this6.collectEvents('module', moduleFn, context.el);
+
           var actions = moduleFn['actions'] || moduleFn['behaviors'] || [];
-          // dedupe the actions
+
           if (actions && actions.length > 0) {
             actions.forEach(function (name) {
-              var act = _this5.getAction(name);
+              var act = _this6.getAction(name);
               if (act && act['fn']) {
-                try {
-                  var process = act['fn'](context); // take context and get events
-                  if (process) _this5.collectEvents('behavior', process, context.el);
-                } catch (e) {
-                  log('could not start behavior ' + name + ': ' + e);
-                }
+                var process = _this6.runFunction(act, 'fn', 'could not start behavior ' + name, context);
+                if (process) _this6.collectEvents('behavior', process, context.el);
               }
             });
-            //  returns event handlers- attach
-            //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
           }
-
-          _this5.stacks = { type: 'moduleRefs', name: name, fn: moduleFn, id: context._id }; // fn should have lifecyle methods?
+          _this6.stacks = { type: 'moduleRefs', name: name, fn: moduleFn, id: context._id };
         }
       }
     });
@@ -929,7 +941,7 @@ function Context(elem, App, util) {
   this.status = 'created';
   /*  Needs to be abstracted out of App */
   this.getService = App.getService.bind(App);
-  this.getSubModule = App.asSubModule.bind(App);
+  //  this.getSubModule = App.asSubModule.bind(App);
   this.getGlobal = App.getGlobal.bind(App);
 }
 

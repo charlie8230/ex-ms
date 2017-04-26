@@ -4,12 +4,12 @@
 */
 console.log(typeof EXMS);
 let log = EXMS.logger.log;
-EXMS.stacks = {name:'hi',fn:function(ctx){console.log('module');
+EXMS.stacks = {name:'hi',fn:function(ctx){coznsole.log('module');
   ctx.on('event2', (data)=>{ console.log('Inside Hiiii', data);});
   log('returning from hi');
   return {
     init() {
-      log('init!')
+      lxog('init!')
       log(ctx.el.id);
     },
     onmessage: {
@@ -59,7 +59,7 @@ EXMS.stacks = {name:'list',fn:function(ctx){
   }
 },type:'modules'};
 EXMS.stacks = {name: 'date', fn: function(App){return new Date();}, type: 'services'};
-EXMS.stacks = {name: 'time', fn: function(App){let dt = App.getService('date'); console.log(dt); return Date.now();}, type: 'services'};
+EXMS.stacks = {name: 'time', fn: function(App){let dt = EApp.getService('date'); console.log(dt); return Date.now();}, type: 'services'};
 EXMS.stacks = {name: 'datetime', fn: function(App){let dt = App.getService('date'); /*let t = App.getService('all')*/}, type: 'services'};
 EXMS.stacks = {name: 'all', fn: function(App){let dt = App.getService('time'); let t = App.getService('alltime')}, type: 'services'};
 EXMS.stacks = {name: 'alltime', fn: function(App){let dt = App.getService('time'); let t = App.getService('datetime')}, type: 'services'};

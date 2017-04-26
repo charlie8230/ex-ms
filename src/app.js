@@ -1,8 +1,6 @@
-//  let R = require('../vendor/ramda/dist/ramda.custom');
 let util = require('./util');
 let generalState = require('./general-state');
 const globalConfig = new generalState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]', maxServiceDepth: 8});
-//  const {stackState, stackFunctions, reset} = require('./stacks-state'); // no redux here
 let Context = require('./context');
 let {API, emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
@@ -56,8 +54,9 @@ let app = {
     let stacks = this.stacks;
     let mRefs = stacks['moduleRefs'];
     mRefs.forEach(moduleInit=>{
-      moduleInit['fn'] && moduleInit.fn['init'] && moduleInit.fn['init']();
-      log(moduleInit, 'init');
+      if(moduleInit['fn'] && moduleInit.fn['init']) {
+        this.runFunction(moduleInit.fn, 'init', `could not initialize ${moduleInit.name}`,false);
+      }
     });
   },
   getService(name=''){
@@ -82,14 +81,12 @@ let app = {
       if (circular) {
         log('Found a circular ref!', svcName);
         return;
-      } else {
-        log('No circular refs', svcName);
       }
       this.stacks = {type:'serviceInit', name: svcName};
-      svc = svcFn['fn'](this);  // this = app
-      this.globalConfig.removeStackItem('serviceInit',svcName);
-      log(this.stacks['serviceInit']);
+      svc = this.runFunction(svcFn, 'fn', `Could not start ${svcFn.name}`, this);
       svcFn['api'] = svc; // ok
+      this.globalConfig.removeStackItem('serviceInit',svcName);
+      
       return svc;
     }
   },
@@ -100,7 +97,6 @@ let app = {
     let stack = this.stacks['actions'];
     return stack && stack.get(name);
   },
-  asSubModule(){},
   runStart(){
     if (this.config['initCompleted']) {
       log('Global Init already done - exit!');
@@ -190,6 +186,17 @@ let app = {
       this.stacks = {type:'actionRefs', fn: _handler, name: _name, id: elem.dataset._id};
     });
   },
+  runFunction(API, name='fn', errorMsg, ...params){
+    let result = void 0;
+    if (name in API) {
+      try {
+        result = API[name](...params);
+      } catch(e) {
+        logger.error(errorMsg, '\n', e);
+      }
+    }
+    return result;
+  },
   setupModules() {
     
     this.processCache();  // register modules, behaviors & services that were imported as common JS
@@ -203,37 +210,26 @@ let app = {
       let context = new Context(e, this, util);
       if(exmodule && exmodule['fn']) {
         let moduleFn;
-        try {
-          moduleFn = exmodule['fn'](context);
-        } catch (e) {
-          log(`Could not start ${name} on ${context}: ${e}`);
-        }
+        moduleFn = this.runFunction(exmodule, 'fn', `Could not start ${name} on ${context}`, context);
          
-        if (typeof moduleFn !== 'undefined') {
+        if (moduleFn) {
           if(moduleFn['onmessage']) {
             emitterAPI.onmessage(moduleFn['onmessage'], moduleFn['messages']);
           }
           this.collectEvents('module', moduleFn, context.el);
-          // ? stack item was not added?
+
           let actions = moduleFn['actions'] || moduleFn['behaviors']||[];
-// dedupe the actions
+
           if(actions && actions.length>0) {
             actions.forEach(name=>{
               let act = this.getAction(name);
               if (act && act['fn']) {
-                try {
-                  let process = act['fn'](context); // take context and get events
-                  if(process) this.collectEvents('behavior', process, context.el);
-                } catch(e){
-                  log(`could not start behavior ${name}: ${e}`);
-                }
+                let process = this.runFunction(act,'fn', `could not start behavior ${name}`, context);
+                if(process) this.collectEvents('behavior', process, context.el);
               }
             });
-            //  returns event handlers- attach
-            //  returns message handlers - 2nd type of priority << module messages! ??? - attach?
           }
-
-          this.stacks = {type: 'moduleRefs', name, fn:moduleFn, id: context._id};  // fn should have lifecyle methods?
+          this.stacks = {type: 'moduleRefs', name, fn:moduleFn, id: context._id};
         }
       }
     });
