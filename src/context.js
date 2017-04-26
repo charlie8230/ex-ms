@@ -1,4 +1,3 @@
-// Context is a store with a bound elem?
 // Context is passed on to the module factory functions
 let {emitterAPI} = require('./events');
 let {logger, debugMode}  = require('./logger');

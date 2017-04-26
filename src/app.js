@@ -55,7 +55,7 @@ let app = {
     let mRefs = stacks['moduleRefs'];
     mRefs.forEach(moduleInit=>{
       if(moduleInit['fn'] && moduleInit.fn['init']) {
-        this.runFunction(moduleInit.fn, 'init', `could not initialize ${moduleInit.name}`,false);
+        this.runFunction(moduleInit.fn, 'init', `Error running Init on ${moduleInit.name}`,false);
       }
     });
   },
@@ -74,16 +74,14 @@ let app = {
       let svcName = svcFn['name'];
       let servicesInProgress = this.stacks['serviceInit'];
       if(servicesInProgress.size>globalConfig.maxServiceDepth) {
-        log('too deep');
-        return;
+        return;  // Too deep - bail out
       }
       let circular = servicesInProgress.has(svcName);
       if (circular) {
-        log('Found a circular ref!', svcName);
         return;
       }
       this.stacks = {type:'serviceInit', name: svcName};
-      svc = this.runFunction(svcFn, 'fn', `Could not start ${svcFn.name}`, this);
+      svc = this.runFunction(svcFn, 'fn', `Error starting service: ${svcFn.name}`, this);
       svcFn['api'] = svc; // ok
       this.globalConfig.removeStackItem('serviceInit',svcName);
       
@@ -99,7 +97,6 @@ let app = {
   },
   runStart(){
     if (this.config['initCompleted']) {
-      log('Global Init already done - exit!');
       return true;
     }    
     this.setupModules();
@@ -122,7 +119,6 @@ let app = {
       if (actionRefs.has(id)) {
         let actions = actionRefs.get(id);
         actions.forEach(val=>{
-          log('detaching', val);
           this.detachHandler(elem, val.name, val.fn);
         });
         this.globalConfig.removeStackItem('actionRefs', id);
@@ -210,7 +206,7 @@ let app = {
       let context = new Context(e, this, util);
       if(exmodule && exmodule['fn']) {
         let moduleFn;
-        moduleFn = this.runFunction(exmodule, 'fn', `Could not start ${name} on ${context}`, context);
+        moduleFn = this.runFunction(exmodule, 'fn', `Error starting module ${name}`, context);
          
         if (moduleFn) {
           if(moduleFn['onmessage']) {
@@ -224,7 +220,7 @@ let app = {
             actions.forEach(name=>{
               let act = this.getAction(name);
               if (act && act['fn']) {
-                let process = this.runFunction(act,'fn', `could not start behavior ${name}`, context);
+                let process = this.runFunction(act,'fn', `Error starting behavior ${name}`, context);
                 if(process) this.collectEvents('behavior', process, context.el);
               }
             });

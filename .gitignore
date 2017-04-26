@@ -4,4 +4,5 @@ bench
 npm-debug.log
 ./dist
 library
+sample_sni
 Todo.md

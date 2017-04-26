@@ -149,45 +149,45 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 */
 console.log(typeof EXMS === 'undefined' ? 'undefined' : _typeof(EXMS));
 var log = EXMS.logger.log;
-EXMS.stacks = { name: 'hi', fn: function fn(ctx) {
-    coznsole.log('module');
-    ctx.on('event2', function (data) {
-      console.log('Inside Hiiii', data);
-    });
-    log('returning from hi');
-    return {
-      init: function init() {
-        lxog('init!');
-        log(ctx.el.id);
-      },
+EXMS.addModule('hi', function (ctx) {
+  console.log('module');
+  ctx.on('event2', function (data) {
+    console.log('Inside Hiiii', data);
+  });
+  log('returning from hi');
+  return {
+    init: function init() {
+      log('init!');
+      log(ctx.el.id);
+    },
 
-      onmessage: {
-        helloMSG: function helloMSG() {
-          log('another pattern');
-          ctx.broadcast('anotherPatter', { data: 'another' });
-        }
+    onmessage: {
+      helloMSG: function helloMSG() {
+        log('another pattern');
+        ctx.broadcast('anotherPatter', { data: 'another' });
       }
-    };
-  }, type: 'modules' };
-EXMS.stacks = { name: 'msg', fn: function fn(ctx) {
-    log('testing msg on return');
-    return {
-      init: function init() {
-        log('init!');
-        log(ctx.el.id);
-      },
+    }
+  };
+});
+EXMS.addModule('msg', function (ctx) {
+  log('testing msg on return');
+  return {
+    init: function init() {
+      log('init!');
+      log(ctx.el.id);
+    },
 
-      actions: ['menu', 'menu2'],
-      messages: ['helloMSG', 'anotherPattern'],
-      onmessage: function onmessage(name, data) {
-        log(name, data);
-      }
-    };
-  }, type: 'modules' };
-EXMS.stacks = { name: 'menu', fn: function fn(context) {
-    log('I am a behavior');
-  }, type: 'actions' };
-EXMS.addAction('menu2', function (context) {
+    actions: ['menu', 'menu2'],
+    messages: ['helloMSG', 'anotherPattern'],
+    onmessage: function onmessage(name, data) {
+      log(name, data);
+    }
+  };
+});
+EXMS.addBehavior('menu', function (context) {
+  log('I am a behavior');
+});
+EXMS.addBehavior('menu2', function (context) {
   log('I am a behavior2 attached to', context.getElement().id);
   return {
     onclick: function onclick(e) {
@@ -195,37 +195,37 @@ EXMS.addAction('menu2', function (context) {
     }
   };
 });
-EXMS.stacks = { name: 'list', fn: function fn(ctx) {
-    var msg = 'HI!!';
-    window.ctx = ctx;
-    var t = ctx.getService('time');
-    console.log(t);
-    console.log('module', ctx);
-    var cfg = ctx.getConfig();
-    ctx.on('event', function (data) {
-      console.log('Inside CTX', msg, data, cfg);
-    });
-    return {
-      onclick: function onclick(event) {
-        console.log(event);
-      }
-    };
-  }, type: 'modules' };
-EXMS.stacks = { name: 'date', fn: function fn(App) {
-    return new Date();
-  }, type: 'services' };
-EXMS.stacks = { name: 'time', fn: function fn(App) {
-    var dt = EApp.getService('date');console.log(dt);return Date.now();
-  }, type: 'services' };
-EXMS.stacks = { name: 'datetime', fn: function fn(App) {
-    var dt = App.getService('date'); /*let t = App.getService('all')*/
-  }, type: 'services' };
-EXMS.stacks = { name: 'all', fn: function fn(App) {
-    var dt = App.getService('time');var t = App.getService('alltime');
-  }, type: 'services' };
-EXMS.stacks = { name: 'alltime', fn: function fn(App) {
-    var dt = App.getService('time');var t = App.getService('datetime');
-  }, type: 'services' };
+EXMS.addModule('list', function (ctx) {
+  var msg = 'HI!!';
+  window.ctx = ctx;
+  var t = ctx.getService('time');
+  console.log(t);
+  console.log('module', ctx);
+  var cfg = ctx.getConfig();
+  ctx.on('event', function (data) {
+    console.log('Inside CTX', msg, data, cfg);
+  });
+  return {
+    onclick: function onclick(event) {
+      console.log(event);
+    }
+  };
+});
+EXMS.addService('date', function (App) {
+  return new Date();
+});
+EXMS.addService('time', function (App) {
+  var dt = App.getService('date');console.log(dt);return Date.now();
+});
+EXMS.addService('datetime', function (App) {
+  var dt = App.getService('date'); /*let t = App.getService('all')*/
+});
+EXMS.addService('all', function (App) {
+  var dt = App.getService('time');var t = App.getService('alltime');
+});
+EXMS.addService('alltime', function (App) {
+  var dt = App.getService('time');var t = App.getService('datetime');
+});
 EXMS.cache = [];
 function importModules(r) {
   r.keys().forEach(function (key) {
