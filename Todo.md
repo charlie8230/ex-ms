@@ -1,11 +1,14 @@
 Todo
 # Event Delegation ??
-  - Basic ... need to pass in eventType :P (needs a wrapper) (no wrapper needed)
+  - Basic ... need to pass in eventType :P (needs a wrapper***) (no wrapper needed)
    - Tracking handlers! - done
    - Lastly - need to start individual module!
+   # Support vdom view layer
+   # Support extensions
+   
 ## Need get x-config - done
 ## Still need life cycle - done
-   # Support vdom view layer
+   
    # Stop a module - removed ref - ok
   # Stop module - remove handlers!
 # Start module? already started or START
@@ -16,7 +19,7 @@ Todo
 ## fixed moduleRefs stack
 
 
-  Event delegation adapter
+  Event delegation adapter - done
   Streams? Pass in elem type?
   Actions - unique??
 # Get global adapter - done
