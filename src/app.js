@@ -221,7 +221,13 @@ let app = {
               let act = this.getAction(name);
               if (act && act['fn']) {
                 let process = this.runFunction(act,'fn', `Error starting behavior ${name}`, context);
-                if(process) this.collectEvents('behavior', process, context.el);
+                if(process) {
+                  let processInit = process['init'];
+                  this.collectEvents('behavior', process, context.el);
+                  if (processInit) {
+                    this.runFunction(process,'init', `Error starting behavior ${name} init`, context);
+                  }
+                }
               }
             });
           }

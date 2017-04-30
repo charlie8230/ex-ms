@@ -575,7 +575,13 @@ var app = {
               var act = _this6.getAction(name);
               if (act && act['fn']) {
                 var process = _this6.runFunction(act, 'fn', 'Error starting behavior ' + name, context);
-                if (process) _this6.collectEvents('behavior', process, context.el);
+                if (process) {
+                  var processInit = process['init'];
+                  _this6.collectEvents('behavior', process, context.el);
+                  if (processInit) {
+                    _this6.runFunction(process, 'init', 'Error starting behavior ' + name + ' init', context);
+                  }
+                }
               }
             });
           }
@@ -945,6 +951,8 @@ Context.prototype = Object.assign(Context.prototype, emitterAPI, {
     return this.el;
   },
   getConfig: function getConfig() {
+    var item = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
     var children = this.el.children;
     var config = null;
     try {
@@ -956,6 +964,13 @@ Context.prototype = Object.assign(Context.prototype, emitterAPI, {
     } catch (e) {
       logger.log('Could not Parse config');
     }
+    if (item) {
+      if (item in config) {
+        return config[item];
+      }
+      return false;
+    }
+
     return config || {};
   },
   destroy: function destroy() {

@@ -21,7 +21,7 @@ Context.prototype = Object.assign(Context.prototype,emitterAPI,{
   getElement(){
     return this.el;
   },
-  getConfig(){
+  getConfig(item=null){
     let children = this.el.children;
     let config = null;
     try {
@@ -33,6 +33,13 @@ Context.prototype = Object.assign(Context.prototype,emitterAPI,{
     } catch(e) {
       logger.log('Could not Parse config');
     }
+    if (item) {
+      if (item in config) {
+        return config[item];
+      }
+      return false;
+    }
+
     return config||{};
   },
   destroy(){
