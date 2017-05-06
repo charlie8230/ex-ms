@@ -1,6 +1,6 @@
 let util = require('./util');
 let generalState = require('./general-state');
-const globalConfig = new generalState({debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]', maxServiceDepth: 8});
+const globalConfig = new generalState({debugger: debugMode, initCompleted: false, adaptHandlers: false, moduleSelector: '[data-module]', maxServiceDepth: 8});
 let Context = require('./context');
 let {API, emitterAPI} = require('./events');
 let {logger, log, debugMode}  = require('./logger');
@@ -173,14 +173,25 @@ let app = {
   collectEvents(processType, process, elem){  // process = module || behavior
     let keys = Object.keys(process);
     let handlers = keys.filter(val=>this._EVENT_TYPES.lastIndexOf(val.replace(/^on/,''))>=0).filter(val=>/on/.test(val));
-
+    let adapt = this.config.adaptHandlers;
     handlers.forEach(value=>{
       let _handler = process[value];
+      let _finalHandler = _handler;
       let _name = value.replace(/^on/,'');
       let _track_name = processType + _name;
-      this.attachHandler(elem,_name,_handler);
-      this.stacks = {type:'actionRefs', fn: _handler, name: _name, id: elem.dataset._id};
+      if (adapt) {
+        _finalHandler = this.adaptHandler(_handler);
+      }
+      this.attachHandler(elem,_name,_finalHandler);
+      this.stacks = {type:'actionRefs', fn: _finalHandler, name: _name, id: elem.dataset._id};
     });
+  },
+  adaptHandler(handler){
+    return function(event){
+      let element = event.currentTarget;
+      let elementType = element && element.dataset && element.dataset.type;
+      return handler(event, element, elementType);
+    };
   },
   runFunction(API, name='fn', errorMsg, ...params){
     let result = void 0;
