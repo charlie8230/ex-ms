@@ -65,12 +65,10 @@ let app = {
     let svc;
     if (svcFn) {
       if ('api' in svcFn) {
-        log('Got ', svcFn['name'], ' already'); // Singleton cannot be inited again
+        //  log('Got ', svcFn['name'], ' already'); // Singleton cannot be inited again
         return svcFn['api'];
       }
-
       // bails out on circular ref checks
-      
       let svcName = svcFn['name'];
       let servicesInProgress = this.stacks['serviceInit'];
       if(servicesInProgress.size>globalConfig.maxServiceDepth) {

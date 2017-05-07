@@ -312,7 +312,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var util = __webpack_require__(1);
 var generalState = __webpack_require__(17);
-var globalConfig = new generalState({ debugger: debugMode, initCompleted: false, moduleSelector: '[data-module]', maxServiceDepth: 8 });
+var globalConfig = new generalState({ debugger: debugMode, initCompleted: false, adaptHandlers: false, moduleSelector: '[data-module]', maxServiceDepth: 8 });
 var Context = __webpack_require__(15);
 
 var _require = __webpack_require__(3),
@@ -395,12 +395,10 @@ var app = {
     var svc = void 0;
     if (svcFn) {
       if ('api' in svcFn) {
-        log('Got ', svcFn['name'], ' already'); // Singleton cannot be inited again
+        //  log('Got ', svcFn['name'], ' already'); // Singleton cannot be inited again
         return svcFn['api'];
       }
-
       // bails out on circular ref checks
-
       var svcName = svcFn['name'];
       var servicesInProgress = this.stacks['serviceInit'];
       if (servicesInProgress.size > globalConfig.maxServiceDepth) {
@@ -519,14 +517,25 @@ var app = {
       return (/on/.test(val)
       );
     });
-
+    var adapt = this.config.adaptHandlers;
     handlers.forEach(function (value) {
       var _handler = process[value];
+      var _finalHandler = _handler;
       var _name = value.replace(/^on/, '');
       var _track_name = processType + _name;
-      _this5.attachHandler(elem, _name, _handler);
-      _this5.stacks = { type: 'actionRefs', fn: _handler, name: _name, id: elem.dataset._id };
+      if (adapt) {
+        _finalHandler = _this5.adaptHandler(_handler);
+      }
+      _this5.attachHandler(elem, _name, _finalHandler);
+      _this5.stacks = { type: 'actionRefs', fn: _finalHandler, name: _name, id: elem.dataset._id };
     });
+  },
+  adaptHandler: function adaptHandler(handler) {
+    return function (event) {
+      var element = event.currentTarget;
+      var elementType = element && element.dataset && element.dataset.type;
+      return handler(event, element, elementType);
+    };
   },
   runFunction: function runFunction(API) {
     var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'fn';
@@ -964,7 +973,7 @@ Context.prototype = Object.assign(Context.prototype, emitterAPI, {
     } catch (e) {
       logger.log('Could not Parse config');
     }
-    if (item) {
+    if (item && config) {
       if (item in config) {
         return config[item];
       }

@@ -33,7 +33,7 @@ Context.prototype = Object.assign(Context.prototype,emitterAPI,{
     } catch(e) {
       logger.log('Could not Parse config');
     }
-    if (item) {
+    if (item && config) {
       if (item in config) {
         return config[item];
       }
